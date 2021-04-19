@@ -38,6 +38,7 @@
     "webpack-merge": "^4.2.2"
   },
   "dependencies": {
+    "babylonjs": "^4.2.0",
     "cannon-es": "^0.15.1",
     "dat.gui": "^0.7.7"
   }
