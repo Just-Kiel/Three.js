@@ -5,12 +5,15 @@ import * as CANNON from 'cannon-es'
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js'
 import * as BABYLON from 'babylonjs';
 
-var leftJoystick = new BABYLON.VirtualJoystick(true)
-leftJoystick.setJoystickColor("#EC623F")
-leftJoystick.setJoystickSensibility(0.3)
+if ("ontouchstart" in document.documentElement)
+{
+    var leftJoystick = new BABYLON.VirtualJoystick(true)
+    leftJoystick.setJoystickColor("#EC623F")
+    leftJoystick.setJoystickSensibility(0.3)
 
-var rightJoystick = new BABYLON.VirtualJoystick(false)
-rightJoystick.setJoystickSensibility(0.3)
+    var rightJoystick = new BABYLON.VirtualJoystick(false)
+    rightJoystick.setJoystickSensibility(0.3)
+}
 
 
 //Loader
@@ -223,11 +226,14 @@ const loop = () =>
     }
 
     // Update Joystick
-    if(leftJoystick.pressed){
-        machineBody.position.x += leftJoystick.deltaPosition.x * 0.01
-    }
-    if(rightJoystick.pressed){
-        machineBody.position.z -= rightJoystick.deltaPosition.y * 1
+    if ("ontouchstart" in document.documentElement)
+    {
+        if(leftJoystick.pressed){
+            machineBody.position.x += leftJoystick.deltaPosition.x * 0.01
+        }
+        if(rightJoystick.pressed){
+            machineBody.position.z -= rightJoystick.deltaPosition.y * 1
+        }
     }
 
     // Update physics world

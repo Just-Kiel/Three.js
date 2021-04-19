@@ -1,45 +1,55 @@
 {
-  "name": "webpack-three-js-template",
+  "name": "portfolio",
   "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "description": "Portfolio",
+  "main": "app.js",
+  "author": "Aurore Lafaurie",
+  "license": "ISC",
   "scripts": {
     "build": "webpack --config ./bundler/webpack.prod.js",
-    "dev": "webpack-dev-server --config ./bundler/webpack.dev.js"
+    "dev": "webpack serve --config ./bundler/webpack.dev.js",
+    "sass": "sass --watch ./static/scss/main.scss:./src/style.css --style compressed"
+  },
+  "dependencies": {
+    "@babel/core": "^7.12.10",
+    "@babel/preset-env": "^7.12.11",
+    "babel-loader": "^8.2.2",
+    "clean-webpack-plugin": "^3.0.0",
+    "copy-webpack-plugin": "^7.0.0",
+    "css-loader": "^5.0.1",
+    "file-loader": "^6.2.0",
+    "gsap": "^3.6.0",
+    "howler": "^2.2.1",
+    "html-loader": "^1.3.2",
+    "html-webpack-plugin": "^5.0.0-alpha.7",
+    "locomotive-scroll": "^4.0.6",
+    "mini-css-extract-plugin": "^1.3.5",
+    "node-sass": "^5.0.0",
+    "portfinder-sync": "0.0.2",
+    "postprocessing": "^6.20.3",
+    "raw-loader": "^4.0.2",
+    "scroll-triggers": "^4.4.0",
+    "simplex-noise": "^2.4.0",
+    "splittext": "^2.0.0",
+    "style-loader": "^2.0.0",
+    "three": "^0.125.1",
+    "three.interaction": "^0.2.3",
+    "webpack": "^5.18.0",
+    "webpack-dev-server": "^3.11.2",
+    "webpack-merge": "^5.7.3"
+  },
+  "devDependencies": {
+    "@webpack-cli/serve": "^1.3.1",
+    "preload-js": "^0.6.3",
+    "url-loader": "^4.1.1",
+    "webpack-cli": "^4.6.0"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/brunosimon/webpack-three-js-template.git"
+    "url": "git+https://github.com/Just-Kiel/Three.js.git"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "bugs": {
-    "url": "https://github.com/brunosimon/webpack-three-js-template/issues"
+    "url": "https://github.com/Just-Kiel/Three.js/issues"
   },
-  "homepage": "https://github.com/brunosimon/webpack-three-js-template#readme",
-  "devDependencies": {
-    "@babel/core": "^7.9.6",
-    "@babel/preset-env": "^7.9.6",
-    "babel-loader": "^8.1.0",
-    "clean-webpack-plugin": "^3.0.0",
-    "copy-webpack-plugin": "^5.1.1",
-    "css-loader": "^3.5.3",
-    "file-loader": "^6.0.0",
-    "glslify-loader": "^2.0.0",
-    "html-loader": "^1.1.0",
-    "html-webpack-plugin": "^4.3.0",
-    "raw-loader": "^4.0.1",
-    "style-loader": "^1.2.1",
-    "three": "^0.127.0",
-    "webpack": "^4.43.0",
-    "webpack-cli": "^3.3.11",
-    "webpack-dev-server": "^3.11.0",
-    "webpack-merge": "^4.2.2"
-  },
-  "dependencies": {
-    "babylonjs": "^4.2.0",
-    "cannon-es": "^0.15.1",
-    "dat.gui": "^0.7.7"
-  }
+  "homepage": "https://github.com/Just-Kiel/Three.js#readme"
 }
