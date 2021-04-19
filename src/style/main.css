@@ -1,0 +1,77 @@
+*
+{
+    padding: 0;
+    margin: 0;
+    font-family: 'Manrope', sans-serif;
+}
+
+body,
+html
+{
+    overflow: hidden;
+}
+
+#tattoine{
+    background-image: url(../../static/image/Tattoine.svg);
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+}
+
+#tattoine h1{
+    position: relative;
+    top: 50%;
+    text-align: center;
+}
+
+.webgl
+{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: #000000;
+}
+
+#load{
+    background-color: #4960A9;
+    position: absolute;
+    z-index: 999;
+    /* background-image: url(/images/Emprunte_Van.svg); */
+    width: 100vw;
+    height: 100vh;
+}
+
+.hidden{
+    visibility: hidden;
+}
+
+.van{
+    background-image: url(../../static/image/Emprunte_Van.svg);
+    background-position: center;
+    background-size: cover;
+    position: absolute;
+    width: 33vw;
+    height: 75vh;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.white_van{
+    /* clip-path: polygon(0% 50%, 100% 50%, 100% 100%, 0% 100%); */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    height: 75vh;
+    transform: translate(-50%, -50%);
+    animation-name: loader;
+    animation-duration: 2.5s;
+}
+
+@keyframes loader{
+    0% {clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);}
+    50% {clip-path: polygon(0% 50%, 100% 50%, 100% 100%, 0% 100%);}
+    100% {clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);}
+}
