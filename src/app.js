@@ -4,6 +4,7 @@ import * as dat from 'dat.gui'
 import * as CANNON from 'cannon-es'
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js'
 import * as BABYLON from 'babylonjs';
+import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 
 if ("ontouchstart" in document.documentElement)
 {
@@ -21,7 +22,9 @@ const loadingManager = new THREE.LoadingManager(
     () =>
     {
         console.log('charged')
+        document.getElementById("load").onclick = function(){
         document.getElementById("load").classList.add("hidden");
+        }
     }
 )
 
@@ -36,8 +39,11 @@ const loadingManager = new THREE.LoadingManager(
 /**
  * Models
  */
- const gltfLoader = new GLTFLoader(loadingManager)
+//  const dracoLoader = new DRACOLoader()
+//  dracoLoader.setDecoderPath('/draco/')
 
+ const gltfLoader = new GLTFLoader(loadingManager)
+//gltfLoader.setDRACOLoader(dracoLoader)
  let mixer = null
  var cat
 
@@ -56,6 +62,67 @@ const loadingManager = new THREE.LoadingManager(
      }
  )
 
+ // Wheel Loader
+ var wheel1, wheel2, wheel3, wheel4
+ const wheel1Loader = new GLTFLoader(loadingManager)
+
+ wheel1Loader.load(
+     'model/roue.gltf',
+     (roue) =>
+     {
+        wheel1 = roue.scene
+        wheel1.scale.set(0.6, 0.6, 0.6)
+
+        wheel1.position.set(0, 0, 0)
+        
+        car.add(wheel1)
+     }
+ )
+const wheel2Loader = new GLTFLoader(loadingManager)
+
+ wheel2Loader.load(
+     'model/roue.gltf',
+     (roue) =>
+     {
+        wheel2 = roue.scene
+        wheel2.scale.set(0.6, 0.6, 0.6)
+
+        wheel2.position.set(0, 0, 2)
+        
+        car.add(wheel2)
+     }
+ )
+
+ const wheel3Loader = new GLTFLoader(loadingManager)
+
+ wheel3Loader.load(
+     'model/roue.gltf',
+     (roue) =>
+     {
+        wheel3 = roue.scene
+        wheel3.scale.set(0.6, 0.6, 0.6)
+        wheel3.rotation.y = Math.PI
+
+        wheel3.position.set(2, 0, 2)
+        
+        car.add(wheel3)
+     }
+ )
+const wheel4Loader = new GLTFLoader(loadingManager)
+
+ wheel4Loader.load(
+     'model/roue.gltf',
+     (roue) =>
+     {
+        wheel4 = roue.scene
+        wheel4.scale.set(0.6, 0.6, 0.6)
+        wheel4.rotation.y = Math.PI
+
+        wheel4.position.set(2, 0, 0)
+        
+        car.add(wheel4)
+     }
+ )
 
 
 /**
@@ -93,8 +160,8 @@ const scene = new THREE.Scene()
 // Camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
 camera.position.x = 4
-camera.position.y = 3
-camera.position.z = 5
+camera.position.y = 4
+camera.position.z = 7
 scene.add(camera)
 
 /**
@@ -155,14 +222,14 @@ const machineBody = new CANNON.Body({
 })
 world.addBody(machineBody)
 
-const cubeShape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5))
-const cubeBody = new CANNON.Body({
+const carShape = new CANNON.Box(new CANNON.Vec3(1, 1, 1))
+const carBody = new CANNON.Body({
     mass: 1,
-    position: new CANNON.Vec3(0, 3, 0),
-    shape: cubeShape
+    position: new CANNON.Vec3(0, 4, 0),
+    shape: carShape
 })
-cubeBody.addEventListener('collide', playHitSound)
-world.addBody(cubeBody)
+carBody.addEventListener('collide', playHitSound)
+world.addBody(carBody)
 
 //Floor phys
 const floorShape = new CANNON.Plane()
@@ -173,13 +240,17 @@ const floorBody = new CANNON.Body({
 floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0), Math.PI * 0.5)
 world.addBody(floorBody)
 
+// Voiture
+const car = new THREE.Group()
+scene.add(car)
+
 // Test
 const cube = new THREE.Mesh(
     new THREE.BoxBufferGeometry(1, 1, 1), 
     new THREE.MeshStandardMaterial({color: '#EC623F'})
 )
 cube.position.y = 1.5
-scene.add(cube)
+//scene.add(cube)
 
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(20, 20),
@@ -209,132 +280,187 @@ renderer.setClearColor('#364689')
 const axesHelper = new THREE.AxesHelper(2)
 scene.add(axesHelper)
 
-/**
- * Loop
- */
-const clock = new THREE.Clock()
-let oldElapsedTime = 0
-const loop = () =>
-{
-    const elapsedTime = clock.getElapsedTime()
-    const deltaTime = elapsedTime - oldElapsedTime
-    oldElapsedTime = elapsedTime
-
-    // Update Animation
-    if (mixer){
-        mixer.update(deltaTime)
-    }
-
-    // Update Joystick
-    if ("ontouchstart" in document.documentElement)
-    {
-        if(leftJoystick.pressed){
-            machineBody.position.x += leftJoystick.deltaPosition.x * 0.01
-        }
-        if(rightJoystick.pressed){
-            machineBody.position.z -= rightJoystick.deltaPosition.y * 1
-        }
-    }
-
-    // Update physics world
-    world.step(1/60, deltaTime, 3)
-
-    // Update world
-    cube.position.copy(cubeBody.position)
-    cube.quaternion.copy(cubeBody.quaternion)
-
-    if(cat){
-        cat.position.copy(machineBody.position)
-    }
-
-    // Update camera
-    if(cat){
-        camera.position.x = cat.position.x
-        camera.position.z = cat.position.z + 5
-    
-        camera.lookAt(cat.position)
-    }
-
-    // Render
-    renderer.render(scene, camera)
-
-    // Keep looping
-    window.requestAnimationFrame(loop)
-}
-loop()
 
 
-window.addEventListener("keydown", keysPressed, false);
-window.addEventListener("keyup", keysReleased, false);
-window.addEventListener("touchmove", handleMove, false);
+window.addEventListener('keyup', keysReleased);
+window.addEventListener('keydown', keysPressed);
+
+//window.addEventListener("touchmove", handleMove, false);
 
 var keys = [];
+
+keys.forward = false
+keys.left = false
+keys.right = false
 
 function keysPressed(e) {
 	// store an entry for every key pressed
 	keys[e.keyCode] = true;
 	
-	// Up and Left
-	if (keys[37] && keys[38]) {
-		machineBody.position.x -= 0.05
-        machineBody.position.z -= 0.05
-        renderer.render(scene, camera)
-	}
-    // Up and Right
-	if (keys[39] && keys[38]) {
-		machineBody.position.x += 0.05
-        machineBody.position.z -= 0.05
-        renderer.render(scene, camera)
-	}
+	// // Up and Left
+	// if (keys[37] && keys[38]) {
+    //     car.lookAt(wheel1.position)
+	// 	carBody.position.x -= 0.05
+    //     carBody.position.z -= 0.05
+        
+	// }
+    // // Up and Right
+	// if (keys[39] && keys[38]) {
+    //     car.lookAt(wheel1.position)
+	// 	carBody.position.x += 0.05
+    //     carBody.position.z -= 0.05
+	// }
 
-    // Down and Left
-	if (keys[37] && keys[40]) {
-		machineBody.position.x -= 0.05
-        machineBody.position.z += 0.05
-        renderer.render(scene, camera)
-	}
-    // Down and Right
-	if (keys[39] && keys[40]) {
-		machineBody.position.x += 0.05
-        machineBody.position.z += 0.05
-        renderer.render(scene, camera)
-	}
+    // // Down and Left
+	// if (keys[37] && keys[40]) {
+	// 	carBody.position.x -= 0.05
+    //     carBody.position.z += 0.05
+	// }
+    // // Down and Right
+	// if (keys[39] && keys[40]) {
+	// 	carBody.position.x += 0.05
+    //     carBody.position.z += 0.05
+	// }
+
+
+    // Up
+	if (keys[38]) {
+        keys.forward = true
+        
+        //carBody.position.z -= 0.05
+        wheel1.rotation.x -= 0.05
+        wheel2.rotation.x -= 0.05
+        wheel3.rotation.x -= 0.05
+        wheel4.rotation.x -= 0.05
+	} else
 
     // Left
 	if (keys[37]) {
-		machineBody.position.x -= 0.05
-        renderer.render(scene, camera)
-	}
+        keys.left = true
+        
+		//carBody.position.x -= 0.05
+	} else
     // Right
 	if (keys[39]) {
-		machineBody.position.x += 0.05
-        renderer.render(scene, camera)
+        keys.right = true
+		// carBody.position.x += 0.05
+        // carBody.quaternion.y -= 0.005
+       
 	}
 
-    // Up
-	if (keys[40]) {
-        machineBody.position.z += 0.05
-        renderer.render(scene, camera)
-	}
+    // // Down
+	// if (keys[40]) {
+    //     carBody.position.z += 0.05
+    //     wheel1.rotation.x += 0.05
+    //     wheel2.rotation.x += 0.05
+    //     wheel3.rotation.x += 0.05
+    //     wheel4.rotation.x += 0.05
+	// }
 
-    // Down
-	if (keys[38]) {
-        machineBody.position.z -= 0.05
-        renderer.render(scene, camera)
-	}
+    
+
+    renderer.render(scene, camera)
 
 }
 
 function keysReleased(e) {
 	// mark keys that were released
 	keys[e.keyCode] = false;
+
+    if(keys[38]){
+        console.log(keys[38])
+        console.log('aled')
+        keys.forward = false
+    }else if(keys[37]){
+        keys.left = false
+    }else if(keys[39]){
+        keys.right = false
+    }
 }
+
 
 function handleMove(e) {
     if(leftJoystick.pressed){
         console.log(leftJoystick.deltaPosition.x)
-        machineBody.position.x += leftJoystick.deltaPosition.x * 5
+        carBody.position.x += leftJoystick.deltaPosition.x * 5
     }
     console.log(e.type, e.touches)
     //machineBody.position.z = e
 }
+
+/**
+ * Loop
+ */
+ const clock = new THREE.Clock()
+ let oldElapsedTime = 0
+ const loop = () =>
+ {
+     const elapsedTime = clock.getElapsedTime()
+     const deltaTime = elapsedTime - oldElapsedTime
+     oldElapsedTime = elapsedTime
+ 
+     // Update Animation
+     if (mixer){
+         mixer.update(deltaTime)
+     }
+ 
+     // Update Joystick
+     if ("ontouchstart" in document.documentElement)
+     {
+         if(leftJoystick.pressed){
+             carBody.position.x += leftJoystick.deltaPosition.x * 1
+         }
+         if(rightJoystick.pressed){
+             carBody.position.z -= rightJoystick.deltaPosition.y * 1
+         }
+     }
+ 
+     // Test déplacement
+     if(keys.forward){
+         console.log('forward')
+         carBody.position.z -= Math.cos(carBody.quaternion.y) * 0.05
+         carBody.position.x -= Math.sin(carBody.quaternion.y) * 0.05
+     }
+     if(keys.left){
+         console.log("left")
+         carBody.quaternion.y += 0.025
+     } else if(keys.right){
+         console.log("right")
+         carBody.quaternion.y -= 0.025
+     }
+ 
+     // Update physics world
+     world.step(1/60, deltaTime, 3)
+ 
+     // Update world
+     car.position.copy(carBody.position)
+     //car.quaternion.copy(carBody.quaternion)
+ 
+     if(cat){
+         cat.position.copy(machineBody.position)
+     }
+ 
+     // Update camera
+     // if(cat){
+     //     camera.position.x = cat.position.x
+     //     camera.position.z = cat.position.z + 5
+     
+     //     //camera.lookAt(cat.position)
+     // }
+ 
+     if(car){
+         camera.position.x = car.position.x
+         camera.position.z = car.position.z + 7
+     }
+ 
+     
+     camera.quaternion.copy(car.quaternion)
+     camera.lookAt(car.position)
+ 
+     // Render
+     renderer.render(scene, camera)
+ 
+     // Keep looping
+     window.requestAnimationFrame(loop)
+ }
+ loop()
