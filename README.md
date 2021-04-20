@@ -1,14 +1,17 @@
-# Webpack THREE.js Template
+# Festival MMI
+
+Hi :)
 
 ## Setup
+
 Download [Node.js](https://nodejs.org/en/download/).
-Run this followed commands:
+Run this followed commands :
 
 ``` bash
-# Install dependencies (only for first time)
-npm i
+# Install dependencies (only the first time)
+npm install
 
-# Serve at localhost:8080
+# Run the local server at localhost:8080
 npm run dev
 
 # Build for production in the dist/ directory

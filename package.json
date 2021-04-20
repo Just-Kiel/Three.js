@@ -1,9 +1,9 @@
 {
-  "name": "portfolio",
+  "name": "festival-mmi",
   "version": "1.0.0",
-  "description": "Portfolio",
+  "description": "oui",
   "main": "app.js",
-  "author": "Aurore Lafaurie",
+  "author": "IUT MMI Tarbes",
   "license": "ISC",
   "scripts": {
     "build": "webpack --config ./bundler/webpack.prod.js",
@@ -22,34 +22,24 @@
     "howler": "^2.2.1",
     "html-loader": "^1.3.2",
     "html-webpack-plugin": "^5.0.0-alpha.7",
-    "locomotive-scroll": "^4.0.6",
     "mini-css-extract-plugin": "^1.3.5",
     "node-sass": "^5.0.0",
     "portfinder-sync": "0.0.2",
     "postprocessing": "^6.20.3",
     "raw-loader": "^4.0.2",
     "scroll-triggers": "^4.4.0",
-    "simplex-noise": "^2.4.0",
-    "splittext": "^2.0.0",
     "style-loader": "^2.0.0",
-    "three": "^0.125.1",
     "three.interaction": "^0.2.3",
     "webpack": "^5.18.0",
     "webpack-dev-server": "^3.11.2",
     "webpack-merge": "^5.7.3"
   },
   "devDependencies": {
-    "@webpack-cli/serve": "^1.3.1",
-    "preload-js": "^0.6.3",
+    "babylonjs": "^4.2.0",
+    "cannon-es": "^0.17.0",
+    "dat.gui": "^0.7.7",
+    "three": "^0.125.2",
     "url-loader": "^4.1.1",
     "webpack-cli": "^4.6.0"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Just-Kiel/Three.js.git"
-  },
-  "bugs": {
-    "url": "https://github.com/Just-Kiel/Three.js/issues"
-  },
-  "homepage": "https://github.com/Just-Kiel/Three.js#readme"
+  }
 }
