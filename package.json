@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "oui",
   "main": "app.js",
-  "author": "IUT MMI Tarbes",
+  "author": "IUT MMI Tarbes (by Baptiste Benjamoile et Aurore Lafaurie)",
   "license": "ISC",
   "scripts": {
     "build": "webpack --config ./bundler/webpack.prod.js",

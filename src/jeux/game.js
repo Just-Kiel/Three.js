@@ -1,4 +1,4 @@
-import './style/main.css'
+import '../style/main.css'
 import * as THREE from 'three'
 import * as dat from 'dat.gui'
 import * as CANNON from 'cannon-es'
@@ -6,8 +6,6 @@ import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js'
 import * as BABYLON from 'babylonjs';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import gsap from 'gsap'
-
-console.log(__dirname)
 
 if ("ontouchstart" in document.documentElement)
 {
@@ -254,7 +252,7 @@ world.addBody(carBody)
 var collideObject
 function interact(i){
     if(i.body.id == testBody.id){
-        window.location.pathname = "./game.html";
+        window.location.pathname = "jeux/game.html";
     }
 }
 
