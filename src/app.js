@@ -65,6 +65,23 @@ const loadingManager = new THREE.LoadingManager(
      }
  )
 
+ // Game Teleport Loader
+ var gameTp
+ const gameTpLoader = new GLTFLoader(loadingManager)
+
+ gameTpLoader.load(
+     'model/teleport_game.gltf',
+     (tp) =>
+     {
+         gameTp = tp.scene
+         gameTp.position.set(7, 1.8, 12)
+         gameTp.scale.set(1.7, 1.7, 1.7)
+         gameTp.rotation.set(Math.PI/2, 0, -Math.PI/4)
+
+         scene.add(gameTp)
+     }
+ )
+
  // Wheel Loader
  var wheel1, wheel2, wheel3, wheel4
  const wheel1Loader = new GLTFLoader(loadingManager)
@@ -254,6 +271,9 @@ world.addBody(carBody)
 var collideObject
 function interact(i){
     if(i.body.id == testBody.id){
+        console.log("test")
+    }
+    if(i.body.id == gameTpBody.id){
         window.location.pathname = "./game.html";
     }
 }
@@ -267,6 +287,15 @@ const testBody = new CANNON.Body({
 })
 world.addBody(testBody)
 
+// Teleport Game phys
+const gameTpShape = new CANNON.Box(new CANNON.Vec3(1.5, 1.5, 1.5))
+const gameTpBody = new CANNON.Body({
+    mass: 100,
+    position: new CANNON.Vec3(7, 1.8, 12),
+    shape: gameTpShape
+})
+world.addBody(gameTpBody)
+
 //Floor phys
 const floorShape = new CANNON.Plane()
 const floorBody = new CANNON.Body({
@@ -279,7 +308,7 @@ world.addBody(floorBody)
 // Voiture
 const car = new THREE.Group()
 car.position.y = 1
-car.scale.set(0.8, 0.8, 0.8)
+car.scale.set(0.5, 0.5, 0.5)
 scene.add(car)
 
 // Test
@@ -355,6 +384,11 @@ const loop = () =>
     carBody.quaternion.copy(car.quaternion)
 
     cube.position.copy(testBody.position)
+
+    if(gameTp){
+    gameTpBody.position.copy(gameTp.position)
+    gameTpBody.quaternion.copy(gameTp.quaternion)
+    }
 
     if(cat){
         cat.position.copy(machineBody.position)

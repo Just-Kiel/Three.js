@@ -43,26 +43,6 @@ const loadingManager = new THREE.LoadingManager(
 //  const dracoLoader = new DRACOLoader()
 //  dracoLoader.setDecoderPath('/draco/')
 
- const gltfLoader = new GLTFLoader(loadingManager)
-//gltfLoader.setDRACOLoader(dracoLoader)
- let mixer = null
- var cat
-
- gltfLoader.load(
-     'model/new_cat.gltf',
-     (gltf) =>
-     {
-         cat = gltf.scene
-         //console.log(gltf)
-         mixer = new THREE.AnimationMixer(cat)
-         const action = mixer.clipAction(gltf.animations[1])
-         action.play()
-         cat.scale.set(0.25, 0.25, 0.25)
-         cat.position.set(2, 0, 2)
-         scene.add(cat)
-     }
- )
-
  // Wheel Loader
  var wheel1, wheel2, wheel3, wheel4
  const wheel1Loader = new GLTFLoader(loadingManager)
@@ -231,30 +211,15 @@ const defaultContactMaterial = new CANNON.ContactMaterial(
 world.addContactMaterial(defaultContactMaterial)
 world.defaultContactMaterial = defaultContactMaterial
 
-const machineShape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5))
-const machineBody = new CANNON.Body({
-    mass: 1,
-    position: new CANNON.Vec3(2, 0, 2),
-    shape: machineShape
-})
-world.addBody(machineBody)
-
 const carShape = new CANNON.Box(new CANNON.Vec3(1, 1.5, 2.2))
 const carBody = new CANNON.Body({
     mass: 1,
     position: new CANNON.Vec3(0, 1, 0),
     shape: carShape
 })
-carBody.addEventListener('collide', interact)
+//carBody.addEventListener('collide', interact)
 //playHitSound)
 world.addBody(carBody)
-
-var collideObject
-function interact(i){
-    if(i.body.id == testBody.id){
-        window.location.pathname = "jeux/game.html";
-    }
-}
 
 // Interactable phys
 const testShape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5))
@@ -328,9 +293,7 @@ const loop = () =>
     oldElapsedTime = elapsedTime
 
     // Update Animation
-    if (mixer){
-        mixer.update(deltaTime)
-    }
+    
 
     // Update Joystick
     if ("ontouchstart" in document.documentElement)
@@ -354,18 +317,7 @@ const loop = () =>
 
     cube.position.copy(testBody.position)
 
-    if(cat){
-        cat.position.copy(machineBody.position)
-    }
-
     // Update camera
-    // if(cat){
-    //     camera.position.x = cat.position.x
-    //     camera.position.z = cat.position.z + 5
-    
-    //     //camera.lookAt(cat.position)
-    // }
-
     if(car){
         camera.position.x = car.position.x
         camera.position.z = car.position.z + 15
@@ -450,5 +402,4 @@ function handleMove(e) {
         carBody.position.x += leftJoystick.deltaPosition.x * 5
     }
     console.log(e.type, e.touches)
-    //machineBody.position.z = e
 }
