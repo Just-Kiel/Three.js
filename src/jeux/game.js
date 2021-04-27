@@ -43,6 +43,37 @@ const loadingManager = new THREE.LoadingManager(
 //  const dracoLoader = new DRACOLoader()
 //  dracoLoader.setDecoderPath('/draco/')
 
+// Island Loader
+var Island
+const islandLoader = new GLTFLoader(loadingManager)
+
+islandLoader.load(
+    'model/floating_island.gltf',
+    (island) =>
+    {
+        Island = island.scene
+        Island.position.y = -62
+        scene.add(Island)
+    }
+)
+
+ // Game Teleport Loader
+ var gameTp
+ const gameTpLoader = new GLTFLoader(loadingManager)
+
+ gameTpLoader.load(
+     'model/teleport_game.gltf',
+     (tp) =>
+     {
+         gameTp = tp.scene
+         gameTp.position.set(7, 1.8, 12)
+         gameTp.scale.set(1.7, 1.7, 1.7)
+         gameTp.rotation.set(Math.PI/2, 0, -Math.PI/4)
+
+         scene.add(gameTp)
+     }
+ )
+
  // Wheel Loader
  var wheel1, wheel2, wheel3, wheel4
  const wheel1Loader = new GLTFLoader(loadingManager)
@@ -121,6 +152,13 @@ vanLoader.load(
     }
 )
 
+/**
+ * Texture Loader
+ */
+const textureLoader = new THREE.TextureLoader(loadingManager)
+
+const colormudarTexture = textureLoader.load('/image/colormudar_startscreen.png')
+
 
 /**
  * Debug
@@ -168,6 +206,9 @@ const hitSound = new Audio('/sound/hit.mp3')
 
 const playHitSound = (collision) =>
 {
+    hitSound.volume = 0.5
+    hitSound.currentTime = 0
+    hitSound.play()
     const impactStrength = collision.contact.getImpactVelocityAlongNormal()
     if (impactStrength > 1.5){
         hitSound.volume = Math.random()
@@ -215,9 +256,23 @@ const carShape = new CANNON.Box(new CANNON.Vec3(1, 1.5, 2.2))
 const carBody = new CANNON.Body({
     mass: 1,
     position: new CANNON.Vec3(0, 1, 0),
-    shape: carShape
+    shape: carShape,
+    material: defaultMaterial
 })
-//carBody.addEventListener('collide', interact)
+carBody.addEventListener('collide', playHitSound)
+carBody.addEventListener('collide', interact)
+
+var colormudarEnable = false
+function interact(i){
+    if(i.body.id == gameTpBody.id){
+        window.location.pathname = "./index.html";
+    }
+    if(i.body.id == colormudarBody.id){
+        console.log("ça marche")
+        colormudarHover.position.y=0
+        colormudarEnable = true
+    }
+}
 //playHitSound)
 world.addBody(carBody)
 
@@ -239,11 +294,51 @@ const floorBody = new CANNON.Body({
 floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0), Math.PI * 0.5)
 world.addBody(floorBody)
 
+// Teleport Game phys
+const gameTpShape = new CANNON.Box(new CANNON.Vec3(1.5, 1.5, 1.5))
+const gameTpBody = new CANNON.Body({
+    mass: 100,
+    position: new CANNON.Vec3(7, 1.8, 12),
+    shape: gameTpShape,
+    material: defaultMaterial
+})
+world.addBody(gameTpBody)
+
 // Voiture
 const car = new THREE.Group()
 car.position.y = 1
-car.scale.set(0.8, 0.8, 0.8)
+car.scale.set(0.5, 0.5, 0.5)
 scene.add(car)
+
+// Plane ColorMudar
+const colormudarGeometry = new THREE.PlaneGeometry(9.5, 5.5)
+const colormudar = new THREE.Mesh(
+    colormudarGeometry,
+    new THREE.MeshBasicMaterial({map: colormudarTexture})
+)
+colormudar.rotation.x = - Math.PI * 0.5
+colormudar.position.y = 0.01
+colormudar.position.x = -6
+scene.add(colormudar)
+const colormudarHover = new THREE.Mesh(
+    new THREE.BoxBufferGeometry(9.5, 5.5, 0.01),
+    new THREE.MeshBasicMaterial({color: '#ffffff'})
+)
+colormudarHover.rotation.x = - Math.PI * 0.5
+colormudarHover.position.copy(colormudar.position)
+colormudarHover.position.y = -0.01
+colormudarHover.scale.multiplyScalar(1.05)
+scene.add(colormudarHover)
+
+// ColorMudar phys
+const colormudarShape = new CANNON.Box(new CANNON.Vec3(4.5, 0.5, 2.3))
+const colormudarBody = new CANNON.Body({
+    mass: 0,
+    position: new CANNON.Vec3(-6, 0.01, 0),
+    shape: colormudarShape
+})
+world.addBody(colormudarBody)
+console.log(colormudarBody)
 
 // Test
 const cube = new THREE.Mesh(
@@ -254,7 +349,7 @@ cube.position.set(5, 1.5, 2)
 scene.add(cube)
 
 const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(20, 20),
+    new THREE.PlaneGeometry(25, 25),
     new THREE.MeshStandardMaterial({color: '#4960A9'})
 )
 floor.rotation.x = - Math.PI * 0.5
@@ -386,6 +481,10 @@ function keysPressed(e) {
         wheel3.rotation.x += 0.05
         wheel4.rotation.x += 0.05
 	}
+
+    if (colormudarEnable && keys[13]){
+        //window.location.pathname = 'colormudar.html'
+    }
 
     renderer.render(scene, camera)
 

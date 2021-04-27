@@ -6,7 +6,9 @@ const path = require('path')
 module.exports = {
     entry: {
         main: path.resolve(__dirname, '../src/app.js'),
-        game: path.resolve(__dirname, '../src/jeux/game.js')
+        game: path.resolve(__dirname, '../src/jeux/game.js'),
+        test: path.resolve(__dirname, '../src/test.js'),
+        vehicle: path.resolve(__dirname, '../src/vehicle.js')
     },
     output:
     {
@@ -25,7 +27,7 @@ module.exports = {
             filename: 'index.html',
             template: path.resolve(__dirname, '../src/index.html'),
             minify: true,
-            chunks: ['main']
+            chunks: ['test', 'vehicle']
         }),
         new HtmlWebpackPlugin({
             filename: 'game.html',
@@ -33,6 +35,11 @@ module.exports = {
             minify: true,
             chunks: ['game']
         }),
+        // new HtmlWebpackPlugin({
+        //     filename: 'colormudar.html',
+        //     template: path.resolve(__dirname, '../src/jeux/colormudar.html'),
+        //     minify: true
+        // }),
         new MiniCSSExtractPlugin()
     ],
     module:

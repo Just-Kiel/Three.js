@@ -7,7 +7,13 @@ import * as BABYLON from 'babylonjs';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import gsap from 'gsap'
 
-console.log(__dirname)
+
+/**
+ * Variables
+ */
+var vanLength
+var vanWidth
+var vanHeight
 
 if ("ontouchstart" in document.documentElement)
 {
@@ -145,13 +151,14 @@ const wheel4Loader = new GLTFLoader(loadingManager)
  )
 
  // Van Loader
+var van
 const vanLoader = new GLTFLoader(loadingManager)
 
 vanLoader.load(
     'model/van.gltf',
-    (van) =>
+    (chassis) =>
     {
-        van = van.scene
+        van = chassis.scene
         van.scale.set(0.8, 0.8, 0.8)
         van.position.set(1, 1.5, 0)
         van.rotation.y = Math.PI
@@ -258,6 +265,63 @@ const machineBody = new CANNON.Body({
 })
 world.addBody(machineBody)
 
+var vehicle
+var chassisShape = new CANNON.Box(new CANNON.Vec3(1, 1.5, 2.2))
+var chassisBody = new CANNON.Body({mass: 150})
+chassisBody.addShape(chassisShape)
+chassisBody.position.set(0, 4, 0)
+//chassisBody.quaternion.set(0, 0, 0, Math.PI/4)
+//chassisBody.angularVelocity.set(0,0,0.5)
+
+var options = {
+    radius: 0.5,
+    //directionLocal: new CANNON.Vec3(0, 0, 1),
+    suspensionStiffness: 30,
+    suspensionRestLength: 0.3,
+    frictionSlip: 5,
+    dampingRelaxation: 2.3,
+    dampingCompression: 4.4,
+    maxSuspensionForce: 100000,
+    rollInfluence:  0.01,
+    //axleLocal: new CANNON.Vec3(0, 1, 0),
+    chassisConnectionPointLocal: new CANNON.Vec3(1, 1, 0),
+    maxSuspensionTravel: 0.3,
+    customSlidingRotationalSpeed: -30,
+    useCustomSlidingRotationalSpeed: true
+}
+
+vehicle = new CANNON.RaycastVehicle({
+    chassisBody: chassisBody
+})
+
+options.chassisConnectionPointLocal.set(1, 1, 0);
+vehicle.addWheel(options);
+
+options.chassisConnectionPointLocal.set(1, -1, 0);
+vehicle.addWheel(options);
+
+options.chassisConnectionPointLocal.set(-1, 1, 0);
+vehicle.addWheel(options);
+
+options.chassisConnectionPointLocal.set(-1, -1, 0);
+vehicle.addWheel(options);
+
+vehicle.addToWorld(world);
+
+var wheelBodies = [];
+for(var i=0; i<vehicle.wheelInfos.length; i++){
+    var wheel = vehicle.wheelInfos[i];
+    var cylinderShape = new CANNON.Cylinder(wheel.radius, wheel.radius, wheel.radius / 2, 20);
+    var wheelBody = new CANNON.Body({ mass: 1 });
+    var q = new CANNON.Quaternion();
+    q.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), Math.PI / 2);
+    wheelBody.addShape(cylinderShape, new CANNON.Vec3(), q);
+    wheelBodies.push(wheelBody);
+}
+
+
+
+
 const carShape = new CANNON.Box(new CANNON.Vec3(1, 1.5, 2.2))
 const carBody = new CANNON.Body({
     mass: 1,
@@ -268,7 +332,6 @@ carBody.addEventListener('collide', interact)
 //playHitSound)
 world.addBody(carBody)
 
-var collideObject
 function interact(i){
     if(i.body.id == testBody.id){
         console.log("test")
@@ -281,7 +344,7 @@ function interact(i){
 // Interactable phys
 const testShape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5))
 const testBody = new CANNON.Body({
-    mass: 120,
+    mass: 2,
     position: new CANNON.Vec3(5, 1.5, 2),
     shape: testShape
 })
@@ -300,7 +363,8 @@ world.addBody(gameTpBody)
 const floorShape = new CANNON.Plane()
 const floorBody = new CANNON.Body({
     mass: 0,
-    shape: floorShape
+    shape: floorShape,
+    material: concreteMaterial
 })
 floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0), Math.PI * 0.5)
 world.addBody(floorBody)
@@ -380,8 +444,22 @@ const loop = () =>
     world.step(1/60, deltaTime, 3)
 
     // Update world
-    carBody.position.copy(car.position)
-    carBody.quaternion.copy(car.quaternion)
+    if(van){
+    van.position.copy(chassisBody.position)
+    van.quaternion.copy(chassisBody.quaternion)
+
+    // wheel1.position.copy(wheelBodies[1].position)
+    // wheel1.quaternion.copy(wheelBodies[1].quaternion)
+    // wheel2.position.copy(wheelBodies[1].position)
+    // wheel2.quaternion.copy(wheelBodies[1].quaternion)
+    // wheel3.position.copy(wheelBodies[2].position)
+    // wheel3.quaternion.copy(wheelBodies[2].quaternion)
+    // wheel4.position.copy(wheelBodies[3].position)
+    // wheel4.quaternion.copy(wheelBodies[3].quaternion)
+    }
+
+    //carBody.position.copy(car.position)
+    //carBody.quaternion.copy(car.quaternion)
 
     cube.position.copy(testBody.position)
 
@@ -402,14 +480,16 @@ const loop = () =>
     //     //camera.lookAt(cat.position)
     // }
 
-    if(car){
-        camera.position.x = car.position.x
-        camera.position.z = car.position.z + 15
+    if(van){
+        camera.position.x = van.position.x
+        camera.position.z = van.position.z + 15
+        camera.quaternion.copy(van.quaternion)
+        camera.lookAt(van.position)
     }
 
     
-    camera.quaternion.copy(car.quaternion)
-    camera.lookAt(car.position)
+    
+    
 
     // Render
     renderer.render(scene, camera)
@@ -418,6 +498,16 @@ const loop = () =>
     window.requestAnimationFrame(loop)
 }
 loop()
+
+world.addEventListener('postStep', () =>
+{
+    for (var i = 0; i < vehicle.wheelInfos.length; i++) {
+        vehicle.updateWheelTransform(i);
+        var t = vehicle.wheelInfos[i].worldTransform;
+        wheelBodies[i].position.copy(t.position);
+        wheelBodies[i].quaternion.copy(t.quaternion);
+    }
+})
 
 
 window.addEventListener("keydown", keysPressed, false);
@@ -435,7 +525,9 @@ function keysPressed(e) {
 
     // Up
 	if (keys[38]) {
-        car.translateZ(-0.25)
+        vehicle.applyEngineForce(-1000, 2)
+        vehicle.applyEngineForce(-1000, 3)
+        //car.translateZ(-0.25)
         wheel1.rotation.set(0, 0, 0)
         wheel4.rotation.set(0, Math.PI, 0)
         wheel1.rotation.x -= 0.05
