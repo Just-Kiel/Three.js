@@ -1,8 +1,8 @@
 import * as THREE from 'three'
 import * as CANNON from 'cannon-es'
 
-var wheelRadius = 0.45,
-wheelHeight = 0.8
+var wheelRadius = 0.7,
+wheelHeight = 0.9
 var wheelSuspensionRestLength = 0.5,
         wheelSuspensionStiffness = 85,
         wheelMaxSuspensionTravel = 0.3,
@@ -35,10 +35,8 @@ const defaultTorqueDistribution = [
 const torqueDistribution = [...defaultTorqueDistribution];
 
 const stateValueLimits = {
-    engineForceMin: -150000,
-    engineForceMax: 150000,
-    brakeForceMin: 0,
-    brakeForceMax: 22,
+    engineForceMin: -1500,
+    engineForceMax: 1500,
     steeringAngleMin: -0.7,
     steeringAngleMax: 0.7,
 };
@@ -52,9 +50,9 @@ const defaultState = {
 export default class Vehicle{
 
     constructor(chassisMesh, wheelMesh){
-        const chassisShape =  new CANNON.Box(new CANNON.Vec3(1.6, 2, 5))
+        const chassisShape =  new CANNON.Box(new CANNON.Vec3(1.6, 1.5, 3.5))
 
-        this.chassisBody = new CANNON.Body({mass: 150})
+        this.chassisBody = new CANNON.Body({mass: 10})
         this.chassisBody.addShape(chassisShape)
 
         this.base = new CANNON.RaycastVehicle({
@@ -66,48 +64,48 @@ export default class Vehicle{
 
         const wheelConfig = {
             radius: wheelRadius,
-            height: wheelHeight,
-            suspensionRestLength: wheelSuspensionRestLength,
-            suspensionStiffness: wheelSuspensionStiffness,
-            maxSuspensionTravel: wheelMaxSuspensionTravel,
-            maxSuspensionForce: wheelMaxSuspensionForce,
-            dampingCompression: wheelDampingCompression,
-            dampingRelaxation: wheelDampingRelaxation,
-            frictionSlip: wheelFrictionSlip,
-            forwardAcceleration: wheelForwardAcceleration,
-            sideAcceleration: wheelSidedAcceleration,
-            rollInfluence: wheelRollInfluence,
+            // height: wheelHeight,
+            // suspensionRestLength: wheelSuspensionRestLength,
+            // suspensionStiffness: wheelSuspensionStiffness,
+            // maxSuspensionTravel: wheelMaxSuspensionTravel,
+            // maxSuspensionForce: wheelMaxSuspensionForce,
+            // dampingCompression: wheelDampingCompression,
+            // dampingRelaxation: wheelDampingRelaxation,
+            // frictionSlip: wheelFrictionSlip,
+            // forwardAcceleration: wheelForwardAcceleration,
+            // sideAcceleration: wheelSidedAcceleration,
+            // rollInfluence: wheelRollInfluence,
             axleLocal: new CANNON.Vec3(-1, 0, 0),
             directionLocal: new CANNON.Vec3(0, -1, 0),
             chassisConnectionPointLocal: new CANNON.Vec3(),
-            customSlidingRotationalSpeed: -30,
-            useCustomSlidingRotationalSpeed: true,
+            // customSlidingRotationalSpeed: -30,
+            // useCustomSlidingRotationalSpeed: true,
         };
 
-        const height = 1.4;
-        const halfTrackWidth = 1.4;
+        const height = 0.6;
+        const halfTrackWidth = 1.2;
         this.trackWidth = halfTrackWidth * 2;
-        this.wheelBase = 1.8 + 2.8;
-        // front right
-        wheelConfig.chassisConnectionPointLocal.set(halfTrackWidth, -height, -1.8);
-        this.base.addWheel(wheelConfig);
+        this.wheelBase = 2.5 + 2.5;
         // front left
-        wheelConfig.chassisConnectionPointLocal.set(-halfTrackWidth, -height, -1.8);
+        wheelConfig.chassisConnectionPointLocal.set(halfTrackWidth, -height, 2.3);
         this.base.addWheel(wheelConfig);
-        // rear right
-        wheelConfig.chassisConnectionPointLocal.set(halfTrackWidth, -height, 2.8);
+        // front right
+        wheelConfig.chassisConnectionPointLocal.set(-halfTrackWidth, -height, 2.3);
         this.base.addWheel(wheelConfig);
         // rear left
-        wheelConfig.chassisConnectionPointLocal.set(-halfTrackWidth, -height, 2.8);
+        wheelConfig.chassisConnectionPointLocal.set(halfTrackWidth, -height, -2.3);
+        this.base.addWheel(wheelConfig);
+        // rear right
+        wheelConfig.chassisConnectionPointLocal.set(-halfTrackWidth, -height, -2.3);
         this.base.addWheel(wheelConfig);
 
         //this.materials = setMaterials(wheelMesh, chassisMesh)
 
         const wheelMeshes = {
-            front_r: wheelMesh,
-            front_l: wheelMesh.clone(),
+            rear_l: wheelMesh,
             rear_r: wheelMesh.clone(),
-            rear_l: wheelMesh.clone()
+            front_l: wheelMesh.clone(),
+            front_r: wheelMesh.clone()
         }
 
         const axes = ['x', 'y', 'z']
@@ -186,10 +184,6 @@ export default class Vehicle{
         // })
 
         return this
-    }
-
-    update(){
-        
     }
 
     addToScene(scene){

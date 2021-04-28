@@ -9,6 +9,9 @@ import * as BABYLON from 'babylonjs';
 import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import gsap from 'gsap'
 import Vehicle from './vehicle.js'
+import cannonDebugger from 'cannon-es-debugger'
+import createVehicle from './voiture.js'
+
 
 // Scene
 const scene = new THREE.Scene()
@@ -23,11 +26,15 @@ const scene = new THREE.Scene()
  world.broadphase = new CANNON.SAPBroadphase(world)
  world.allowSleep = true
 
+ cannonDebugger(scene, world.bodies)
+
+
+
 
 /**
  * Variables
  */
- const translateAxis = new THREE.Vector3(0, 0, 1);
+ const translateAxis = new THREE.Vector3(0, 1, 0);
 
 
 if ("ontouchstart" in document.documentElement)
@@ -284,7 +291,7 @@ const cube = new THREE.Mesh(
 scene.add(cube)
 
 const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(20, 20),
+    new THREE.PlaneGeometry(50, 50),
     new THREE.MeshStandardMaterial({color: '#4960A9'})
 )
 floor.rotation.x = - Math.PI * 0.5
@@ -315,9 +322,9 @@ const controls = new OrbitControls( camera, renderer.domElement );
 
 // world.addEventListener('postStep', () =>
 // {
-//     for (var i = 0; i < vehicle.wheelInfos.length; i++) {
-//         vehicle.updateWheelTransform(i);
-//         var t = vehicle.wheelInfos[i].worldTransform;
+//     for (var i = 0; i < vroum.base.wheelInfos.length; i++) {
+//         vroum.updateWheelTransform(i);
+//         var t = vroum.wheelInfos[i].worldTransform;
 //         wheelBodies[i].position.copy(t.position);
 //         wheelBodies[i].quaternion.copy(t.quaternion);
 
@@ -334,6 +341,9 @@ let oldElapsedTime = 0
 let engineForceDirection = 0;
     let steeringDirection = 0;
 
+
+const new_van = createVehicle()
+
 const loop = () =>
 {
     const elapsedTime = clock.getElapsedTime()
@@ -345,14 +355,25 @@ const loop = () =>
 
     controls.update();
 
-    if (wheel3 != undefined){        
-        vroum = new Vehicle(van, wheel3)
-        console.log('aled')
-        console.log(vroum.base.chassisBody.position)
-        vroum.base.chassisBody.position.set(-4, 7, 0)
-        //vroum.base.chassisBody.position.set(7, 7, 1)
-        vroum.addToWorld(world).addToScene(scene)
+
+    // if (wheel3 != undefined){        
+    //     vroum = new Vehicle(van, wheel3)
+    //     console.log('aled')
+    //     vroum.base.chassisBody.position.set(-4, 7, 0)
+    //     vroum.addToWorld(world).addToScene(scene)
+    //     wheel3 = undefined
+    // }
+
+    if(wheel3 != undefined){
+        const meshes = {
+            wheel_front_r: wheel3,
+            wheel_front_l: wheel3.clone(),
+            wheel_front_r: wheel3.clone(),
+            wheel_front_r: wheel3.clone(),
+            van
+        }
         wheel3 = undefined
+        new_van.addToWorld(world, meshes)
     }
 
     // var tmp_transform
@@ -426,45 +447,39 @@ const loop = () =>
 }
 loop()
 
-world.addEventListener('postStep', () =>
-        {
-            // this.steerWheels()
-            // this.applyWheelSlipReduction()
-            // this.setEngineForceDirection()
+// world.addEventListener('postStep', () =>
+//         {
+//             // this.steerWheels()
+//             // this.applyWheelSlipReduction()
+//             // this.setEngineForceDirection()
 
-        var tmp_transform
+//         var tmp_transform
 
-        if(vroum != undefined){
-        for(let i = 0; i<vroum.base.wheelInfos.length; i++){
-            //console.log(this.state.engineForce)
-            //console.log(torqueDistribution[i])
-
-            //vroum.base.applyEngineForce(-1500, i)
+//         if(vroum != undefined){
+//         for(let i = 0; i<vroum.base.wheelInfos.length; i++){
+//             vroum.base.updateWheelTransform(i)
+//             tmp_transform = vroum.base.wheelInfos[i].worldTransform
+//                 //console.log('help')
             
-
-            vroum.base.updateWheelTransform(i)
-            tmp_transform = vroum.base.wheelInfos[i].worldTransform
-                //console.log('help')
+//             //vroum.wheelMeshes[i].position.set(0, 0, 0)
+//             vroum.wheelMeshes[i].position.copy(tmp_transform.position)
+//             vroum.wheelMeshes[i].quaternion.copy(tmp_transform.quaternion)
             
-            //vroum.wheelMeshes[i].position.set(0, 0, 0)
-            vroum.wheelMeshes[i].position.copy(tmp_transform.position)
-            vroum.wheelMeshes[i].quaternion.copy(tmp_transform.quaternion)
-            
-        }
-        vroum.chassisMesh.position.copy(vroum.base.chassisBody.position)
-        //console.log(this.chassisMesh.position)
-        //console.log(this.chassisBody.position)
-        vroum.chassisMesh.quaternion.copy(vroum.base.chassisBody.quaternion)
-        vroum.chassisMesh.translateOnAxis(translateAxis, 0.6)
-    }
-        })
+//         }
+//         vroum.chassisMesh.position.copy(vroum.base.chassisBody.position)
+//         //console.log(this.chassisMesh.position)
+//         //console.log(this.chassisBody.position)
+//         vroum.chassisMesh.quaternion.copy(vroum.base.chassisBody.quaternion)
+//         vroum.chassisMesh.translateOnAxis(translateAxis, 0.2)
+//     }
+//         })
 
 
 // Keybindings
         // Add force on keydown
         document.addEventListener('keydown', (event) => {
             const maxSteerVal = 0.5
-            const maxForce = 2500
+            const maxForce = 500
   
             switch (event.key) {
               case 'w':
@@ -477,30 +492,31 @@ world.addEventListener('postStep', () =>
 
 
                   
-                vroum.base.applyEngineForce(-maxForce, 2)
-                vroum.base.applyEngineForce(-maxForce, 3)
+                //vroum.base.applyEngineForce(-maxForce, 2)
+                // vroum.base.applyEngineForce(-maxForce, 3)
+
 
                 break
   
               case 's':
               case 'ArrowDown':
-                for(let i = 0; i<vroum.base.wheelInfos.length; i++){
-                    vroum.base.applyEngineForce(maxForce, i)
-                }
+                // for(let i = 0; i<vroum.base.wheelInfos.length; i++){
+                //     vroum.base.applyEngineForce(maxForce, i)
+                // }
                 // vroum.base.applyEngineForce(maxForce, 0)
                 // vroum.base.applyEngineForce(maxForce, 1)
                 break
   
               case 'a':
               case 'ArrowLeft':
-                vroum.base.setSteeringValue(maxSteerVal, 2)
-                vroum.base.setSteeringValue(maxSteerVal, 3)
+                // vroum.base.setSteeringValue(maxSteerVal, 2)
+                // vroum.base.setSteeringValue(maxSteerVal, 3)
                 break
   
               case 'd':
               case 'ArrowRight':
-                vroum.base.setSteeringValue(-maxSteerVal, 2)
-                vroum.base.setSteeringValue(-maxSteerVal, 3)
+                // vroum.base.setSteeringValue(-maxSteerVal, 2)
+                // vroum.base.setSteeringValue(-maxSteerVal, 3)
                 break
             }
           })
@@ -510,32 +526,32 @@ world.addEventListener('postStep', () =>
             switch (event.key) {
               case 'w':
               case 'ArrowUp':
-                for(let i = 0; i<vroum.base.wheelInfos.length; i++){
-                    vroum.base.applyEngineForce(0, i)
-                }
+                // for(let i = 0; i<vroum.base.wheelInfos.length; i++){
+                //     vroum.base.applyEngineForce(0, i)
+                // }
                 // vroum.base.applyEngineForce(0, 0)
                 // vroum.base.applyEngineForce(0, 1)
                 break
   
               case 's':
               case 'ArrowDown':
-                for(let i = 0; i<vroum.base.wheelInfos.length; i++){
-                    vroum.base.applyEngineForce(0, i)
-                }
+                // for(let i = 0; i<vroum.base.wheelInfos.length; i++){
+                //     vroum.base.applyEngineForce(0, i)
+                // }
                 // vroum.base.applyEngineForce(0, 0)
                 // vroum.base.applyEngineForce(0, 1)
                 break
   
               case 'a':
               case 'ArrowLeft':
-                vroum.base.setSteeringValue(0, 2)
-                vroum.base.setSteeringValue(0, 3)
+                // vroum.base.setSteeringValue(0, 2)
+                // vroum.base.setSteeringValue(0, 3)
                 break
   
               case 'd':
               case 'ArrowRight':
-                vroum.base.setSteeringValue(0, 2)
-                vroum.base.setSteeringValue(0, 3)
+                // vroum.base.setSteeringValue(0, 2)
+                // vroum.base.setSteeringValue(0, 3)
                 break
             }
           })

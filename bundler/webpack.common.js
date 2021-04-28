@@ -8,7 +8,8 @@ module.exports = {
         main: path.resolve(__dirname, '../src/app.js'),
         game: path.resolve(__dirname, '../src/jeux/game.js'),
         test: path.resolve(__dirname, '../src/test.js'),
-        vehicle: path.resolve(__dirname, '../src/vehicle.js')
+        vehicle: path.resolve(__dirname, '../src/vehicle.js'),
+        new: path.resolve(__dirname, '../src/new.js')
     },
     output:
     {
@@ -27,7 +28,7 @@ module.exports = {
             filename: 'index.html',
             template: path.resolve(__dirname, '../src/index.html'),
             minify: true,
-            chunks: ['test', 'vehicle']
+            chunks: ['new']
         }),
         new HtmlWebpackPlugin({
             filename: 'game.html',
@@ -35,11 +36,6 @@ module.exports = {
             minify: true,
             chunks: ['game']
         }),
-        // new HtmlWebpackPlugin({
-        //     filename: 'colormudar.html',
-        //     template: path.resolve(__dirname, '../src/jeux/colormudar.html'),
-        //     minify: true
-        // }),
         new MiniCSSExtractPlugin()
     ],
     module:
