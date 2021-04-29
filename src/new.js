@@ -3,6 +3,7 @@ import * as CANNON from 'cannon-es'
 import * as THREE from 'three'
 import * as utils from './utils.js';
 import createVehicle from './raycastVehicle.js';
+import {cameraHelper} from './cameraHelper.js';
 
 const worldStep = 1/60;
 
@@ -62,12 +63,12 @@ floor.position.z = 2
 gScene.add(floor)
 
 //Floor phys
-const floorShape = new CANNON.Plane()
+const floorShape = new CANNON.Cylinder(45, 45, 1)
 const floorBody = new CANNON.Body({
     mass: 0,
     shape: floorShape,
 })
-floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0), Math.PI * 0.5)
+//floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0), Math.PI * 0.5)
 gWorld.addBody(floorBody)
 
 // Interactable phys
@@ -95,18 +96,38 @@ const vehicleInitialPosition = new THREE.Vector3(0, 15, -2);
 const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, -1, 0), -Math.PI / 2);
 let resetVehicle = () => {};
 
+var gameTp
+var gameTpBody
+
 
 
 
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, gameTpGLTF] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
+        utils.loadResource('model/teleport_game.gltf'),
     ]);
 
     const wheel = wheelGLTF.scene;
     const chassis = chassisGLTF.scene;
+    gameTp = gameTpGLTF.scene;
+
+    gameTp.position.set(7, 1.8, 12)
+    gameTp.scale.set(1.7, 1.7, 1.7)
+    gameTp.rotation.set(Math.PI/2, 0, -Math.PI/4)
+
+    gScene.add(gameTp)
+
+    // Teleport Game phys
+    const gameTpShape = new CANNON.Box(new CANNON.Vec3(1.5, 1.5, 1.5))
+    gameTpBody = new CANNON.Body({
+        mass: 1000,
+        position: new CANNON.Vec3(7, 1.8, 12),
+        shape: gameTpShape
+    })
+    gWorld.addBody(gameTpBody)
 
     setMaterials(wheel, chassis);
     chassis.scale.set(0.5, 0.5, 0.5);
@@ -120,7 +141,7 @@ let resetVehicle = () => {};
         chassis,
     };
 
-    const vehicle = createVehicle();
+    const vehicle = createVehicle(gameTpBody);
     vehicle.addToWorld(gWorld, meshes);
 
     resetVehicle = () => {
@@ -138,7 +159,7 @@ let resetVehicle = () => {};
         gScene.add(meshes[meshName]);
     });
 
-    //cameraHelper.init(gCamera, chassis, gRenderer.domElement);
+    cameraHelper.init(camera, chassis, gRenderer.domElement);
     
     render();
 })();
@@ -147,7 +168,7 @@ function updatePhysics() {
     gWorld.step(worldStep);
 }
 
-function render(positionV) {
+function render() {
     if (pause) {
         return;
     }
@@ -159,11 +180,13 @@ function render(positionV) {
         wireframeRenderer.update();
     }
 
-    //cameraHelper.update();
+    cameraHelper.update();
+
+    gameTp.position.copy(gameTpBody.position)
 
     mesh.position.copy(testBody.position)
 
-    camera.lookAt(mesh.position)
+    //camera.lookAt(mesh.position)
     gRenderer.render(gScene, camera);
 
     requestAnimationFrame(render);

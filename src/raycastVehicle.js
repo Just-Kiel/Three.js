@@ -2,8 +2,8 @@
 import * as CANNON from 'cannon-es'
 import * as THREE from 'three'
 
-export default function createVehicle() {
-    const chassisBody = new CANNON.Body({mass: 70});
+export default function createVehicle(interactBody) {
+    const chassisBody = new CANNON.Body({mass: 100});
     const chassisBaseShape = new CANNON.Box(new CANNON.Vec3(0.9, 0.4, 2.8));
     const chassisTopShape = new CANNON.Box(new CANNON.Vec3(0.9, 0.2, 2.8));
     chassisBody
@@ -15,7 +15,7 @@ export default function createVehicle() {
         directionLocal: new CANNON.Vec3(0, -1, 0),
         suspensionStiffness: 30,
         suspensionRestLength: 0.3,
-        frictionSlip: 1.4,
+        frictionSlip: 0.4,
         dampingRelaxation: 2.3,
         dampingCompression: 4.4,
         maxSuspensionForce: 100000,
@@ -61,6 +61,8 @@ export default function createVehicle() {
     let transform;
     let wheelBody;
     function updateVisuals(chassisMesh, wheelMeshes) {
+        chassisBody.addEventListener('collide', interact)
+
         for (let i = 0; i < this.wheelInfos.length; i++) {
             this.updateWheelTransform(i);
             transform = this.wheelInfos[i].worldTransform;
@@ -75,6 +77,16 @@ export default function createVehicle() {
         chassisMesh.position.copy(chassisBody.position);
         chassisMesh.quaternion.copy(chassisBody.quaternion);
         chassisMesh.translateOnAxis(new THREE.Vector3(0, 0, 1), 0.6);
+    }
+
+    function interact(i){
+        if(i.body.id == interactBody.id){
+            console.log("test")
+            window.location.pathname = "./game.html";
+        }
+        // if(i.body.id == gameTpBody.id){
+        //     window.location.pathname = "./game.html";
+        // }
     }
 
     function beforeAddToWorld(world, meshes) {
@@ -94,7 +106,7 @@ export default function createVehicle() {
     };
 
     const maxAcceleration = 70;
-    const maxSteeringValue = 0.5;
+    const maxSteeringValue = 0.1;
     const maxBrakeForce = 1;
     
     const minValues = {
@@ -202,7 +214,6 @@ function initControls(vehicle) {
         const brakeMultiplier = Number(isKeyDown(' '));
         [0, 1].forEach(wheelIndex => vehicle.setBrake(brakeForce * brakeMultiplier, wheelIndex));
 
-        console.log('coucou')
     };
 }
 
