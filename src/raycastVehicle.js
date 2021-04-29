@@ -80,10 +80,20 @@ export default function createVehicle(interactBody) {
     }
 
     function interact(i){
-        if(i.body.id == interactBody.id){
+        var path = window.location.pathname;
+        var page = path.split("/").pop();
+        if(i.body.id == interactBody.id && page == "game.html"){
+            console.log("test")
+            //window.location.pathname = "./immersions/index.html";
+            window.location.pathname = "./index.html";
+        }
+
+        if(i.body.id == interactBody.id && page == "index.html"){
             console.log("test")
             window.location.pathname = "./game.html";
+            //window.location.pathname = "./immersions/game.html";
         }
+        
         // if(i.body.id == gameTpBody.id){
         //     window.location.pathname = "./game.html";
         // }
@@ -166,7 +176,7 @@ function getLimitedValue(value, min, max) {
 function initControls(vehicle) {
     const keysPressed = new Set();
     const isKeyDown = (keyCode) => keysPressed.has(keyCode);
-    const maxSteeringValue = 0.5;
+    const maxSteeringValue = 0.7;
     const maxForceOnFrontWheels = 70;
     const maxForceOnRearWheels = 65;
     const brakeForce = 1;

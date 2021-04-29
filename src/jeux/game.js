@@ -4,7 +4,6 @@ import * as dat from 'dat.gui'
 import * as CANNON from 'cannon-es'
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js'
 import * as BABYLON from 'babylonjs';
-import { DRACOLoader } from 'three/examples/jsm/loaders/DRACOLoader.js'
 import gsap from 'gsap'
 
 if ("ontouchstart" in document.documentElement)

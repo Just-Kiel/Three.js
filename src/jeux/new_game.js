@@ -1,9 +1,9 @@
-import './style/main.css'
+import '../style/main.css'
 import * as CANNON from 'cannon-es'
 import * as THREE from 'three'
-import * as utils from './utils.js';
-import createVehicle from './raycastVehicle.js';
-import {cameraHelper} from './cameraHelper.js';
+import * as utils from '../utils.js';
+import createVehicle from '../raycastVehicle.js';
+import {cameraHelper} from '../cameraHelper.js';
 
 const worldStep = 1/60;
 
@@ -47,42 +47,40 @@ let pause = false;
 
 const ambientLight = new THREE.AmbientLight('#ffffff', 1);
 gScene.add(ambientLight);
-// Object
-const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
-const mesh = new THREE.Mesh(geometry, material)
-gScene.add(mesh)
 
-const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(50, 50),
-    new THREE.MeshStandardMaterial({color: '#4960A9'})
-)
-floor.rotation.x = - Math.PI * 0.5
-floor.position.y = 0
-floor.position.z = 2
-gScene.add(floor)
+// const floor = new THREE.Mesh(
+//     new THREE.PlaneGeometry(50, 50),
+//     new THREE.MeshStandardMaterial({color: '#4960A9'})
+// )
+// floor.rotation.x = - Math.PI * 0.5
+// floor.position.y = 0
+// floor.position.z = 2
+// gScene.add(floor)
+
+// Ball fun
+const ballGeometry = new THREE.SphereGeometry(0.5, 32, 32)
+const ballMaterial = new THREE.MeshBasicMaterial({color: 0xff0000})
+const ballMesh = new THREE.Mesh(ballGeometry, ballMaterial)
+gScene.add(ballMesh)
+
+// Ball phys
+const ballShape = new CANNON.Sphere(0.5)
+const ballBody = new CANNON.Body({mass: 1, shape: ballShape, position: new CANNON.Vec3(-4, 5, 8)})
+gWorld.addBody(ballBody)
 
 //Floor phys
-const floorShape = new CANNON.Cylinder(45, 45, 1)
+const floorShape = new CANNON.Cylinder(95, 1, 30)
 const floorBody = new CANNON.Body({
     mass: 0,
     shape: floorShape,
+    position: new CANNON.Vec3(0, -10, 0)
 })
 //floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0), Math.PI * 0.5)
 gWorld.addBody(floorBody)
 
-// Interactable phys
-const testShape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5))
-const testBody = new CANNON.Body({
-    mass: 2,
-    position: new CANNON.Vec3(0, 3, 2),
-    shape: testShape
-})
-gWorld.addBody(testBody)
-
-//Axes Helper
-const axesHelper = new THREE.AxesHelper(2)
-gScene.add(axesHelper)
+// //Axes Helper
+// const axesHelper = new THREE.AxesHelper(2)
+// gScene.add(axesHelper)
 
 gWorld.broadphase = new CANNON.SAPBroadphase(gWorld);
 gWorld.gravity.set(0, -10, 0);
@@ -99,26 +97,29 @@ let resetVehicle = () => {};
 var gameTp
 var gameTpBody
 
-
-
-
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF, gameTpGLTF] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, gameTpGLTF, islandGLTF] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
         utils.loadResource('model/teleport_game.gltf'),
+        utils.loadResource('model/Floating_island_all.gltf')
     ]);
 
     const wheel = wheelGLTF.scene;
     const chassis = chassisGLTF.scene;
     gameTp = gameTpGLTF.scene;
+    const island = islandGLTF.scene
 
     gameTp.position.set(7, 1.8, 12)
     gameTp.scale.set(1.7, 1.7, 1.7)
     gameTp.rotation.set(Math.PI/2, 0, -Math.PI/4)
 
     gScene.add(gameTp)
+
+
+    island.position.set(0, -62.5, 0)
+    gScene.add(island)
 
     // Teleport Game phys
     const gameTpShape = new CANNON.Box(new CANNON.Vec3(1.5, 1.5, 1.5))
@@ -184,9 +185,8 @@ function render() {
 
     gameTp.position.copy(gameTpBody.position)
 
-    mesh.position.copy(testBody.position)
+    ballMesh.position.copy(ballBody.position)
 
-    //camera.lookAt(mesh.position)
     gRenderer.render(gScene, camera);
 
     requestAnimationFrame(render);
@@ -272,8 +272,11 @@ window.addEventListener('keyup', (e) => {
                 render();
             }
             break;
+        case 'R':
+            ballBody.position.set(-4, 5, 8)
+            break;
         case 'V':
-            resetVehicle();
+            resetVehicle(); 
             break;
         case 'ESCAPE':
             instructionsContainer.classList.toggle('hidden');

@@ -9,7 +9,8 @@ module.exports = {
         game: path.resolve(__dirname, '../src/jeux/game.js'),
         test: path.resolve(__dirname, '../src/test.js'),
         vehicle: path.resolve(__dirname, '../src/vehicle.js'),
-        new: path.resolve(__dirname, '../src/new.js')
+        new: path.resolve(__dirname, '../src/new.js'),
+        new_game: path.resolve(__dirname, '../src/jeux/new_game.js')
     },
     output:
     {
@@ -34,7 +35,7 @@ module.exports = {
             filename: 'game.html',
             template: path.resolve(__dirname, '../src/jeux/game.html'),
             minify: true,
-            chunks: ['game']
+            chunks: ['new_game']
         }),
         new MiniCSSExtractPlugin()
     ],
