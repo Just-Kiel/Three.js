@@ -1,6 +1,7 @@
 // import controllerSocketHandler from './socketHandler.js';
 import * as CANNON from 'cannon-es'
 import * as THREE from 'three'
+import * as BABYLON from 'babylonjs'
 
 export default function createVehicle(interactBody) {
     const chassisBody = new CANNON.Body({mass: 100});
@@ -88,7 +89,7 @@ export default function createVehicle(interactBody) {
             window.location.pathname = "./index.html";
         }
 
-        if(i.body.id == interactBody.id && page == "index.html"){
+        if(i.body.id == interactBody.id && (page == "index.html" || page == "")){
             console.log("test")
             window.location.pathname = "./game.html";
             //window.location.pathname = "./immersions/game.html";
@@ -176,6 +177,15 @@ function getLimitedValue(value, min, max) {
 function initControls(vehicle) {
     const keysPressed = new Set();
     const isKeyDown = (keyCode) => keysPressed.has(keyCode);
+
+    if ("ontouchstart" in document.documentElement)
+    {
+    var leftJoystick = new BABYLON.VirtualJoystick(true)
+    leftJoystick.setJoystickColor("#EC623F")
+    }
+
+    var direction
+    var steeringDirection
     const maxSteeringValue = 0.7;
     const maxForceOnFrontWheels = 70;
     const maxForceOnRearWheels = 65;
@@ -185,6 +195,23 @@ function initControls(vehicle) {
     const liftingForce = new CANNON.Vec3(0, 360, 0);
     const upAxis = new CANNON.Vec3(0, 1, 0);
     let pressedKey;
+
+    if ("ontouchstart" in document.documentElement)
+    {
+    ontouchstart = ontouchmove = ontouchend = (e) => {
+            direction = leftJoystick.deltaPosition.y > 0 ? -1 : leftJoystick.deltaPosition.y < 0 ? 1 : 0;
+            steeringDirection = leftJoystick.deltaPosition.x < 0 ? 1 : leftJoystick.deltaPosition.x > 0 ? -1 : 0;
+
+            if(!leftJoystick.pressed){
+                direction = 0
+                steeringDirection = 0
+            }
+            [0, 1].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnFrontWheels * direction, wheelIndex));
+            [2, 3].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnRearWheels * direction, wheelIndex));
+
+            [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(maxSteeringValue * steeringDirection, wheelIndex));
+    }
+}
 
     onkeydown = onkeyup = (e) => {
         pressedKey = e.key.toUpperCase();
@@ -210,7 +237,7 @@ function initControls(vehicle) {
             keysPressed.add(pressedKey);
         }
 
-        const direction = isKeyDown('S') ? 1 : isKeyDown('Z') ? -1 : 0;
+        direction = isKeyDown('S') ? 1 : isKeyDown('Z') ? -1 : 0;
 
         // const speed = vehicle.chassisBody.velocity.length();
         

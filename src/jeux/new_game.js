@@ -4,6 +4,8 @@ import * as THREE from 'three'
 import * as utils from '../utils.js';
 import createVehicle from '../raycastVehicle.js';
 import {cameraHelper} from '../cameraHelper.js';
+import cannonDebugger from 'cannon-es-debugger'
+
 
 const worldStep = 1/60;
 
@@ -13,6 +15,8 @@ const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
     canvas: document.querySelector('.webgl')
 });
 const gCamera = new THREE.PerspectiveCamera(90, getAspectRatio(), 0.1, 1000);
+
+cannonDebugger(gScene, gWorld.bodies)
 
 /**
  * Sizes
@@ -48,38 +52,29 @@ let pause = false;
 const ambientLight = new THREE.AmbientLight('#ffffff', 1);
 gScene.add(ambientLight);
 
-// const floor = new THREE.Mesh(
-//     new THREE.PlaneGeometry(50, 50),
-//     new THREE.MeshStandardMaterial({color: '#4960A9'})
-// )
-// floor.rotation.x = - Math.PI * 0.5
-// floor.position.y = 0
-// floor.position.z = 2
-// gScene.add(floor)
-
 // Ball fun
-const ballGeometry = new THREE.SphereGeometry(0.5, 32, 32)
+const ballGeometry = new THREE.SphereGeometry(5, 32, 32)
 const ballMaterial = new THREE.MeshBasicMaterial({color: 0xff0000})
 const ballMesh = new THREE.Mesh(ballGeometry, ballMaterial)
 gScene.add(ballMesh)
 
 // Ball phys
-const ballShape = new CANNON.Sphere(0.5)
-const ballBody = new CANNON.Body({mass: 1, shape: ballShape, position: new CANNON.Vec3(-4, 5, 8)})
+const ballShape = new CANNON.Sphere(5)
+const ballBody = new CANNON.Body({mass: 1, shape: ballShape, position: new CANNON.Vec3(-15, 15, 8)})
 gWorld.addBody(ballBody)
 
-//Floor phys
-const floorShape = new CANNON.Cylinder(95, 1, 30)
-const floorBody = new CANNON.Body({
-    mass: 0,
-    shape: floorShape,
-    position: new CANNON.Vec3(0, -10, 0)
-})
-//floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0), Math.PI * 0.5)
-gWorld.addBody(floorBody)
+// //Floor phys
+// const floorShape = new CANNON.Cylinder(95, 1, 30)
+// const floorBody = new CANNON.Body({
+//     mass: 0,
+//     shape: floorShape,
+//     position: new CANNON.Vec3(0, -10, 0)
+// })
+// //floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0), Math.PI * 0.5)
+// gWorld.addBody(floorBody)
 
 // //Axes Helper
-// const axesHelper = new THREE.AxesHelper(2)
+// const axesHelper = new THREE.AxesHzselper(2)
 // gScene.add(axesHelper)
 
 gWorld.broadphase = new CANNON.SAPBroadphase(gWorld);
@@ -97,6 +92,8 @@ let resetVehicle = () => {};
 var gameTp
 var gameTpBody
 
+var island
+
 (async function init() {
 
     const [wheelGLTF, chassisGLTF, gameTpGLTF, islandGLTF] = await Promise.all([
@@ -109,7 +106,7 @@ var gameTpBody
     const wheel = wheelGLTF.scene;
     const chassis = chassisGLTF.scene;
     gameTp = gameTpGLTF.scene;
-    const island = islandGLTF.scene
+    island = islandGLTF.scene.children[0]
 
     gameTp.position.set(7, 1.8, 12)
     gameTp.scale.set(1.7, 1.7, 1.7)
@@ -119,7 +116,22 @@ var gameTpBody
 
 
     island.position.set(0, -62.5, 0)
+    console.log(island)
+    var islandShape = []
+    var islandBody = []
+    for(var i = 0; i< island.children.length; i++){
+        islandShape[i] = CreateTrimesh(island.children[i].geometry)
+        //console.log(island.children[i].position)
+
+        islandBody[i] = new CANNON.Body({mass: 0})
+        islandBody[i].addShape(islandShape[i])
+        gWorld.addBody(islandBody[i])
+        console.log(islandBody)
+    }
+
     gScene.add(island)
+
+    
 
     // Teleport Game phys
     const gameTpShape = new CANNON.Box(new CANNON.Vec3(1.5, 1.5, 1.5))
@@ -303,6 +315,11 @@ window.addEventListener('keyup', (e) => {
 //         wireframeRenderer = gCannonDebugRenderer;
 //     }
 // });
+function CreateTrimesh(geometry) {
+    const vertices = geometry.attributes.position.array;
+    const indices = Object.keys(vertices).map(Number);
+    return new CANNON.Trimesh(vertices, indices);
+}
 
 (function initResolutionController() {
     const maxWidth = window.screen.availWidth;

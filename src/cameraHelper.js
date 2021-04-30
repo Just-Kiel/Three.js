@@ -10,7 +10,7 @@ export const cameraHelper = {
 function initCameraHelper(camera, target, controllerScope) {
     const cameraController = new OrbitControls(camera, controllerScope);
 
-    let cameraId = 0;
+    let cameraId = 1;
 
     cameraHelper.switch = () => {
         switch (cameraId++) {
@@ -23,8 +23,8 @@ function initCameraHelper(camera, target, controllerScope) {
                 break;
             case 1:
                 console.info('Static camera');
-    
-                cameraHelper.update = () => camera.lookAt(target.position);
+                camera.position.set(0, 150, -20);
+                cameraHelper.update = () => {camera.lookAt(target.position)};
                 break;
             case 2:
                 console.info('Hood camera');
