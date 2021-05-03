@@ -10,7 +10,7 @@ export const cameraHelper = {
 function initCameraHelper(camera, target, controllerScope) {
     const cameraController = new OrbitControls(camera, controllerScope);
 
-    let cameraId = 1;
+    let cameraId = 0;
 
     cameraHelper.switch = () => {
         switch (cameraId++) {

@@ -5,10 +5,10 @@ import * as BABYLON from 'babylonjs'
 
 export default function createVehicle(interactBody) {
     const chassisBody = new CANNON.Body({mass: 100});
-    const chassisBaseShape = new CANNON.Box(new CANNON.Vec3(0.9, 0.4, 2.8));
+    const chassisBaseShape = new CANNON.Box(new CANNON.Vec3(0.9, 0.4, 3));
     const chassisTopShape = new CANNON.Box(new CANNON.Vec3(0.9, 0.2, 2.8));
     chassisBody
-        .addShape(chassisBaseShape, new CANNON.Vec3(0, -0.3, 0.1))
+        .addShape(chassisBaseShape, new CANNON.Vec3(0, -0.3, 0.5))
         .addShape(chassisTopShape, new CANNON.Vec3(0, 0.7, 0.8));
 
     const wheelOptions = {
@@ -47,7 +47,7 @@ export default function createVehicle(interactBody) {
 
     const wheelBodies = [];
     const wheelOrientation = new CANNON.Quaternion();
-    wheelOrientation.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI / 2);
+    wheelOrientation.setFromAxisAngle(new CANNON.Vec3(0, 0, 1), Math.PI / 2);
 
     vehicle.wheelInfos.forEach((wheel) => {
         const wheelShape = new CANNON.Cylinder(wheel.radius, wheel.radius, wheel.radius / 2, 8);
@@ -92,7 +92,7 @@ export default function createVehicle(interactBody) {
         if(i.body.id == interactBody.id && (page == "index.html" || page == "")){
             console.log("test")
             window.location.pathname = "./game.html";
-            //window.location.pathname = "./immersions/game.html";
+            //zddzzdzswindow.location.pathname = "./immersions/game.html";
         }
         
         // if(i.body.id == gameTpBody.id){
@@ -118,7 +118,7 @@ export default function createVehicle(interactBody) {
 
     const maxAcceleration = 70;
     const maxSteeringValue = 0.1;
-    const maxBrakeForce = 1;
+    const maxBrakeForce = 4;
     
     const minValues = {
         acceleration: -maxAcceleration,

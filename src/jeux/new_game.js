@@ -16,7 +16,7 @@ const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
 });
 const gCamera = new THREE.PerspectiveCamera(90, getAspectRatio(), 0.1, 1000);
 
-cannonDebugger(gScene, gWorld.bodies)
+cannonDebugger(gScene, gWorld.bodies, {color: "red"})
 
 /**
  * Sizes
@@ -49,8 +49,12 @@ gScene.add(camera)
 let wireframeRenderer = null;
 let pause = false;
 
-const ambientLight = new THREE.AmbientLight('#ffffff', 1);
+const ambientLight = new THREE.AmbientLight('#686868', 1);
 gScene.add(ambientLight);
+
+const pointLight = new THREE.PointLight(0xffffff, 2, 1000)
+pointLight.position.set(50, 100, 150)
+gScene.add(pointLight)
 
 // Ball fun
 const ballGeometry = new THREE.SphereGeometry(5, 32, 32)
@@ -63,15 +67,49 @@ const ballShape = new CANNON.Sphere(5)
 const ballBody = new CANNON.Body({mass: 1, shape: ballShape, position: new CANNON.Vec3(-15, 15, 8)})
 gWorld.addBody(ballBody)
 
-// //Floor phys
-// const floorShape = new CANNON.Cylinder(95, 1, 30)
-// const floorBody = new CANNON.Body({
-//     mass: 0,
-//     shape: floorShape,
-//     position: new CANNON.Vec3(0, -10, 0)
-// })
-// //floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0), Math.PI * 0.5)
-// gWorld.addBody(floorBody)
+//Floor phys
+const floorShape = new CANNON.Cylinder(115, 1, 30)
+const floorBody1 = new CANNON.Body({
+    mass: 0,
+    shape: floorShape,
+    position: new CANNON.Vec3(0, -15, 0)
+})
+const floorBody2 = new CANNON.Body({
+    mass: 0,
+    shape: floorShape,
+    position: new CANNON.Vec3(0, -14.4, 390),
+    quaternion: new CANNON.Quaternion(-0.005, 0, 0.005)
+})
+const floorBody3 = new CANNON.Body({
+    mass: 0,
+    shape: floorShape,
+    position: new CANNON.Vec3(340, -45.4, 630),
+    quaternion: new CANNON.Quaternion(-0.005, 0, 0.005)
+})
+//floorBody2.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 1), Math.PI * 0.004)
+gWorld.addBody(floorBody1)
+gWorld.addBody(floorBody2)
+gWorld.addBody(floorBody3)
+
+const bridgeShape1 = new CANNON.Box(new CANNON.Vec3(20, 1, 110))
+const floorBodyBridge1 = new CANNON.Body({
+    mass: 0,
+    shape: bridgeShape1,
+    position: new CANNON.Vec3(0, -1, 200)
+})
+gWorld.addBody(floorBodyBridge1)
+
+const bridgeShape2 = new CANNON.Box(new CANNON.Vec3(20, 3, 110))
+const floorBodyBridge2 = new CANNON.Body({
+    mass: 0,
+    shape: bridgeShape2,
+    position: new CANNON.Vec3(179, -18.2, 504),
+    quaternion: new CANNON.Quaternion(0.088, 0.4, -0.015)
+})
+// floorBodyBridge2.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI * 1.2)
+// floorBodyBridge2.quaternion.set(0,Math.PI * 0.6,Math.PI * 0.6)
+gWorld.addBody(floorBodyBridge2)
+
 
 // //Axes Helper
 // const axesHelper = new THREE.AxesHzselper(2)
@@ -117,17 +155,18 @@ var island
 
     island.position.set(0, -62.5, 0)
     console.log(island)
-    var islandShape = []
-    var islandBody = []
-    for(var i = 0; i< island.children.length; i++){
-        islandShape[i] = CreateTrimesh(island.children[i].geometry)
-        //console.log(island.children[i].position)
+    // var islandShape = []
+    // var islandBody = []
+    // for(var i = 0; i< island.children.length; i++){
+    //     islandShape[i] = CreateTrimesh(island.children[i].geometry)
+    //     console.log(island.children[i])
 
-        islandBody[i] = new CANNON.Body({mass: 0})
-        islandBody[i].addShape(islandShape[i])
-        gWorld.addBody(islandBody[i])
-        console.log(islandBody)
-    }
+    //     // islandBody[i] = new CANNON.Body({mass: 0})
+    //     // islandBody[i].addShape(islandShape[i])
+    //     // console.log(islandBody[i])
+    //     //gWorld.addBody(islandBody[i])
+    //     // console.log(islandBody)
+    // }
 
     gScene.add(island)
 
@@ -173,6 +212,9 @@ var island
     });
 
     cameraHelper.init(camera, chassis, gRenderer.domElement);
+    //cameraHelper.init(camera, ballMesh, gRenderer.domElement);
+
+    console.log(ballMesh.position)
     
     render();
 })();
