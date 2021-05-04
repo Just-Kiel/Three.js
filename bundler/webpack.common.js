@@ -37,6 +37,11 @@ module.exports = {
             minify: true,
             chunks: ['new_game']
         }),
+        // new HtmlWebpackPlugin({
+        //     filename: 'colormudar.html',
+        //     template: path.resolve(__dirname, '../src/jeux/colormudar.html'),
+        //     minify: true
+        // }),
         new MiniCSSExtractPlugin()
     ],
     module:

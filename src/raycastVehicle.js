@@ -3,16 +3,18 @@ import * as CANNON from 'cannon-es'
 import * as THREE from 'three'
 import * as BABYLON from 'babylonjs'
 
-export default function createVehicle(interactBody) {
+export default function createVehicle() {
     const chassisBody = new CANNON.Body({mass: 100});
-    const chassisBaseShape = new CANNON.Box(new CANNON.Vec3(0.9, 0.4, 3));
-    const chassisTopShape = new CANNON.Box(new CANNON.Vec3(0.9, 0.2, 2.8));
+    const chassisBaseShape = new CANNON.Box(new CANNON.Vec3(4, 1.6, 9.2));
+    const chassisTopShape = new CANNON.Box(new CANNON.Vec3(4, 0.6, 9));
+    const chassisCylinderShape = new CANNON.Cylinder(2, 2, 10)
     chassisBody
-        .addShape(chassisBaseShape, new CANNON.Vec3(0, -0.3, 0.5))
-        .addShape(chassisTopShape, new CANNON.Vec3(0, 0.7, 0.8));
+        //.addShape(chassisCylinderShape, new CANNON.Vec3(0, 0, 0), new CANNON.Quaternion(0.9, 0.1, 0.1))
+        .addShape(chassisBaseShape, new CANNON.Vec3(0, -3, 0.5))
+        .addShape(chassisTopShape, new CANNON.Vec3(0, 0.6, 0.8));
 
     const wheelOptions = {
-        radius: 0.4,
+        radius: 1.4,
         directionLocal: new CANNON.Vec3(0, -1, 0),
         suspensionStiffness: 30,
         suspensionRestLength: 0.3,
@@ -35,14 +37,14 @@ export default function createVehicle(interactBody) {
         indexUpAxis: 1,
     });
     
-    const height = 1;
-    wheelOptions.chassisConnectionPointLocal.set(0.7, -height, -1);
+    const height = 4;
+    wheelOptions.chassisConnectionPointLocal.set(3, -height, -5.5);
     vehicle.addWheel(wheelOptions);
-    wheelOptions.chassisConnectionPointLocal.set(-0.7, -height, -1);
+    wheelOptions.chassisConnectionPointLocal.set(-3, -height, -5.5);
     vehicle.addWheel(wheelOptions);
-    wheelOptions.chassisConnectionPointLocal.set(0.7, -height, 2);
+    wheelOptions.chassisConnectionPointLocal.set(3, -height, 6.5);
     vehicle.addWheel(wheelOptions);
-    wheelOptions.chassisConnectionPointLocal.set(-0.7, -height, 2);
+    wheelOptions.chassisConnectionPointLocal.set(-3, -height, 6.5);
     vehicle.addWheel(wheelOptions);
 
     const wheelBodies = [];
@@ -62,7 +64,6 @@ export default function createVehicle(interactBody) {
     let transform;
     let wheelBody;
     function updateVisuals(chassisMesh, wheelMeshes) {
-        chassisBody.addEventListener('collide', interact)
 
         for (let i = 0; i < this.wheelInfos.length; i++) {
             this.updateWheelTransform(i);
@@ -80,24 +81,30 @@ export default function createVehicle(interactBody) {
         chassisMesh.translateOnAxis(new THREE.Vector3(0, 0, 1), 0.6);
     }
 
-    function interact(i){
-        var path = window.location.pathname;
-        var page = path.split("/").pop();
-        if(i.body.id == interactBody.id && page == "game.html"){
-            console.log("test")
-            //window.location.pathname = "./immersions/index.html";
-            window.location.pathname = "./index.html";
-        }
+    
+    vehicle.detectBody = function(interactBodies){
+        chassisBody.addEventListener('collide', interact)
+        function interact(i){
+            var path = window.location.pathname;
+            var page = path.split("/").pop();
+    
+            if(i.body.id == interactBodies[0].id && (page == "index.html" || page == "")){
+                window.location.pathname = "./game.html";
+                // window.location.pathname = "./immersions/game.html";
+            }
 
-        if(i.body.id == interactBody.id && (page == "index.html" || page == "")){
-            console.log("test")
-            window.location.pathname = "./game.html";
-            //zddzzdzswindow.location.pathname = "./immersions/game.html";
-        }
+            if(page == "game.html"){
+                if(i.body.id == interactBodies[0].id){
+                    // window.location.pathname = "./immersions/index.html";
+                    window.location.pathname = "./index.html";
+                }
+                if(i.body.id == interactBodies[1].id){
+                    console.log("start colormudar")
+                    window.open("https://just-kiel.itch.io/colormudar")
+                }
+            }
         
-        // if(i.body.id == gameTpBody.id){
-        //     window.location.pathname = "./game.html";
-        // }
+        }
     }
 
     function beforeAddToWorld(world, meshes) {
@@ -116,9 +123,9 @@ export default function createVehicle(interactBody) {
         addToWorld(world);
     };
 
-    const maxAcceleration = 70;
-    const maxSteeringValue = 0.1;
-    const maxBrakeForce = 4;
+    const maxAcceleration = 100;
+    const maxSteeringValue = 0.4;
+    const maxBrakeForce = 700;
     
     const minValues = {
         acceleration: -maxAcceleration,
@@ -168,6 +175,8 @@ export default function createVehicle(interactBody) {
     return vehicle;
 }
 
+
+
 function getLimitedValue(value, min, max) {
     return Math.max(min, Math.min(value, max));
 }
@@ -187,9 +196,9 @@ function initControls(vehicle) {
     var direction
     var steeringDirection
     const maxSteeringValue = 0.7;
-    const maxForceOnFrontWheels = 70;
-    const maxForceOnRearWheels = 65;
-    const brakeForce = 1;
+    const maxForceOnFrontWheels = 100;
+    const maxForceOnRearWheels = 95;
+    const brakeForce = 700;
 
     const liftingPoint = new CANNON.Vec3();
     const liftingForce = new CANNON.Vec3(0, 360, 0);

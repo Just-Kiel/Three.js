@@ -28,6 +28,9 @@ function loadResource(url) {
         case 'jpg':
             loader = new THREE.ImageLoader();
             break;
+        case 'png':
+            loader = new THREE.TextureLoader(loadingManager);
+            break;
         case 'glb':
         case 'gltf':
             loader = new GLTFLoader(loadingManager);

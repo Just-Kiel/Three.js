@@ -68,7 +68,6 @@ const floorBody = new CANNON.Body({
     mass: 0,
     shape: floorShape,
 })
-//floorBody.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 0), Math.PI * 0.5)
 gWorld.addBody(floorBody)
 
 // Interactable phys
@@ -92,15 +91,12 @@ gRenderer.setPixelRatio(window.devicePixelRatio);
 gRenderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(gRenderer.domElement);
 
-const vehicleInitialPosition = new THREE.Vector3(0, 15, -2);
+const vehicleInitialPosition = new THREE.Vector3(0, 15, -20);
 const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, -1, 0), -Math.PI / 2);
 let resetVehicle = () => {};
 
 var gameTp
-var gameTpBody
-
-
-
+var gameTpBody;
 
 (async function init() {
 
@@ -115,23 +111,22 @@ var gameTpBody
     gameTp = gameTpGLTF.scene;
 
     gameTp.position.set(7, 1.8, 12)
-    gameTp.scale.set(1.7, 1.7, 1.7)
-    gameTp.rotation.set(Math.PI/2, 0, -Math.PI/4)
+    gameTp.scale.set(11, 11, 11)
 
     gScene.add(gameTp)
 
     // Teleport Game phys
-    const gameTpShape = new CANNON.Box(new CANNON.Vec3(1.5, 1.5, 1.5))
+    const gameTpShape = new CANNON.Box(new CANNON.Vec3(11, 11, 11))
     gameTpBody = new CANNON.Body({
         mass: 1000,
-        position: new CANNON.Vec3(7, 1.8, 12),
+        position: new CANNON.Vec3(7, 10, 12),
         shape: gameTpShape
     })
     gWorld.addBody(gameTpBody)
 
     setMaterials(wheel, chassis);
-    chassis.scale.set(0.5, 0.5, 0.5);
-    wheel.scale.set(0.3, 0.3, 0.3)
+    chassis.scale.set(2, 2, 2);
+    wheel.scale.set(1.2, 1.2, 1.2)
 
     const meshes = {
         wheel_front_r: wheel,
@@ -143,6 +138,8 @@ var gameTpBody
 
     const vehicle = createVehicle(gameTpBody);
     vehicle.addToWorld(gWorld, meshes);
+    var interactable = [gameTpBody]
+    vehicle.detectBody(interactable)
 
     resetVehicle = () => {
         vehicle.chassisBody.position.copy(vehicleInitialPosition);

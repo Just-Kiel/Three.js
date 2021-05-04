@@ -18,7 +18,7 @@ function initCameraHelper(camera, target, controllerScope) {
                 console.info('Chase camera');
                 
                 target.remove(camera);
-                camera.fov = 50;
+                camera.fov = 70;
                 cameraHelper.update = initChaseCamera(camera, target);
                 break;
             case 1:
@@ -31,7 +31,7 @@ function initCameraHelper(camera, target, controllerScope) {
     
                 target.add(camera);
                 camera.position.set(0, 1.5, 0);
-                camera.rotation.set(0, 0, 0);
+                camera.rotation.set(0, 3, 0);
                 camera.fov = 70;
                 cameraHelper.update = () => {};
                 break;
@@ -50,7 +50,7 @@ function initChaseCamera(camera, target) {
     const cameraMountPosition = new THREE.Vector3();
     const cameraLookPosition = new THREE.Vector3();
     const chaseCameraMountPositionHelper = new THREE.Object3D();
-    chaseCameraMountPositionHelper.position.set(0, 10, -25);
+    chaseCameraMountPositionHelper.position.set(-50, 30, -15);
     target.add(chaseCameraMountPositionHelper);
 
     return () => {

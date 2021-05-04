@@ -16,7 +16,7 @@ const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
 });
 const gCamera = new THREE.PerspectiveCamera(90, getAspectRatio(), 0.1, 1000);
 
-cannonDebugger(gScene, gWorld.bodies, {color: "red"})
+// cannonDebugger(gScene, gWorld.bodies, {color: "red"})
 
 /**
  * Sizes
@@ -68,7 +68,7 @@ const ballBody = new CANNON.Body({mass: 1, shape: ballShape, position: new CANNO
 gWorld.addBody(ballBody)
 
 //Floor phys
-const floorShape = new CANNON.Cylinder(115, 1, 30)
+const floorShape = new CANNON.Cylinder(120, 1, 30)
 const floorBody1 = new CANNON.Body({
     mass: 0,
     shape: floorShape,
@@ -77,7 +77,7 @@ const floorBody1 = new CANNON.Body({
 const floorBody2 = new CANNON.Body({
     mass: 0,
     shape: floorShape,
-    position: new CANNON.Vec3(0, -14.4, 390),
+    position: new CANNON.Vec3(0, -15.8, 390),
     quaternion: new CANNON.Quaternion(-0.005, 0, 0.005)
 })
 const floorBody3 = new CANNON.Body({
@@ -99,7 +99,7 @@ const floorBodyBridge1 = new CANNON.Body({
 })
 gWorld.addBody(floorBodyBridge1)
 
-const bridgeShape2 = new CANNON.Box(new CANNON.Vec3(20, 3, 110))
+const bridgeShape2 = new CANNON.Box(new CANNON.Vec3(20, 3, 106))
 const floorBodyBridge2 = new CANNON.Body({
     mass: 0,
     shape: bridgeShape2,
@@ -117,28 +117,30 @@ gWorld.addBody(floorBodyBridge2)
 
 gWorld.broadphase = new CANNON.SAPBroadphase(gWorld);
 gWorld.gravity.set(0, -10, 0);
-gWorld.defaultContactMaterial.friction = 0;
+gWorld.defaultContactMaterial.friction = 1;
 
 gRenderer.setPixelRatio(window.devicePixelRatio);
 gRenderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(gRenderer.domElement);
 
-const vehicleInitialPosition = new THREE.Vector3(0, 15, -2);
-const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, -1, 0), -Math.PI / 2);
+const vehicleInitialPosition = new THREE.Vector3(400, 15, 600);
+const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI / 2);
 let resetVehicle = () => {};
 
 var gameTp
 var gameTpBody
+var gameTpSize = 11
 
 var island
 
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF, gameTpGLTF, islandGLTF] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, gameTpGLTF, islandGLTF, colormudarPNG] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
         utils.loadResource('model/teleport_game.gltf'),
-        utils.loadResource('model/Floating_island_all.gltf')
+        utils.loadResource('model/Floating_island_all.gltf'),
+        utils.loadResource('image/colormudar_startscreen.png')
     ]);
 
     const wheel = wheelGLTF.scene;
@@ -146,44 +148,53 @@ var island
     gameTp = gameTpGLTF.scene;
     island = islandGLTF.scene.children[0]
 
-    gameTp.position.set(7, 1.8, 12)
-    gameTp.scale.set(1.7, 1.7, 1.7)
-    gameTp.rotation.set(Math.PI/2, 0, -Math.PI/4)
+    gameTp.position.set(7, 3.8, 12)
+    gameTp.scale.set(gameTpSize, gameTpSize, gameTpSize)
+    gameTp.rotation.set(Math.PI/2, 0, 0)
 
     gScene.add(gameTp)
 
 
     island.position.set(0, -62.5, 0)
-    console.log(island)
-    // var islandShape = []
-    // var islandBody = []
-    // for(var i = 0; i< island.children.length; i++){
-    //     islandShape[i] = CreateTrimesh(island.children[i].geometry)
-    //     console.log(island.children[i])
-
-    //     // islandBody[i] = new CANNON.Body({mass: 0})
-    //     // islandBody[i].addShape(islandShape[i])
-    //     // console.log(islandBody[i])
-    //     //gWorld.addBody(islandBody[i])
-    //     // console.log(islandBody)
-    // }
-
     gScene.add(island)
 
     
 
     // Teleport Game phys
-    const gameTpShape = new CANNON.Box(new CANNON.Vec3(1.5, 1.5, 1.5))
+    //pas de cylinder bc les collisions sont pas bonnes
+    const gameTpShape = new CANNON.Box(new CANNON.Vec3(gameTpSize, gameTpSize, gameTpSize))
     gameTpBody = new CANNON.Body({
         mass: 1000,
-        position: new CANNON.Vec3(7, 1.8, 12),
+        position: new CANNON.Vec3(340, -10, 630),
         shape: gameTpShape
     })
     gWorld.addBody(gameTpBody)
 
+    // Plane First Game (ColorMudar)
+    const colormudarGeometry = new THREE.PlaneGeometry(19, 11)
+    const colormudar = new THREE.Mesh(
+        colormudarGeometry,
+        new THREE.MeshBasicMaterial({map: colormudarPNG})
+    )
+    colormudar.rotation.set(-Math.PI*0.5, 0, -Math.PI*0.5)
+    colormudar.position.y = 0.01
+    colormudar.position.x = 30
+    gScene.add(colormudar)
+
+    // ColorMudar phys
+    const colormudarShape = new CANNON.Box(new CANNON.Vec3(5, 1, 9))
+    const colormudarBody = new CANNON.Body({
+        mass: 0,
+        position: new CANNON.Vec3(30, 1, 0),
+        shape: colormudarShape
+    })
+    gWorld.addBody(colormudarBody)
+
+
+
     setMaterials(wheel, chassis);
-    chassis.scale.set(0.5, 0.5, 0.5);
-    wheel.scale.set(0.3, 0.3, 0.3)
+    chassis.scale.set(2, 2, 2);
+    wheel.scale.set(1.2, 1.2, 1.2)
 
     const meshes = {
         wheel_front_r: wheel,
@@ -193,8 +204,10 @@ var island
         chassis,
     };
 
-    const vehicle = createVehicle(gameTpBody);
+    const vehicle = createVehicle();
     vehicle.addToWorld(gWorld, meshes);
+    var interactable = [gameTpBody, colormudarBody]
+    vehicle.detectBody(interactable)
 
     resetVehicle = () => {
         vehicle.chassisBody.position.copy(vehicleInitialPosition);
