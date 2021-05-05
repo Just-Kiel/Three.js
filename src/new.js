@@ -4,6 +4,7 @@ import * as THREE from 'three'
 import * as utils from './utils.js';
 import createVehicle from './raycastVehicle.js';
 import {cameraHelper} from './cameraHelper.js';
+import cannonDebugger from 'cannon-es-debugger'
 
 const worldStep = 1/60;
 
@@ -13,6 +14,8 @@ const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
     canvas: document.querySelector('.webgl')
 });
 const gCamera = new THREE.PerspectiveCamera(90, getAspectRatio(), 0.1, 1000);
+
+cannonDebugger(gScene, gWorld.bodies, {color: "red"})
 
 /**
  * Sizes
@@ -45,16 +48,15 @@ gScene.add(camera)
 let wireframeRenderer = null;
 let pause = false;
 
-const ambientLight = new THREE.AmbientLight('#ffffff', 1);
+
+const ambientLight = new THREE.AmbientLight('#686868', 1);
 gScene.add(ambientLight);
-// Object
-const geometry = new THREE.BoxGeometry(1, 1, 1)
-const material = new THREE.MeshBasicMaterial({ color: 0xff0000 })
-const mesh = new THREE.Mesh(geometry, material)
-gScene.add(mesh)
+const pointLight = new THREE.PointLight(0xffffff, 2, 1000)
+pointLight.position.set(50, 300, 150)
+gScene.add(pointLight)
 
 const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(50, 50),
+    new THREE.PlaneGeometry(400, 400),
     new THREE.MeshStandardMaterial({color: '#4960A9'})
 )
 floor.rotation.x = - Math.PI * 0.5
@@ -63,21 +65,12 @@ floor.position.z = 2
 gScene.add(floor)
 
 //Floor phys
-const floorShape = new CANNON.Cylinder(45, 45, 1)
+const floorShape = new CANNON.Box(new CANNON.Vec3(200, 1, 200))
 const floorBody = new CANNON.Body({
     mass: 0,
     shape: floorShape,
 })
 gWorld.addBody(floorBody)
-
-// Interactable phys
-const testShape = new CANNON.Box(new CANNON.Vec3(0.5, 0.5, 0.5))
-const testBody = new CANNON.Body({
-    mass: 2,
-    position: new CANNON.Vec3(0, 3, 2),
-    shape: testShape
-})
-gWorld.addBody(testBody)
 
 //Axes Helper
 const axesHelper = new THREE.AxesHelper(2)
@@ -85,29 +78,34 @@ gScene.add(axesHelper)
 
 gWorld.broadphase = new CANNON.SAPBroadphase(gWorld);
 gWorld.gravity.set(0, -10, 0);
-gWorld.defaultContactMaterial.friction = 0;
+gWorld.defaultContactMaterial.friction = 1;
 
 gRenderer.setPixelRatio(window.devicePixelRatio);
 gRenderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(gRenderer.domElement);
 
 const vehicleInitialPosition = new THREE.Vector3(0, 15, -20);
-const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, -1, 0), -Math.PI / 2);
+// const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, -1, 0), -Math.PI / 2);
+const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI / 2);
 let resetVehicle = () => {};
 
 var gameTp
 var gameTpBody;
 
+var pontGallery, pontGalleryBody
+
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF, gameTpGLTF] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, gameTpGLTF, pontGalleryGLTF] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
         utils.loadResource('model/teleport_game.gltf'),
+        utils.loadResource('model/Pont.gltf'),
     ]);
 
     const wheel = wheelGLTF.scene;
     const chassis = chassisGLTF.scene;
+    
     gameTp = gameTpGLTF.scene;
 
     gameTp.position.set(7, 1.8, 12)
@@ -115,12 +113,39 @@ var gameTpBody;
 
     gScene.add(gameTp)
 
+    // Pont vers la galerie
+    pontGallery = pontGalleryGLTF.scene
+    pontGallery.scale.set(3.3, 3.3, 3.3)
+    pontGallery.rotation.set(0, - Math.PI*0.3, 0)
+    pontGallery.position.set(-295, 1, 255)
+    gScene.add(pontGallery)
+
+    const bridgeShape = new CANNON.Box(new CANNON.Vec3(22, 1, 140))
+    pontGalleryBody = new CANNON.Body({
+        mass: 0,
+        shape: bridgeShape,
+        position: new CANNON.Vec3(-295, 1, 255) ,
+        quaternion: new CANNON.Quaternion(0, -0.43, 0)
+    })
+    gWorld.addBody(pontGalleryBody)
+
+    // Collider vers galerie
+    const collideShape = new CANNON.Box(new CANNON.Vec3(22, 10, 50))
+    const collideGallery = new CANNON.Body({
+        mass:1000,
+        shape: collideShape,
+        position: new CANNON.Vec3(-295, 15, 255),
+        quaternion: new CANNON.Quaternion(0, -0.47, 0)
+    })
+    gWorld.addBody(collideGallery)
+
     // Teleport Game phys
     const gameTpShape = new CANNON.Box(new CANNON.Vec3(11, 11, 11))
     gameTpBody = new CANNON.Body({
         mass: 1000,
-        position: new CANNON.Vec3(7, 10, 12),
-        shape: gameTpShape
+        position: new CANNON.Vec3(100, 22, 150),
+        shape: gameTpShape,
+        quaternion: new CANNON.Quaternion(1, 0, -0.5)
     })
     gWorld.addBody(gameTpBody)
 
@@ -138,7 +163,7 @@ var gameTpBody;
 
     const vehicle = createVehicle(gameTpBody);
     vehicle.addToWorld(gWorld, meshes);
-    var interactable = [gameTpBody]
+    var interactable = [gameTpBody, collideGallery]
     vehicle.detectBody(interactable)
 
     resetVehicle = () => {
@@ -180,10 +205,8 @@ function render() {
     cameraHelper.update();
 
     gameTp.position.copy(gameTpBody.position)
+    gameTp.quaternion.copy(gameTpBody.quaternion)
 
-    mesh.position.copy(testBody.position)
-
-    //camera.lookAt(mesh.position)
     gRenderer.render(gScene, camera);
 
     requestAnimationFrame(render);

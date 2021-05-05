@@ -50,7 +50,7 @@ function initChaseCamera(camera, target) {
     const cameraMountPosition = new THREE.Vector3();
     const cameraLookPosition = new THREE.Vector3();
     const chaseCameraMountPositionHelper = new THREE.Object3D();
-    chaseCameraMountPositionHelper.position.set(-50, 30, -15);
+    chaseCameraMountPositionHelper.position.set(-30, 25, -5);
     target.add(chaseCameraMountPositionHelper);
 
     return () => {

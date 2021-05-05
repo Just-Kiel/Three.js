@@ -6,11 +6,11 @@ const path = require('path')
 module.exports = {
     entry: {
         main: path.resolve(__dirname, '../src/app.js'),
-        game: path.resolve(__dirname, '../src/jeux/game.js'),
         test: path.resolve(__dirname, '../src/test.js'),
         vehicle: path.resolve(__dirname, '../src/vehicle.js'),
         new: path.resolve(__dirname, '../src/new.js'),
-        new_game: path.resolve(__dirname, '../src/jeux/new_game.js')
+        new_game: path.resolve(__dirname, '../src/jeux/new_game.js'),
+        gallery: path.resolve(__dirname, '../src/galerie/gallery.js')
     },
     output:
     {
@@ -37,11 +37,12 @@ module.exports = {
             minify: true,
             chunks: ['new_game']
         }),
-        // new HtmlWebpackPlugin({
-        //     filename: 'colormudar.html',
-        //     template: path.resolve(__dirname, '../src/jeux/colormudar.html'),
-        //     minify: true
-        // }),
+        new HtmlWebpackPlugin({
+            filename: 'gallery.html',
+            template: path.resolve(__dirname, '../src/galerie/gallery.html'),
+            minify: true,
+            chunks: ['gallery']
+        }),
         new MiniCSSExtractPlugin()
     ],
     module:

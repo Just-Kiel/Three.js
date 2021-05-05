@@ -6,19 +6,19 @@ import * as BABYLON from 'babylonjs'
 export default function createVehicle() {
     const chassisBody = new CANNON.Body({mass: 100});
     const chassisBaseShape = new CANNON.Box(new CANNON.Vec3(4, 1.6, 9.2));
-    const chassisTopShape = new CANNON.Box(new CANNON.Vec3(4, 0.6, 9));
+    const chassisTopShape = new CANNON.Box(new CANNON.Vec3(4, 1.6, 9));
     const chassisCylinderShape = new CANNON.Cylinder(2, 2, 10)
     chassisBody
         //.addShape(chassisCylinderShape, new CANNON.Vec3(0, 0, 0), new CANNON.Quaternion(0.9, 0.1, 0.1))
-        .addShape(chassisBaseShape, new CANNON.Vec3(0, -3, 0.5))
-        .addShape(chassisTopShape, new CANNON.Vec3(0, 0.6, 0.8));
+        .addShape(chassisBaseShape, new CANNON.Vec3(0, -2.5, 0.5))
+        .addShape(chassisTopShape, new CANNON.Vec3(0, 1, 0.8));
 
     const wheelOptions = {
         radius: 1.4,
         directionLocal: new CANNON.Vec3(0, -1, 0),
         suspensionStiffness: 30,
         suspensionRestLength: 0.3,
-        frictionSlip: 0.4,
+        frictionSlip: 1,
         dampingRelaxation: 2.3,
         dampingCompression: 4.4,
         maxSuspensionForce: 100000,
@@ -87,10 +87,16 @@ export default function createVehicle() {
         function interact(i){
             var path = window.location.pathname;
             var page = path.split("/").pop();
-    
-            if(i.body.id == interactBodies[0].id && (page == "index.html" || page == "")){
-                window.location.pathname = "./game.html";
-                // window.location.pathname = "./immersions/game.html";
+            
+            if(page == "index.html" || page == ""){
+                if(i.body.id == interactBodies[0].id){
+                    window.location.pathname = "./game.html";
+                    // window.location.pathname = "./immersions/game.html";
+                }
+                if(i.body.id == interactBodies[1].id){
+                    window.location.pathname = "./gallery.html";
+                    // window.location.pathname = "./immersions/gallery.html";
+                }
             }
 
             if(page == "game.html"){
@@ -102,6 +108,15 @@ export default function createVehicle() {
                     console.log("start colormudar")
                     window.open("https://just-kiel.itch.io/colormudar")
                 }
+                if(i.body.id == interactBodies[2].id){
+                    console.log("start fear of daemon")
+                    window.open("https://kangourou-gang.itch.io/fear-of-daemon")
+                }
+                if(i.body.id == interactBodies[3].id){
+                    console.log("start Boom boom escape")
+                    window.open("https://valentin-prieto.itch.io/boom-boom-escape")
+                }
+
             }
         
         }

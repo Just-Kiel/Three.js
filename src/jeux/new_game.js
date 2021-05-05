@@ -80,13 +80,12 @@ const floorBody2 = new CANNON.Body({
     position: new CANNON.Vec3(0, -15.8, 390),
     quaternion: new CANNON.Quaternion(-0.005, 0, 0.005)
 })
+const floorShapeBig = new CANNON.Cylinder(170, 1, 30)
 const floorBody3 = new CANNON.Body({
     mass: 0,
-    shape: floorShape,
+    shape: floorShapeBig,
     position: new CANNON.Vec3(340, -45.4, 630),
-    quaternion: new CANNON.Quaternion(-0.005, 0, 0.005)
 })
-//floorBody2.quaternion.setFromAxisAngle(new CANNON.Vec3(-1, 0, 1), Math.PI * 0.004)
 gWorld.addBody(floorBody1)
 gWorld.addBody(floorBody2)
 gWorld.addBody(floorBody3)
@@ -95,7 +94,7 @@ const bridgeShape1 = new CANNON.Box(new CANNON.Vec3(20, 1, 110))
 const floorBodyBridge1 = new CANNON.Body({
     mass: 0,
     shape: bridgeShape1,
-    position: new CANNON.Vec3(0, -1, 200)
+    position: new CANNON.Vec3(0, -1.8, 200)
 })
 gWorld.addBody(floorBodyBridge1)
 
@@ -106,8 +105,6 @@ const floorBodyBridge2 = new CANNON.Body({
     position: new CANNON.Vec3(179, -18.2, 504),
     quaternion: new CANNON.Quaternion(0.088, 0.4, -0.015)
 })
-// floorBodyBridge2.quaternion.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), Math.PI * 1.2)
-// floorBodyBridge2.quaternion.set(0,Math.PI * 0.6,Math.PI * 0.6)
 gWorld.addBody(floorBodyBridge2)
 
 
@@ -123,7 +120,7 @@ gRenderer.setPixelRatio(window.devicePixelRatio);
 gRenderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(gRenderer.domElement);
 
-const vehicleInitialPosition = new THREE.Vector3(400, 15, 600);
+const vehicleInitialPosition = new THREE.Vector3(440, 15, 650);
 const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI / 2);
 let resetVehicle = () => {};
 
@@ -131,16 +128,22 @@ var gameTp
 var gameTpBody
 var gameTpSize = 11
 
+var colormudarBody, colormudar
+var fearOfDaemon, fearOfDaemonBody
+var boomBoomEscape, boomBoomEscapeBody
+
 var island
 
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF, gameTpGLTF, islandGLTF, colormudarPNG] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, gameTpGLTF, islandGLTF, colormudarPNG, fearOfDaemonPNG, boomBoomEscapePNG] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
         utils.loadResource('model/teleport_game.gltf'),
         utils.loadResource('model/Floating_island_all.gltf'),
-        utils.loadResource('image/colormudar_startscreen.png')
+        utils.loadResource('image/colormudar_startscreen.png'),
+        utils.loadResource('image/fearOfDaemon_startscreen.png'),
+        utils.loadResource('image/boomBoomEscape_startscreen.png'),
     ]);
 
     const wheel = wheelGLTF.scene;
@@ -165,32 +168,61 @@ var island
     const gameTpShape = new CANNON.Box(new CANNON.Vec3(gameTpSize, gameTpSize, gameTpSize))
     gameTpBody = new CANNON.Body({
         mass: 1000,
-        position: new CANNON.Vec3(340, -10, 630),
-        shape: gameTpShape
+        position: new CANNON.Vec3(450, -10, 670),
+        shape: gameTpShape,
+        quaternion: new CANNON.Quaternion(0, -1, -1)
     })
     gWorld.addBody(gameTpBody)
 
     // Plane First Game (ColorMudar)
-    const colormudarGeometry = new THREE.PlaneGeometry(19, 11)
-    const colormudar = new THREE.Mesh(
-        colormudarGeometry,
+    const gameGeometry = new THREE.PlaneGeometry(152, 88)
+    colormudar = new THREE.Mesh(
+        gameGeometry,
         new THREE.MeshBasicMaterial({map: colormudarPNG})
     )
-    colormudar.rotation.set(-Math.PI*0.5, 0, -Math.PI*0.5)
-    colormudar.position.y = 0.01
-    colormudar.position.x = 30
+    colormudar.rotation.set(-Math.PI*0.5, 0, -Math.PI*1.2)
+    colormudar.position.set(330, -30, 680)
     gScene.add(colormudar)
 
     // ColorMudar phys
-    const colormudarShape = new CANNON.Box(new CANNON.Vec3(5, 1, 9))
-    const colormudarBody = new CANNON.Body({
+    const gameShape = new CANNON.Box(new CANNON.Vec3(76, 40, 2))
+    colormudarBody = new CANNON.Body({
         mass: 0,
-        position: new CANNON.Vec3(30, 1, 0),
-        shape: colormudarShape
+        position: new CANNON.Vec3(330, -28, 680),
+        shape: gameShape,
     })
     gWorld.addBody(colormudarBody)
 
 
+    fearOfDaemon = new THREE.Mesh(
+        gameGeometry,
+        new THREE.MeshBasicMaterial({map: fearOfDaemonPNG})
+    )
+    fearOfDaemon.position.set(-25, 1.5, 410)
+    fearOfDaemon.rotation.set(-Math.PI*0.5, 0, -Math.PI*1.3)
+    gScene.add(fearOfDaemon)
+
+    // Fear of Daemon phys
+    fearOfDaemonBody = new CANNON.Body({
+        mass: 0,
+        shape: gameShape,
+    })
+    gWorld.addBody(fearOfDaemonBody)
+
+    boomBoomEscape = new THREE.Mesh(
+        gameGeometry,
+        new THREE.MeshBasicMaterial({map: boomBoomEscapePNG})
+    )
+    boomBoomEscape.position.set(-15, 0.8, -35)
+    boomBoomEscape.rotation.set(-Math.PI*0.5, 0, -Math.PI*2)
+    gScene.add(boomBoomEscape)
+
+    // Boom Boom Escape phys
+    boomBoomEscapeBody = new CANNON.Body({
+        mass: 0,
+        shape: gameShape,
+    })
+    gWorld.addBody(boomBoomEscapeBody)
 
     setMaterials(wheel, chassis);
     chassis.scale.set(2, 2, 2);
@@ -206,7 +238,7 @@ var island
 
     const vehicle = createVehicle();
     vehicle.addToWorld(gWorld, meshes);
-    var interactable = [gameTpBody, colormudarBody]
+    var interactable = [gameTpBody, colormudarBody, fearOfDaemonBody, boomBoomEscapeBody]
     vehicle.detectBody(interactable)
 
     resetVehicle = () => {
@@ -225,7 +257,6 @@ var island
     });
 
     cameraHelper.init(camera, chassis, gRenderer.domElement);
-    //cameraHelper.init(camera, ballMesh, gRenderer.domElement);
 
     console.log(ballMesh.position)
     
@@ -251,6 +282,14 @@ function render() {
     cameraHelper.update();
 
     gameTp.position.copy(gameTpBody.position)
+    gameTp.quaternion.copy(gameTpBody.quaternion)
+
+    colormudarBody.quaternion.copy(colormudar.quaternion)
+    fearOfDaemonBody.quaternion.copy(fearOfDaemon.quaternion)
+    fearOfDaemonBody.position.copy(fearOfDaemon.position)
+
+    boomBoomEscapeBody.quaternion.copy(boomBoomEscape.quaternion)
+    boomBoomEscapeBody.position.copy(boomBoomEscape.position)
 
     ballMesh.position.copy(ballBody.position)
 
