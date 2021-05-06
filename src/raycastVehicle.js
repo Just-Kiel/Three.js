@@ -10,7 +10,7 @@ export default function createVehicle() {
     const chassisCylinderShape = new CANNON.Cylinder(2, 2, 10)
     chassisBody
         //.addShape(chassisCylinderShape, new CANNON.Vec3(0, 0, 0), new CANNON.Quaternion(0.9, 0.1, 0.1))
-        .addShape(chassisBaseShape, new CANNON.Vec3(0, -2.5, 0.5))
+        .addShape(chassisBaseShape, new CANNON.Vec3(0, -2, 0.5))
         .addShape(chassisTopShape, new CANNON.Vec3(0, 1, 0.8));
 
     const wheelOptions = {
@@ -138,7 +138,7 @@ export default function createVehicle() {
         addToWorld(world);
     };
 
-    const maxAcceleration = 100;
+    const maxAcceleration = 1000;
     const maxSteeringValue = 0.4;
     const maxBrakeForce = 700;
     
@@ -202,6 +202,9 @@ function initControls(vehicle) {
     const keysPressed = new Set();
     const isKeyDown = (keyCode) => keysPressed.has(keyCode);
 
+    var path = window.location.pathname;
+    var page = path.split("/").pop();
+
     if ("ontouchstart" in document.documentElement)
     {
     var leftJoystick = new BABYLON.VirtualJoystick(true)
@@ -211,9 +214,10 @@ function initControls(vehicle) {
     var direction
     var steeringDirection
     const maxSteeringValue = 0.7;
-    const maxForceOnFrontWheels = 100;
-    const maxForceOnRearWheels = 95;
-    const brakeForce = 700;
+    const joystickMaxSteeringValue = 0.9;
+    const maxForceOnFrontWheels = 200;
+    const maxForceOnRearWheels = 125;
+    const brakeForce = 400;
 
     const liftingPoint = new CANNON.Vec3();
     const liftingForce = new CANNON.Vec3(0, 360, 0);
@@ -223,8 +227,13 @@ function initControls(vehicle) {
     if ("ontouchstart" in document.documentElement)
     {
     ontouchstart = ontouchmove = ontouchend = (e) => {
-            direction = leftJoystick.deltaPosition.y > 0 ? -1 : leftJoystick.deltaPosition.y < 0 ? 1 : 0;
-            steeringDirection = leftJoystick.deltaPosition.x < 0 ? 1 : leftJoystick.deltaPosition.x > 0 ? -1 : 0;
+            direction = leftJoystick.deltaPosition.y > 0 ? -2 : leftJoystick.deltaPosition.y < 0 ? 3 : 0;
+
+            if(page != "gallery.html"){
+                steeringDirection = leftJoystick.deltaPosition.x < 0 ? 1 : leftJoystick.deltaPosition.x > 0 ? -1 : 0;
+            } else {
+                steeringDirection = 0
+            }
 
             if(!leftJoystick.pressed){
                 direction = 0
@@ -233,7 +242,7 @@ function initControls(vehicle) {
             [0, 1].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnFrontWheels * direction, wheelIndex));
             [2, 3].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnRearWheels * direction, wheelIndex));
 
-            [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(maxSteeringValue * steeringDirection, wheelIndex));
+            [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(joystickMaxSteeringValue * steeringDirection, wheelIndex));
     }
 }
 
@@ -269,11 +278,16 @@ function initControls(vehicle) {
         [2, 3].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnRearWheels * direction, wheelIndex));
         
 
-        const steeringDirection = isKeyDown('Q') ? 1 : isKeyDown('D') ? -1 : 0;
+        if(page != "gallery.html"){
+            console.log('chocola')
+            steeringDirection = isKeyDown('Q') ? 1 : isKeyDown('D') ? -1 : 0;
+        } else {
+            steeringDirection = 0
+        }
         [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(maxSteeringValue * steeringDirection, wheelIndex));
 
         const brakeMultiplier = Number(isKeyDown(' '));
-        [0, 1].forEach(wheelIndex => vehicle.setBrake(brakeForce * brakeMultiplier, wheelIndex));
+        [0, 1].forEach(wheelIndex => vehicle.setBrake(brakeForce * brakeMultiplier *0.5, wheelIndex));
 
     };
 }

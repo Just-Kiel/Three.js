@@ -224,7 +224,7 @@ var island
     })
     gWorld.addBody(boomBoomEscapeBody)
 
-    setMaterials(wheel, chassis);
+    // setMaterials(wheel, chassis);
     chassis.scale.set(2, 2, 2);
     wheel.scale.set(1.2, 1.2, 1.2)
 
@@ -256,7 +256,7 @@ var island
         gScene.add(meshes[meshName]);
     });
 
-    cameraHelper.init(camera, chassis, gRenderer.domElement);
+    cameraHelper.init(camera, chassis, gRenderer.domElement, 0);
 
     console.log(ballMesh.position)
     
@@ -298,55 +298,55 @@ function render() {
     requestAnimationFrame(render);
 }
 
-function setMaterials(wheel, chassis) {
-    const baseMaterial = new THREE.MeshLambertMaterial({color: 0x111111});
-    const fenderMaterial = new THREE.MeshBasicMaterial({color: 0x050505});
-    const grillMaterial = new THREE.MeshBasicMaterial({color: 0x222222});
-    const chromeMaterial = new THREE.MeshPhongMaterial({color: 0xCCCCCC});
-    const glassMaterial = new THREE.MeshPhongMaterial({color: 0x1155FF});
-    const tailLightMaterial = new THREE.MeshPhongMaterial({color: 0x550000});
-    const headLightMaterial = new THREE.MeshPhongMaterial({color: 0xFFFFBB});
-    const wheelMaterial = new THREE.MeshBasicMaterial();
-    wheelMaterial.alphaTest = 0.5;
-    wheelMaterial.skinning = true;
+// function setMaterials(wheel, chassis) {
+//     const baseMaterial = new THREE.MeshLambertMaterial({color: 0x111111});
+//     const fenderMaterial = new THREE.MeshBasicMaterial({color: 0x050505});
+//     const grillMaterial = new THREE.MeshBasicMaterial({color: 0x222222});
+//     const chromeMaterial = new THREE.MeshPhongMaterial({color: 0xCCCCCC});
+//     const glassMaterial = new THREE.MeshPhongMaterial({color: 0x1155FF});
+//     const tailLightMaterial = new THREE.MeshPhongMaterial({color: 0x550000});
+//     const headLightMaterial = new THREE.MeshPhongMaterial({color: 0xFFFFBB});
+//     const wheelMaterial = new THREE.MeshBasicMaterial();
+//     wheelMaterial.alphaTest = 0.5;
+//     wheelMaterial.skinning = true;
     
-    wheel.traverse((childMesh) => {
-        if (childMesh.material) {
-            wheelMaterial.map = childMesh.material.map;
+//     wheel.traverse((childMesh) => {
+//         if (childMesh.material) {
+//             wheelMaterial.map = childMesh.material.map;
 
-            childMesh.material = wheelMaterial;
-            childMesh.material.needsUpdate = true;
-        }
-    });
+//             childMesh.material = wheelMaterial;
+//             childMesh.material.needsUpdate = true;
+//         }
+//     });
 
-    chassis.traverse((childMesh) => {
-        if (childMesh.material) {
-            childMesh.material = getChassisMaterialByPartName(childMesh.name);
-        }
-    });
+//     chassis.traverse((childMesh) => {
+//         if (childMesh.material) {
+//             childMesh.material = getChassisMaterialByPartName(childMesh.name);
+//         }
+//     });
 
-    function getChassisMaterialByPartName(partName) {
-        switch (partName) {
-            case 'front_bumper':
-            case 'rear_bumper':
-            case 'front_fender':
-            case 'rear_fender':
-                return fenderMaterial;
-            case 'grill':
-                return grillMaterial;
-            case 'brushGuard':
-                return chromeMaterial;
-            case 'glass':
-                return glassMaterial;
-            case 'tail_lights':
-                return tailLightMaterial;
-            case 'head_lights':
-                return headLightMaterial;
-            default:
-                return baseMaterial;
-        };
-    }
-}
+//     function getChassisMaterialByPartName(partName) {
+//         switch (partName) {
+//             case 'front_bumper':
+//             case 'rear_bumper':
+//             case 'front_fender':
+//             case 'rear_fender':
+//                 return fenderMaterial;
+//             case 'grill':
+//                 return grillMaterial;
+//             case 'brushGuard':
+//                 return chromeMaterial;
+//             case 'glass':
+//                 return glassMaterial;
+//             case 'tail_lights':
+//                 return tailLightMaterial;
+//             case 'head_lights':
+//                 return headLightMaterial;
+//             default:
+//                 return baseMaterial;
+//         };
+//     }
+// }
 
 function getAspectRatio() {
     return window.innerWidth / window.innerHeight;

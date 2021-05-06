@@ -14,6 +14,7 @@ const loadingManager = new THREE.LoadingManager(
     () =>
     {
         console.log('charged')
+        document.getElementById("load").style.cursor = "pointer"
         document.getElementById("load").onclick = function(){
         document.getElementById("load").classList.add("hidden");
         }
@@ -34,6 +35,9 @@ function loadResource(url) {
         case 'glb':
         case 'gltf':
             loader = new GLTFLoader(loadingManager);
+            break;
+        case 'json':
+            loader = new THREE.FontLoader(loadingManager)
             break;
         default:
             return Promise.reject(new Error(`unknown resource type [${extension}]`));

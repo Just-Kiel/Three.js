@@ -6,6 +6,12 @@ import createVehicle from './raycastVehicle.js';
 import {cameraHelper} from './cameraHelper.js';
 import cannonDebugger from 'cannon-es-debugger'
 
+import Stats from 'stats.js'
+
+const stats = new Stats()
+stats.showPanel(0)
+document.body.appendChild(stats.dom)
+
 const worldStep = 1/60;
 
 const gWorld = new CANNON.World();
@@ -181,7 +187,7 @@ var pontGallery, pontGalleryBody
         gScene.add(meshes[meshName]);
     });
 
-    cameraHelper.init(camera, chassis, gRenderer.domElement);
+    cameraHelper.init(camera, chassis, gRenderer.domElement, 0);
     
     render();
 })();
@@ -191,6 +197,8 @@ function updatePhysics() {
 }
 
 function render() {
+    stats.begin()
+
     if (pause) {
         return;
     }
@@ -210,6 +218,7 @@ function render() {
     gRenderer.render(gScene, camera);
 
     requestAnimationFrame(render);
+    stats.end()
 }
 
 function setMaterials(wheel, chassis) {
