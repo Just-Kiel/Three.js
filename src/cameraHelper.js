@@ -3,7 +3,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js'
 
 export const cameraHelper = {
     init: initCameraHelper,
-    switch: () => {},
+    switch: (oeuvre, chassis) => {},
     update: () => {},
 };
 
@@ -12,7 +12,7 @@ function initCameraHelper(camera, target, controllerScope, cameraId) {
 
     // let cameraId = 0;
 
-    cameraHelper.switch = () => {
+    cameraHelper.switch = (oeuvre, chassis) => {
         switch (cameraId++) {
             case 0:
                 console.info('Chase camera');
@@ -38,7 +38,18 @@ function initCameraHelper(camera, target, controllerScope, cameraId) {
             case 3:
                 target.remove(camera);
                 camera.fov = 70;
-                cameraHelper.update = initMyCamera(camera, target);
+                
+                console.log(camera.position)
+                cameraHelper.update = initMyCamera(camera, target, oeuvre);
+                break;
+            case 4:
+                console.log('Camera Mentions Légales')
+
+                target.add(camera);
+                camera.position.set(-30, 6.5, 15);
+                camera.rotation.set(0, 4.65, 0);
+                camera.fov = 90;
+                cameraHelper.update = () => {};
                 break;
             default:
                 cameraId = 0;
@@ -72,24 +83,36 @@ function initChaseCamera(camera, target) {
     };
 }
 
-function initMyCamera(camera, target) {
+function initMyCamera(camera, target, oeuvre, chassis) {
     const cameraMovementSpeed = 0.05; 
     const cameraLookPositionHeightOffset = 5;
     const cameraMountPosition = new THREE.Vector3();
     const cameraLookPosition = new THREE.Vector3();
     const chaseCameraMountPositionHelper = new THREE.Object3D();
-    chaseCameraMountPositionHelper.position.set(-30, 25, -5);
+    chaseCameraMountPositionHelper.position.set(1000, 25, 15);
     target.add(chaseCameraMountPositionHelper);
+
+    // if(chassis != undefined){
+    //     console.log("manjé")
+    // camera.position.copy(chassis.position)
+    // }
 
     return () => {
         chaseCameraMountPositionHelper.getWorldPosition(cameraMountPosition);
 
-        if (cameraMountPosition.y < target.position.y) {
-            cameraMountPosition.setY(target.position.y);
-        }
+        // if (cameraMountPosition.y < target.position.y) {
+            // cameraMountPosition.setY(target.position.y/2);
+            // camera.position.copy(target.position)
+            if (oeuvre){
+                cameraMountPosition.setY(oeuvre.object.position.y)
+                cameraMountPosition.setX(oeuvre.object.position.x + 150)
+                cameraMountPosition.setZ(oeuvre.object.position.z - 10)
+            }
+            // cameraMountPosition.setZ(target.position.z + 10)
+        // }
 
         camera.position.lerp(cameraMountPosition, cameraMovementSpeed);
-        cameraLookPosition.copy(target.position).y += cameraLookPositionHeightOffset;
+        cameraLookPosition.copy(oeuvre.object.position).y += cameraLookPositionHeightOffset;
 
         camera.lookAt(cameraLookPosition);
     };

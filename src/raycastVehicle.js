@@ -97,6 +97,9 @@ export default function createVehicle() {
                     window.location.pathname = "./gallery.html";
                     // window.location.pathname = "./immersions/gallery.html";
                 }
+                if(i.body.id == interactBodies[2].id){
+                    window.location.pathname = './artists.html'
+                }
             }
 
             if(page == "game.html"){
@@ -117,6 +120,12 @@ export default function createVehicle() {
                     window.open("https://valentin-prieto.itch.io/boom-boom-escape")
                 }
 
+            }
+
+            if(page == "gallery.html"){
+                if(i.body.id == interactBodies[0].id){
+                    window.location.pathname = "./index.html";
+                }
             }
         
         }
@@ -215,9 +224,9 @@ function initControls(vehicle) {
     var steeringDirection
     const maxSteeringValue = 0.7;
     const joystickMaxSteeringValue = 0.9;
-    const maxForceOnFrontWheels = 200;
-    const maxForceOnRearWheels = 125;
-    const brakeForce = 400;
+    const maxForceOnFrontWheels = 150;
+    const maxForceOnRearWheels = 225;
+    const brakeForce = 200;
 
     const liftingPoint = new CANNON.Vec3();
     const liftingForce = new CANNON.Vec3(0, 360, 0);
@@ -279,15 +288,15 @@ function initControls(vehicle) {
         
 
         if(page != "gallery.html"){
-            console.log('chocola')
             steeringDirection = isKeyDown('Q') ? 1 : isKeyDown('D') ? -1 : 0;
         } else {
             steeringDirection = 0
         }
         [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(maxSteeringValue * steeringDirection, wheelIndex));
 
-        const brakeMultiplier = Number(isKeyDown(' '));
-        [0, 1].forEach(wheelIndex => vehicle.setBrake(brakeForce * brakeMultiplier *0.5, wheelIndex));
+        const brakeMultiplier = isKeyDown(' ') ? 1 : 0;
+        [0, 1].forEach(wheelIndex => vehicle.setBrake(brakeForce * brakeMultiplier, wheelIndex));
+        // [2, 3].forEach(wheelIndex => vehicle.setBrake(brakeForce * brakeMultiplier *0.5, wheelIndex));
 
     };
 }

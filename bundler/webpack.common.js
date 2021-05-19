@@ -10,7 +10,9 @@ module.exports = {
         vehicle: path.resolve(__dirname, '../src/vehicle.js'),
         new: path.resolve(__dirname, '../src/new.js'),
         new_game: path.resolve(__dirname, '../src/jeux/new_game.js'),
-        gallery: path.resolve(__dirname, '../src/galerie/gallery.js')
+        gallery: path.resolve(__dirname, '../src/galerie/gallery.js'),
+        artists: path.resolve(__dirname, '../src/artistes/artists.js'),
+        mentions: path.resolve(__dirname, '../src/mentions_legales/mentions_legales.js')
     },
     output:
     {
@@ -42,6 +44,18 @@ module.exports = {
             template: path.resolve(__dirname, '../src/galerie/gallery.html'),
             minify: true,
             chunks: ['gallery']
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'artists.html',
+            template: path.resolve(__dirname, '../src/artistes/artists.html'),
+            minify: true,
+            chunks: ['artists']
+        }),
+        new HtmlWebpackPlugin({
+            filename: 'mentions_legales.html',
+            template: path.resolve(__dirname, '../src/mentions_legales/mentions_legales.html'),
+            minify: true,
+            chunks: ['mentions']
         }),
         new MiniCSSExtractPlugin()
     ],

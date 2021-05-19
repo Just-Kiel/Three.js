@@ -6,11 +6,7 @@ import createVehicle from './raycastVehicle.js';
 import {cameraHelper} from './cameraHelper.js';
 import cannonDebugger from 'cannon-es-debugger'
 
-import Stats from 'stats.js'
 
-const stats = new Stats()
-stats.showPanel(0)
-document.body.appendChild(stats.dom)
 
 const worldStep = 1/60;
 
@@ -100,13 +96,16 @@ var gameTpBody;
 
 var pontGallery, pontGalleryBody
 
+var pupitreArtists, pupitreArtistsBody
+
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF, gameTpGLTF, pontGalleryGLTF] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, gameTpGLTF, pontGalleryGLTF, pupitreArtistsGLTF] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
         utils.loadResource('model/teleport_game.gltf'),
         utils.loadResource('model/Pont.gltf'),
+        utils.loadResource('model/Pupitre.gltf')
     ]);
 
     const wheel = wheelGLTF.scene;
@@ -118,6 +117,30 @@ var pontGallery, pontGalleryBody
     gameTp.scale.set(11, 11, 11)
 
     gScene.add(gameTp)
+
+    // Pupitre vers la page des Nominés
+    pupitreArtists = pupitreArtistsGLTF.scene
+    pupitreArtists.scale.set(12, 12, 12)
+    pupitreArtists.rotation.y = -Math.PI*0.5
+    gScene.add(pupitreArtists)
+
+    // Collider vers la page des Nominés
+    const pupitreShape = new CANNON.Box(new CANNON.Vec3(15,25,15))
+    pupitreArtistsBody = new CANNON.Body({
+        mass: 1000,
+        shape: pupitreShape,
+        position: new CANNON.Vec3(120, 50, -125)
+    })
+    gWorld.addBody(pupitreArtistsBody)
+
+    const pontArtistShape = new CANNON.Box(new CANNON.Vec3(8,1, 20))
+    const pontArtists = new CANNON.Body({
+        mass: 0,
+        shape: pontArtistShape,
+        position: new CANNON.Vec3(120, 5, -90),
+        quaternion: new CANNON.Quaternion(0.15, 0, 0)
+    })
+    gWorld.addBody(pontArtists)
 
     // Pont vers la galerie
     pontGallery = pontGalleryGLTF.scene
@@ -155,7 +178,7 @@ var pontGallery, pontGalleryBody
     })
     gWorld.addBody(gameTpBody)
 
-    setMaterials(wheel, chassis);
+    // setMaterials(wheel, chassis);
     chassis.scale.set(2, 2, 2);
     wheel.scale.set(1.2, 1.2, 1.2)
 
@@ -169,7 +192,7 @@ var pontGallery, pontGalleryBody
 
     const vehicle = createVehicle(gameTpBody);
     vehicle.addToWorld(gWorld, meshes);
-    var interactable = [gameTpBody, collideGallery]
+    var interactable = [gameTpBody, collideGallery, pupitreArtistsBody]
     vehicle.detectBody(interactable)
 
     resetVehicle = () => {
@@ -197,7 +220,6 @@ function updatePhysics() {
 }
 
 function render() {
-    stats.begin()
 
     if (pause) {
         return;
@@ -215,61 +237,63 @@ function render() {
     gameTp.position.copy(gameTpBody.position)
     gameTp.quaternion.copy(gameTpBody.quaternion)
 
+    pupitreArtists.position.copy(pupitreArtistsBody.position)
+    pupitreArtists.position.y = 0
+
     gRenderer.render(gScene, camera);
 
     requestAnimationFrame(render);
-    stats.end()
 }
 
-function setMaterials(wheel, chassis) {
-    const baseMaterial = new THREE.MeshLambertMaterial({color: 0x111111});
-    const fenderMaterial = new THREE.MeshBasicMaterial({color: 0x050505});
-    const grillMaterial = new THREE.MeshBasicMaterial({color: 0x222222});
-    const chromeMaterial = new THREE.MeshPhongMaterial({color: 0xCCCCCC});
-    const glassMaterial = new THREE.MeshPhongMaterial({color: 0x1155FF});
-    const tailLightMaterial = new THREE.MeshPhongMaterial({color: 0x550000});
-    const headLightMaterial = new THREE.MeshPhongMaterial({color: 0xFFFFBB});
-    const wheelMaterial = new THREE.MeshBasicMaterial();
-    wheelMaterial.alphaTest = 0.5;
-    wheelMaterial.skinning = true;
+// function setMaterials(wheel, chassis) {
+//     const baseMaterial = new THREE.MeshLambertMaterial({color: 0x111111});
+//     const fenderMaterial = new THREE.MeshBasicMaterial({color: 0x050505});
+//     const grillMaterial = new THREE.MeshBasicMaterial({color: 0x222222});
+//     const chromeMaterial = new THREE.MeshPhongMaterial({color: 0xCCCCCC});
+//     const glassMaterial = new THREE.MeshPhongMaterial({color: 0x1155FF});
+//     const tailLightMaterial = new THREE.MeshPhongMaterial({color: 0x550000});
+//     const headLightMaterial = new THREE.MeshPhongMaterial({color: 0xFFFFBB});
+//     const wheelMaterial = new THREE.MeshBasicMaterial();
+//     wheelMaterial.alphaTest = 0.5;
+//     wheelMaterial.skinning = true;
     
-    wheel.traverse((childMesh) => {
-        if (childMesh.material) {
-            wheelMaterial.map = childMesh.material.map;
+//     wheel.traverse((childMesh) => {
+//         if (childMesh.material) {
+//             wheelMaterial.map = childMesh.material.map;
 
-            childMesh.material = wheelMaterial;
-            childMesh.material.needsUpdate = true;
-        }
-    });
+//             childMesh.material = wheelMaterial;
+//             childMesh.material.needsUpdate = true;
+//         }
+//     });
 
-    chassis.traverse((childMesh) => {
-        if (childMesh.material) {
-            childMesh.material = getChassisMaterialByPartName(childMesh.name);
-        }
-    });
+//     chassis.traverse((childMesh) => {
+//         if (childMesh.material) {
+//             childMesh.material = getChassisMaterialByPartName(childMesh.name);
+//         }
+//     });
 
-    function getChassisMaterialByPartName(partName) {
-        switch (partName) {
-            case 'front_bumper':
-            case 'rear_bumper':
-            case 'front_fender':
-            case 'rear_fender':
-                return fenderMaterial;
-            case 'grill':
-                return grillMaterial;
-            case 'brushGuard':
-                return chromeMaterial;
-            case 'glass':
-                return glassMaterial;
-            case 'tail_lights':
-                return tailLightMaterial;
-            case 'head_lights':
-                return headLightMaterial;
-            default:
-                return baseMaterial;
-        };
-    }
-}
+//     function getChassisMaterialByPartName(partName) {
+//         switch (partName) {
+//             case 'front_bumper':
+//             case 'rear_bumper':
+//             case 'front_fender':
+//             case 'rear_fender':
+//                 return fenderMaterial;
+//             case 'grill':
+//                 return grillMaterial;
+//             case 'brushGuard':
+//                 return chromeMaterial;
+//             case 'glass':
+//                 return glassMaterial;
+//             case 'tail_lights':
+//                 return tailLightMaterial;
+//             case 'head_lights':
+//                 return headLightMaterial;
+//             default:
+//                 return baseMaterial;
+//         };
+//     }
+// }
 
 function getAspectRatio() {
     return window.innerWidth / window.innerHeight;
