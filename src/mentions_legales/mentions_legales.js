@@ -4,7 +4,7 @@ import * as THREE from 'three'
 import * as utils from '../utils.js';
 import createVehicle from '../raycastVehicle.js';
 import {cameraHelper} from '../cameraHelper.js';
-import cannonDebugger from 'cannon-es-debugger'
+// import cannonDebugger from 'cannon-es-debugger'
 
 const worldStep = 1/60;
 
@@ -18,7 +18,7 @@ const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
 
 const clock = new THREE.Clock()
 
-cannonDebugger(gScene, gWorld.bodies, {color: "red"})
+// cannonDebugger(gScene, gWorld.bodies, {color: "red"})
 
 /**
  * Sizes
@@ -52,15 +52,15 @@ let wireframeRenderer = null;
 let pause = false;
 
 
-const ambientLight = new THREE.AmbientLight('#686868', 1);
+const ambientLight = new THREE.AmbientLight('#706F6F', 1);
 gScene.add(ambientLight);
-const pointLight = new THREE.PointLight(0xffffff, 2, 1000)
-pointLight.position.set(50, 500, 150)
+const pointLight = new THREE.PointLight(0xffffff, 2, 800)
+pointLight.position.set(50, 1000, -150)
 gScene.add(pointLight)
 
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(6000, 600),
-    new THREE.MeshStandardMaterial({color: '#4960A9'})
+    new THREE.MeshStandardMaterial({color: '#D9AE71'})
 )
 floor.rotation.x = - Math.PI * 0.5
 floor.position.set(-2700, 0, 2)
@@ -103,6 +103,21 @@ const ecartOeuvre = 155;
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
     ]);
+
+    const collideShape = new CANNON.Box(new CANNON.Vec3(50, 10, 22))
+    const collideBehind = new CANNON.Body({
+        mass:1000,
+        shape: collideShape,
+        position: new CANNON.Vec3(50, 15,0)
+    })
+    gWorld.addBody(collideBehind)
+    const collideFront = new CANNON.Body({
+        mass:1000,
+        shape: collideShape,
+        position: new CANNON.Vec3(-950, 15,0)
+    })
+    gWorld.addBody(collideFront)
+
 
     // Plane Mentions Légales
     const oeuvreGeometry = new THREE.PlaneGeometry(152, 88)
@@ -159,8 +174,8 @@ const ecartOeuvre = 155;
 
     vehicle = createVehicle();
     vehicle.addToWorld(gWorld, meshes);
-    // var interactable = [collideHub]
-    // vehicle.detectBody(interactable)
+    var interactable = [collideFront]
+    vehicle.detectBody(interactable)
 
     resetVehicle = () => {
         vehicle.chassisBody.position.copy(vehicleInitialPosition);

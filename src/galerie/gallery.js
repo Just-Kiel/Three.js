@@ -4,15 +4,26 @@ import * as THREE from 'three'
 import * as utils from '../utils.js';
 import createVehicle from '../raycastVehicle.js';
 import {cameraHelper} from '../cameraHelper.js';
-// import cannonDebugger from 'cannon-es-debugger'
+// import cannonDebugger from 'cannon-es-debugger';
+import vertexShader from '../shaders/vertex.glsl'
+import fragmentShader from '../shaders/fragment.glsl'
+
+import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
+// import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass'
+
 
 const worldStep = 1/60;
 
 const gWorld = new CANNON.World();
 const gScene = new THREE.Scene();
 const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
-    canvas: document.querySelector('.webgl')
+    canvas: document.querySelector('.webgl'),
+    powerPreference: 'high-performance'
 });
+
+
 
 
 
@@ -41,6 +52,8 @@ const clock = new THREE.Clock()
      gRenderer.setSize(sizes.width, sizes.height)
  })
 
+
+
 // Camera
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
 
@@ -48,30 +61,101 @@ camera.position.y = 3
 camera.position.z = -10
 gScene.add(camera)
 
-// const personControls = new FirstPersonControls(camera, gRenderer.domElement)
-// personControls.movementSpeed = 150
-// personControls.lookSpeed = 0.1
+ // EffectComposer
+ const effectComposer = new EffectComposer(gRenderer)
+ effectComposer.setSize(sizes.width, sizes.height)
+ effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+ const renderPass = new RenderPass(gScene, camera)
+ effectComposer.addPass(renderPass)
+ // Antialiasing
+ const smaaPass = new SMAAPass()
+ effectComposer.addPass(smaaPass)
+
+//  // BloomPass
+//  const unrealBloomPass = new UnrealBloomPass()
+//  unrealBloomPass.enabled = true
+//  unrealBloomPass.strength = 0.35
+//  unrealBloomPass.radius = 0
+//  unrealBloomPass.threshold = 0.15
+//  unrealBloomPass.renderToScreen = true
+//  effectComposer.addPass(unrealBloomPass)
 
 let wireframeRenderer = null;
 let pause = false;
 
-
-const ambientLight = new THREE.AmbientLight('#686868', 1);
+/**
+ * Lights
+ */
+const ambientLight = new THREE.AmbientLight('#706F6F', 1);
 gScene.add(ambientLight);
-const pointLight = new THREE.PointLight(0xffffff, 2, 1000)
-pointLight.position.set(50, 500, 150)
+const pointLight = new THREE.PointLight(0xffffff, 2, 800)
+pointLight.position.set(50, 1000, 150)
 gScene.add(pointLight)
+const horizonLight = new THREE.PointLight(0xffffff, 6, 2000)
+gScene.add(horizonLight)
+const spot1 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot1.position.set(-200, 0, -100)
+const spot2 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot2.position.set(-500, 0, 100)
+const spot3 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot3.position.set(-800, 0, -100)
+const spot4 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot4.position.set(-1100, 0, 100)
+const spot5 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot5.position.set(-1400, 0, -100)
+const spot6 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot6.position.set(-1700, 0, 100)
+const spot7 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot7.position.set(-2000, 0, -100)
+const spot8 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot8.position.set(-2300, 0, 100)
+const spot9 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot9.position.set(-2600, 0, -100)
+const spot10 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot10.position.set(-2900, 0, 100)
+const spot11 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot11.position.set(-3200, 0, -100)
+const spot12 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot12.position.set(-3500, 0, 100)
+const spot13 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot13.position.set(-3800, 0, -100)
+const spot14 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot14.position.set(-4100, 0, 100)
+const spot15 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot15.position.set(-4400, 0, -100)
+const spot16 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot16.position.set(-4700, 0, 100)
+const spot17 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot17.position.set(-5000, 0, -100)
+const spot18 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot18.position.set(-5300, 0, 100)
+const spot19 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot19.position.set(-5600, 0, -100)
+const spot20 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot20.position.set(-5900, 0, 100)
+const spot21 = new THREE.PointLight('#0DC6FD', 1, 200)
+spot21.position.set(-6200, 0, -100)
+// const spot22 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot22.position.set(-6500, 0, 100)
+// const spot23 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot23.position.set(-6800, 0, -100)
+// const spot24 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot24.position.set(-00, 0, 100)
+gScene.add(spot1, spot2, spot3, spot4, spot5, spot6, spot7, spot8, spot9, spot10, spot11, spot12, spot13, spot14, spot15, spot16, spot17, spot18, spot19, spot20, spot21)
 
-const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(6000, 600),
-    new THREE.MeshStandardMaterial({color: '#4960A9'})
-)
-floor.rotation.x = - Math.PI * 0.5
-floor.position.set(-2700, 0, 2)
-gScene.add(floor)
+const floorMaterial = new THREE.RawShaderMaterial({
+    vertexShader: vertexShader,
+    fragmentShader: fragmentShader,
+    side: THREE.DoubleSide,
+    uniforms:
+    {
+        uTime: {value: 0},
+        u_resolution: {value : new THREE.Vector2(sizes.height, sizes.width)}
+    }
+})
 
 // Floor phys
-const floorShape = new CANNON.Box(new CANNON.Vec3(3000, 1, 100))
+const floorShape = new CANNON.Box(new CANNON.Vec3(3200, 1, 100))
 const floorBody = new CANNON.Body({
     mass: 0,
     shape: floorShape,
@@ -91,7 +175,7 @@ gRenderer.setPixelRatio(window.devicePixelRatio);
 gRenderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(gRenderer.domElement);
 
-const vehicleInitialPosition = new THREE.Vector3(180, 25, -10);
+const vehicleInitialPosition = new THREE.Vector3(180, 25, 2.5);
 const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI *0.50);
 let resetVehicle = () => {};
 
@@ -100,7 +184,7 @@ const mouse = new THREE.Vector2();
 
 var vehicle, chassis
 
-const multimedia = [40, 30, 0];
+const multimedia = [40, 37, 0];
 var oeuvre1, oeuvre2, oeuvre3;
 const hauteurOeuvre = 70;
 const ecartOeuvre = 225;
@@ -115,15 +199,74 @@ var oeuvreWeb1, oeuvreWeb2, oeuvreWeb3;
 const animation = [web[0]-(ecartOeuvre*4), web[1], web[2]];
 var oeuvreAnim1, oeuvreAnim2, oeuvreAnim3;
 var pontTron, pontTronBody;
+var horizonGalerie;
+var positionHorizon = -6500;
+var boutHorizon = [];
 
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF, manropeJSON, pontTronGLTF] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, hansonJSON, pontTronGLTF, horizonGLTF] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
-        utils.loadResource('fonts/Manrope_Bold.json'),
-        utils.loadResource('model/Pont.gltf')
+        utils.loadResource('fonts/Hanson_Bold.json'),
+        utils.loadResource('model/Pont.gltf'),
+        utils.loadResource('model/horizon_galerie.gltf')
     ]);
+
+    // Sol
+
+    // floorMaskMaterial.alphaMap.magFilter = THREE.NearestFilter;
+    // floorMaskMaterial.alphaMap.wrapT = THREE.RepeatWrapping;
+    // floorMaskMaterial.alphaMap.repeat.y = 1;
+
+    // const fog = new THREE.Fog('#0DC6FD', 15, 120)
+    // gScene.fog = fog
+    
+    const floor = new THREE.Mesh(
+        new THREE.PlaneGeometry(6000, 600),
+        floorMaterial
+    )
+    floor.rotation.x = - Math.PI * 0.5
+    floor.position.set(-2700, 0, 2)
+    
+    const floorSecond = new THREE.Mesh(
+        new THREE.PlaneGeometry(6000, 600),
+        floorMaterial
+    )
+    floorSecond.rotation.x = - Math.PI * 0.5
+    floorSecond.position.set(-8900, 0, 2)
+
+    const mur = new THREE.Mesh(
+        new THREE.PlaneGeometry(6000, 600),
+        new THREE.MeshStandardMaterial({color: '#000000'})
+    )
+    mur.rotation.y = Math.PI * 0.5
+    mur.position.set(-6000, -301, 2)
+    
+    gScene.add(floor, floorSecond, mur)
+
+    horizonGalerie = horizonGLTF.scene
+    horizonGalerie.scale.set(15, 15, 15)
+    horizonGalerie.rotation.set(0, Math.PI*0.5, 0)
+
+    // boutHorizon[0] = horizonGLTF.scene.children[5]
+    // boutHorizon[0].scale.set(12, 12, 12)
+    // boutHorizon[0].position.set(-200, 12, 150)
+    // boutHorizon[0].rotation.set(0, Math.PI*0.5, 0)
+
+    // boutHorizon[1] = horizonGLTF.scene.children[1]
+    // boutHorizon[1].scale.set(12, 12, 12)
+    // boutHorizon[1].position.set(-450, 9, -150)
+    // boutHorizon[1].rotation.set(0, Math.PI*0.5, Math.PI*0.4)
+    
+    // boutHorizon[2] = horizonGLTF.scene.children[0]
+    // boutHorizon[2].scale.set(8, 8, 8)
+    // boutHorizon[2].position.set(-900, 9, 150)
+    // boutHorizon[2].rotation.set(Math.PI*0.5, 0, Math.PI*0.5)
+
+
+    // console.log(horizonGLTF.scene)
+    gScene.add(horizonGalerie)
 
     // Pont retour vers Hub
     pontTron = pontTronGLTF.scene
@@ -131,15 +274,6 @@ var pontTron, pontTronBody;
     pontTron.rotation.set(0, -Math.PI*0.5, 0)
     pontTron.position.set(-5800,1,0)
     gScene.add(pontTron)
-
-    const bridgeShape = new CANNON.Box(new CANNON.Vec3(140, 1, 22))
-    pontTronBody = new CANNON.Body({
-        mass: 0,
-        shape: bridgeShape,
-        position: new CANNON.Vec3(-5800, 1, 0) ,
-        quaternion: new CANNON.Quaternion(0, 0, 0)
-    })
-    gWorld.addBody(pontTronBody)
 
     // Collider vers hub
     const collideShape = new CANNON.Box(new CANNON.Vec3(50, 10, 22))
@@ -160,11 +294,11 @@ var pontTron, pontTronBody;
 
     // Texte
     const textGalleryGeometry = new THREE.TextGeometry(
-        'Galerie',
+        'galerie',
         {
-            font: manropeJSON,
+            font: hansonJSON,
             size: 15,
-            height: 4,
+            height: 3,
             curveSegments: 12,
             bevelEnabled: true,
             bevelThickness: 0.03,
@@ -176,14 +310,14 @@ var pontTron, pontTronBody;
     const textGalleryMaterial = new THREE.MeshBasicMaterial()
     const textGallery = new THREE.Mesh(textGalleryGeometry, textGalleryMaterial)
     textGallery.rotation.y = -Math.PI*1.5
-    textGallery.position.set(50, 0, 100)
+    textGallery.position.set(50, 7, 125)
 
     const textGallery2Geometry = new THREE.TextGeometry(
-        'des Nominés',
+        'des nominés',
         {
-            font: manropeJSON,
+            font: hansonJSON,
             size: 15,
-            height: 4,
+            height: 3,
             curveSegments: 12,
             bevelEnabled: true,
             bevelThickness: 0.03,
@@ -193,14 +327,14 @@ var pontTron, pontTronBody;
         }
     )
     const textGallery2 = new THREE.Mesh(textGallery2Geometry, textGalleryMaterial)
-    textGallery2.rotation.y = Math.PI/2
-    textGallery2.position.set(50, 0, -20)
+    textGallery2.rotation.y = Math.PI/2 * 1.1
+    textGallery2.position.set(50, 7, -20)
     gScene.add(textGallery, textGallery2)
 
     const textMultimediaGeometry = new THREE.TextGeometry(
-        'Multimédia',
+        'multimédia',
         {
-            font: manropeJSON,
+            font: hansonJSON,
             size: 15,
             height: 4,
             curveSegments: 12,
@@ -217,9 +351,9 @@ var pontTron, pontTronBody;
     textMultimedia.position.set(multimedia[0], multimedia[1], multimedia[2])
     
     const textCommunicationGeometry = new THREE.TextGeometry(
-        'Communication',
+        'communication',
         {
-            font: manropeJSON,
+            font: hansonJSON,
             size: 15,
             height: 4,
             curveSegments: 12,
@@ -236,9 +370,9 @@ var pontTron, pontTronBody;
     textCommunication.position.set(communication[0], communication[1], communication[2])
 
     const textInfoGeometry = new THREE.TextGeometry(
-        'Infographie',
+        'infographie',
         {
-            font: manropeJSON,
+            font: hansonJSON,
             size: 15,
             height: 4,
             curveSegments: 12,
@@ -255,9 +389,9 @@ var pontTron, pontTronBody;
     textInfo.position.set(infographie[0], infographie[1], infographie[2])
     
     const textAudioGeometry = new THREE.TextGeometry(
-        'Audiovisuel',
+        'audiovisuel',
         {
-            font: manropeJSON,
+            font: hansonJSON,
             size: 15,
             height: 4,
             curveSegments: 12,
@@ -274,9 +408,9 @@ var pontTron, pontTronBody;
     textAudio.position.set(audiovisuel[0], audiovisuel[1], audiovisuel[2])
     
     const textWebGeometry = new THREE.TextGeometry(
-        'Site Web',
+        'site web',
         {
-            font: manropeJSON,
+            font: hansonJSON,
             size: 15,
             height: 4,
             curveSegments: 12,
@@ -293,9 +427,9 @@ var pontTron, pontTronBody;
     textWeb.position.set(web[0], web[1], web[2])
     
     const textAnimGeometry = new THREE.TextGeometry(
-        'Animation',
+        'animation',
         {
-            font: manropeJSON,
+            font: hansonJSON,
             size: 15,
             height: 4,
             curveSegments: 12,
@@ -508,8 +642,6 @@ function onMouseMove(event){
     mouse.y = - (event.clientY / window.innerHeight) *2 +1;
 }
 
-//var CameraOeuvrePosition = new THREE.Vector3()
-
 window.addEventListener('click', () => {
     if(document.getElementById("cursor").classList.contains('cross')){
         document.getElementById("cursor").classList.remove("cross")
@@ -528,6 +660,20 @@ window.addEventListener('click', () => {
 
 function render() {
     if(document.getElementById("load").classList.contains("hidden")){
+
+        const elapsedTime = clock.getElapsedTime()
+
+        effectComposer.render()
+
+        floorMaterial.uniforms.uTime.value = elapsedTime
+
+        if(chassis.position.x >= web[0]){
+            horizonGalerie.position.set(chassis.position.x - 3000, 1, -180)
+        } else {
+            horizonGalerie.position.set(positionHorizon, 1, -180)
+        }
+
+        horizonLight.position.set(horizonGalerie.position.x, 700 , 150)
 
     raycaster.setFromCamera(mouse, camera)
     const objectsToTest = [oeuvre1, oeuvre2, oeuvre3, oeuvreCom1, oeuvreCom2, oeuvreCom3, oeuvreInfo1, oeuvreInfo2, oeuvreInfo3, oeuvreAudio1, oeuvreAudio2, oeuvreAudio3, oeuvreWeb1, oeuvreWeb2, oeuvreWeb3, oeuvreAnim1, oeuvreAnim2, oeuvreAnim3]

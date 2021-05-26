@@ -90,22 +90,23 @@ export default function createVehicle() {
             
             if(page == "index.html" || page == ""){
                 if(i.body.id == interactBodies[0].id){
-                    window.location.pathname = "./game.html";
-                    // window.location.pathname = "./immersions/game.html";
+                    // window.location.pathname = "./game.html";
+                    window.location.pathname = "./immersions/game.html";
                 }
                 if(i.body.id == interactBodies[1].id){
-                    window.location.pathname = "./gallery.html";
-                    // window.location.pathname = "./immersions/gallery.html";
+                    // window.location.pathname = "./gallery.html";
+                    window.location.pathname = "./immersions/gallery.html";
                 }
                 if(i.body.id == interactBodies[2].id){
-                    window.location.pathname = './artists.html'
+                    // window.location.pathname = './artists.html'
+                    window.location.pathname = "./immersions/artists.html";
                 }
             }
 
             if(page == "game.html"){
                 if(i.body.id == interactBodies[0].id){
-                    // window.location.pathname = "./immersions/index.html";
-                    window.location.pathname = "./index.html";
+                    window.location.pathname = "./immersions/index.html";
+                    // window.location.pathname = "./index.html";
                 }
                 if(i.body.id == interactBodies[1].id){
                     console.log("start colormudar")
@@ -124,7 +125,15 @@ export default function createVehicle() {
 
             if(page == "gallery.html"){
                 if(i.body.id == interactBodies[0].id){
-                    window.location.pathname = "./index.html";
+                    window.location.pathname = "./immersions/index.html";
+                    // window.location.pathname = "./index.html";
+                }
+            }
+
+            if(page == "mentions_legales.html"){
+                if(i.body.id == interactBodies[0].id){
+                    window.location.pathname = "./immersions/index.html";
+                    // window.location.pathname = "./index.html"
                 }
             }
         

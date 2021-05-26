@@ -51,6 +51,20 @@ function initCameraHelper(camera, target, controllerScope, cameraId) {
                 camera.fov = 90;
                 cameraHelper.update = () => {};
                 break;
+            case 5:
+                console.log('Camera Hub')
+
+                // target.add(camera)
+                camera.position.set(-50, 16.5, 15);
+                // camera.rotation.set(1, 4.65, 1);
+                camera.fov = 90;
+                cameraHelper.update = () => 
+                {
+                    camera.lookAt(target.position)
+                    camera.position.set(target.position.x - 60, target.position.y + 25, target.position.z)
+                    // camera.rotation.set(1, 4.65, 1)
+                };
+                break;
             default:
                 cameraId = 0;
                 cameraHelper.switch();

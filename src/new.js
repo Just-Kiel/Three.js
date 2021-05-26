@@ -4,9 +4,7 @@ import * as THREE from 'three'
 import * as utils from './utils.js';
 import createVehicle from './raycastVehicle.js';
 import {cameraHelper} from './cameraHelper.js';
-import cannonDebugger from 'cannon-es-debugger'
-
-
+// import cannonDebugger from 'cannon-es-debugger'
 
 const worldStep = 1/60;
 
@@ -17,7 +15,7 @@ const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
 });
 const gCamera = new THREE.PerspectiveCamera(90, getAspectRatio(), 0.1, 1000);
 
-cannonDebugger(gScene, gWorld.bodies, {color: "red"})
+// cannonDebugger(gScene, gWorld.bodies, {color: "red"})
 
 /**
  * Sizes
@@ -51,16 +49,19 @@ let wireframeRenderer = null;
 let pause = false;
 
 
-const ambientLight = new THREE.AmbientLight('#686868', 1);
+const ambientLight = new THREE.AmbientLight('#706F6F', 1);
 gScene.add(ambientLight);
-const pointLight = new THREE.PointLight(0xffffff, 2, 1000)
-pointLight.position.set(50, 300, 150)
+const pointLight = new THREE.PointLight(0xffffff, 2, 800)
+pointLight.position.set(50, 500, -150)
 gScene.add(pointLight)
+
+gRenderer.setClearColor('#D9AE71')
 
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(400, 400),
-    new THREE.MeshStandardMaterial({color: '#4960A9'})
+    new THREE.MeshStandardMaterial({color: '#D9AE71'}),
 )
+floor.material.side = THREE.DoubleSide
 floor.rotation.x = - Math.PI * 0.5
 floor.position.y = 0
 floor.position.z = 2
@@ -74,9 +75,9 @@ const floorBody = new CANNON.Body({
 })
 gWorld.addBody(floorBody)
 
-//Axes Helper
-const axesHelper = new THREE.AxesHelper(2)
-gScene.add(axesHelper)
+// //Axes Helper
+// const axesHelper = new THREE.AxesHelper(2)
+// gScene.add(axesHelper)
 
 gWorld.broadphase = new CANNON.SAPBroadphase(gWorld);
 gWorld.gravity.set(0, -10, 0);
@@ -100,10 +101,10 @@ var pupitreArtists, pupitreArtistsBody
 
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF, gameTpGLTF, pontGalleryGLTF, pupitreArtistsGLTF] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, /*gameTpGLTF,*/ pontGalleryGLTF, pupitreArtistsGLTF] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
-        utils.loadResource('model/teleport_game.gltf'),
+        // utils.loadResource('model/teleport_game.gltf'),
         utils.loadResource('model/Pont.gltf'),
         utils.loadResource('model/Pupitre.gltf')
     ]);
@@ -111,12 +112,12 @@ var pupitreArtists, pupitreArtistsBody
     const wheel = wheelGLTF.scene;
     const chassis = chassisGLTF.scene;
     
-    gameTp = gameTpGLTF.scene;
+    // gameTp = gameTpGLTF.scene;
 
-    gameTp.position.set(7, 1.8, 12)
-    gameTp.scale.set(11, 11, 11)
+    // gameTp.position.set(7, 1.8, 12)
+    // gameTp.scale.set(11, 11, 11)
 
-    gScene.add(gameTp)
+    // gScene.add(gameTp)
 
     // Pupitre vers la page des Nominés
     pupitreArtists = pupitreArtistsGLTF.scene
@@ -124,16 +125,16 @@ var pupitreArtists, pupitreArtistsBody
     pupitreArtists.rotation.y = -Math.PI*0.5
     gScene.add(pupitreArtists)
 
-    // Collider vers la page des Nominés
-    const pupitreShape = new CANNON.Box(new CANNON.Vec3(15,25,15))
+    // Collider pupitre
+    const pupitreShape = new CANNON.Box(new CANNON.Vec3(15,5,15))
     pupitreArtistsBody = new CANNON.Body({
         mass: 1000,
         shape: pupitreShape,
-        position: new CANNON.Vec3(120, 50, -125)
+        position: new CANNON.Vec3(120, 15, -125)
     })
     gWorld.addBody(pupitreArtistsBody)
 
-    const pontArtistShape = new CANNON.Box(new CANNON.Vec3(8,1, 20))
+    const pontArtistShape = new CANNON.Box(new CANNON.Vec3(10,1, 20))
     const pontArtists = new CANNON.Body({
         mass: 0,
         shape: pontArtistShape,
@@ -141,6 +142,15 @@ var pupitreArtists, pupitreArtistsBody
         quaternion: new CANNON.Quaternion(0.15, 0, 0)
     })
     gWorld.addBody(pontArtists)
+
+    // Collider vers la page des nominés
+    const collideArtistsShape = new CANNON.Box(new CANNON.Vec3(5,5,5))
+    const collideArtists = new CANNON.Body({
+        mass: 0,
+        shape: collideArtistsShape,
+        position: new CANNON.Vec3(120, 20, -130)
+    })
+    gWorld.addBody(collideArtists)
 
     // Pont vers la galerie
     pontGallery = pontGalleryGLTF.scene
@@ -169,14 +179,14 @@ var pupitreArtists, pupitreArtistsBody
     gWorld.addBody(collideGallery)
 
     // Teleport Game phys
-    const gameTpShape = new CANNON.Box(new CANNON.Vec3(11, 11, 11))
-    gameTpBody = new CANNON.Body({
-        mass: 1000,
-        position: new CANNON.Vec3(100, 22, 150),
-        shape: gameTpShape,
-        quaternion: new CANNON.Quaternion(1, 0, -0.5)
-    })
-    gWorld.addBody(gameTpBody)
+    // const gameTpShape = new CANNON.Box(new CANNON.Vec3(11, 11, 11))
+    // gameTpBody = new CANNON.Body({
+    //     mass: 1000,
+    //     position: new CANNON.Vec3(100, 22, 150),
+    //     shape: gameTpShape,
+    //     quaternion: new CANNON.Quaternion(1, 0, -0.5)
+    // })
+    // gWorld.addBody(gameTpBody)
 
     // setMaterials(wheel, chassis);
     chassis.scale.set(2, 2, 2);
@@ -190,9 +200,9 @@ var pupitreArtists, pupitreArtistsBody
         chassis,
     };
 
-    const vehicle = createVehicle(gameTpBody);
+    const vehicle = createVehicle();
     vehicle.addToWorld(gWorld, meshes);
-    var interactable = [gameTpBody, collideGallery, pupitreArtistsBody]
+    var interactable = [/*gameTpBody*/, collideGallery, collideArtists]
     vehicle.detectBody(interactable)
 
     resetVehicle = () => {
@@ -210,7 +220,7 @@ var pupitreArtists, pupitreArtistsBody
         gScene.add(meshes[meshName]);
     });
 
-    cameraHelper.init(camera, chassis, gRenderer.domElement, 0);
+    cameraHelper.init(camera, chassis, gRenderer.domElement, 5);
     
     render();
 })();
@@ -234,8 +244,8 @@ function render() {
 
     cameraHelper.update();
 
-    gameTp.position.copy(gameTpBody.position)
-    gameTp.quaternion.copy(gameTpBody.quaternion)
+    // gameTp.position.copy(gameTpBody.position)
+    // gameTp.quaternion.copy(gameTpBody.quaternion)
 
     pupitreArtists.position.copy(pupitreArtistsBody.position)
     pupitreArtists.position.y = 0
