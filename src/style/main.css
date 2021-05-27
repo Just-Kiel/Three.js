@@ -89,8 +89,13 @@ html
 }
 
 #arrow{
-    z-index: 998;
+    z-index: 997;
     position: absolute;
     top: 2%;
     left: 2%;
+}
+
+#hub_arrow{
+    z-index: 998;
+    position: absolute;
 }

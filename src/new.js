@@ -89,7 +89,7 @@ document.body.appendChild(gRenderer.domElement);
 
 const vehicleInitialPosition = new THREE.Vector3(0, 15, -20);
 // const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, -1, 0), -Math.PI / 2);
-const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI / 2);
+const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI);
 let resetVehicle = () => {};
 
 var gameTp
@@ -99,14 +99,17 @@ var pontGallery, pontGalleryBody
 
 var pupitreArtists, pupitreArtistsBody
 
+var ceremonie, theatreBodyPart1, theatreBodyPart2, ceremonieBody;
+
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF, /*gameTpGLTF,*/ pontGalleryGLTF, pupitreArtistsGLTF] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, /*gameTpGLTF,*/ pontGalleryGLTF, pupitreArtistsGLTF, theatreGLTF] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
         // utils.loadResource('model/teleport_game.gltf'),
         utils.loadResource('model/Pont.gltf'),
-        utils.loadResource('model/Pupitre.gltf')
+        utils.loadResource('model/Pupitre.gltf'),
+        utils.loadResource('model/theatre.gltf')
     ]);
 
     const wheel = wheelGLTF.scene;
@@ -118,6 +121,52 @@ var pupitreArtists, pupitreArtistsBody
     // gameTp.scale.set(11, 11, 11)
 
     // gScene.add(gameTp)
+
+    // Théâtre vers la cérémonie
+    ceremonie = theatreGLTF.scene
+    ceremonie.scale.set(8, 8, 8)
+    ceremonie.position.set(-100, 0, -90)
+    ceremonie.rotation.y = Math.PI*0.5
+    gScene.add(ceremonie)
+
+    // Collider théatre
+    const theatreShape = new CANNON.Box(new CANNON.Vec3(25,15,30))
+    theatreBodyPart1 = new CANNON.Body({
+        mass: 1000,
+        shape: theatreShape,
+        position: new CANNON.Vec3(-140, 15, -175)
+    })
+    gWorld.addBody(theatreBodyPart1)
+    theatreBodyPart2 = new CANNON.Body({
+        mass: 1000,
+        shape: theatreShape,
+        position: new CANNON.Vec3(-55, 15, -175)
+    })
+    gWorld.addBody(theatreBodyPart2)
+
+    // Barrières
+    const barriereShape = new CANNON.Box(new CANNON.Vec3(2,5,55))
+    const barriere1 = new CANNON.Body({
+        mass: 0,
+        shape: barriereShape,
+        position: new CANNON.Vec3(-116, 5, -90)
+    })
+    gWorld.addBody(barriere1)
+    
+    const barriere2 = new CANNON.Body({
+        mass: 0,
+        shape: barriereShape,
+        position: new CANNON.Vec3(-84, 5, -90)
+    })
+    gWorld.addBody(barriere2)
+
+    const ceremonieShape = new CANNON.Box(new CANNON.Vec3(15,15,25))
+    ceremonieBody = new CANNON.Body({
+        mass: 1000,
+        shape: ceremonieShape,
+        position: new CANNON.Vec3(-100, 15, -175)
+    })
+    gWorld.addBody(ceremonieBody)
 
     // Pupitre vers la page des Nominés
     pupitreArtists = pupitreArtistsGLTF.scene
@@ -202,7 +251,7 @@ var pupitreArtists, pupitreArtistsBody
 
     const vehicle = createVehicle();
     vehicle.addToWorld(gWorld, meshes);
-    var interactable = [/*gameTpBody*/, collideGallery, collideArtists]
+    var interactable = [collideGallery, collideArtists, ceremonieBody]
     vehicle.detectBody(interactable)
 
     resetVehicle = () => {

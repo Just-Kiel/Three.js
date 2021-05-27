@@ -90,17 +90,20 @@ export default function createVehicle() {
             
             if(page == "index.html" || page == ""){
                 if(i.body.id == interactBodies[0].id){
-                    // window.location.pathname = "./game.html";
-                    window.location.pathname = "./immersions/game.html";
-                }
-                if(i.body.id == interactBodies[1].id){
                     // window.location.pathname = "./gallery.html";
                     window.location.pathname = "./immersions/gallery.html";
                 }
-                if(i.body.id == interactBodies[2].id){
+                if(i.body.id == interactBodies[1].id){
                     // window.location.pathname = './artists.html'
                     window.location.pathname = "./immersions/artists.html";
                 }
+                if(i.body.id == interactBodies[2].id){
+                    window.open("https://www.youtube.com/channel/UCNiWu4M9VCs8Sn-x9lcQjag")
+                }
+                // if(i.body.id == interactBodies[3].id){
+                //     // window.location.pathname = "./game.html";
+                //     window.location.pathname = "./immersions/game.html";
+                // }
             }
 
             if(page == "game.html"){

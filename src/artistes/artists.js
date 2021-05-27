@@ -2,14 +2,13 @@ import '../style/main.css'
 // import * as CANNON from 'cannon-es'
 import * as THREE from 'three'
 import * as utils from '../utils.js';
-import createVehicle from '../raycastVehicle.js';
+// import createVehicle from '../raycastVehicle.js';
 import {cameraHelper} from '../cameraHelper.js';
 import gsap from 'gsap'
 // import cannonDebugger from 'cannon-es-debugger'
 
 const worldStep = 1/60;
 
-// const gWorld = new CANNON.World();
 const gScene = new THREE.Scene();
 const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
     canvas: document.querySelector('.webgl')
@@ -60,19 +59,10 @@ const pointLight = new THREE.PointLight(0xffffff, 2, 1000)
 pointLight.position.set(50, 500, 150)
 gScene.add(pointLight)
 
-const floor = new THREE.Mesh(
-    new THREE.PlaneGeometry(6000, 600),
-    new THREE.MeshStandardMaterial({color: '#4960A9'})
-)
-floor.rotation.x = - Math.PI * 0.5
-floor.position.set(-2700, 0, 2)
-// gScene.add(floor)
-
 
 gRenderer.setPixelRatio(window.devicePixelRatio);
 gRenderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(gRenderer.domElement);
-
 
 
 const raycaster = new THREE.Raycaster()
@@ -96,11 +86,15 @@ var heightArtist = -25;
 var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
 
+
+
 (async function init() {
 
     const [manropeJSON] = await Promise.all([
-        utils.loadResource('fonts/Manrope_Bold.json')
+        utils.loadResource('fonts/Manrope_Bold.json'),
     ]);
+
+    
 
     const textArtistsGeometry = new THREE.TextGeometry(
         'Artistes', 
@@ -373,16 +367,22 @@ var currentArtistsClicked = [];
 
 
 window.addEventListener('click', () => {
+    document.getElementById("hub_arrow").onclick = function(){
+        window.location.pathname = "./immersions/index.html";
+        // window.location.pathname = "./index.html";
+    }
     if(document.getElementById("cursor").classList.contains('cross')){
         document.getElementById("cursor").classList.remove("cross")
     }else
     if(currentIntersect){
+        
         document.getElementById("arrow").onclick = function(){
             gsap.to(currentArtistsClicked[0].position, {duration: 1, x:0, y:heightArtist, z: coordNomin1[2]})
             gsap.to(currentArtistsClicked[0].rotation, {duration: 1, z:0})
             gsap.to(currentArtistsClicked[1].position, {duration: 1, x:0, y:heightArtist, z: coordNomin2[2]})
             gsap.to(currentArtistsClicked[2].position, {duration: 1, x:0, y:heightArtist, z: coordNomin3[2]})
             gsap.to(currentArtistsClicked[2].rotation, {duration: 1, z:0})
+            document.getElementById("arrow").classList.add("hidden")
 
             setTimeout(function(){
                 gScene.add(backCard);
@@ -391,6 +391,7 @@ window.addEventListener('click', () => {
                 gsap.to(currentArtistsClicked[0].rotation, {duration: 1, y: -3})
                 gsap.to(currentArtistsClicked[1].rotation, {duration: 1, y: -3})
                 gsap.to(currentArtistsClicked[2].rotation, {duration: 1, y: -3})
+                document.getElementById("hub_arrow").classList.remove("hidden")
             }, 1000)
 
             setTimeout(function(){
@@ -418,11 +419,12 @@ window.addEventListener('click', () => {
                 gsap.to(cardCategory5.position, {duration: 1, x: coordCategoryCard[4]})
                 gsap.to(cardCategory6.position, {duration: 1, x: coordCategoryCard[5]})
                 artistesClicked = false
-                document.getElementById("arrow").classList.add("hidden")
+                
             }, 4000)
         }
         if(currentIntersect.object.name == "Multimédia")
         {
+            document.getElementById("hub_arrow").classList.add("hidden")
             document.getElementById("arrow").classList.remove("hidden")
             gScene.add(backCard);
             gsap.to(cardCategory1.position, {duration: 1, x: 0, y:50})
@@ -469,6 +471,7 @@ window.addEventListener('click', () => {
             
         } else if(currentIntersect.object.name == "Communication")
         {
+            document.getElementById("hub_arrow").classList.add("hidden")
             document.getElementById("arrow").classList.remove("hidden")
             gScene.add(backCard);
             gsap.to(cardCategory1.position, {duration: 1, x: 0, y:50})
@@ -513,6 +516,7 @@ window.addEventListener('click', () => {
             }, 4000)
 
         } else if(currentIntersect.object.name == "Infographie"){
+            document.getElementById("hub_arrow").classList.add("hidden")
             document.getElementById("arrow").classList.remove("hidden")
             gScene.add(backCard);
             gsap.to(cardCategory1.position, {duration: 1, x: 0, y:50})
@@ -557,6 +561,7 @@ window.addEventListener('click', () => {
             }, 4000)
 
         } else if(currentIntersect.object.name == "Audiovisuel"){
+            document.getElementById("hub_arrow").classList.add("hidden")
             document.getElementById("arrow").classList.remove("hidden")
             gScene.add(backCard);
             gsap.to(cardCategory1.position, {duration: 1, x: 0, y:50})
@@ -600,6 +605,7 @@ window.addEventListener('click', () => {
                 gsap.to(cardAudio3.rotation, {duration: 1, z: rotatNomin[2]})
             }, 4000)
         }else if(currentIntersect.object.name == "Site Web"){
+            document.getElementById("hub_arrow").classList.add("hidden")
             document.getElementById("arrow").classList.remove("hidden")
             gScene.add(backCard);
             gsap.to(cardCategory1.position, {duration: 1, x: 0, y:50})
@@ -643,6 +649,7 @@ window.addEventListener('click', () => {
                 gsap.to(cardWeb3.rotation, {duration: 1, z: rotatNomin[2]})
             }, 4000)
         }else if(currentIntersect.object.name == "Animation"){
+            document.getElementById("hub_arrow").classList.add("hidden")
             document.getElementById("arrow").classList.remove("hidden")
             gScene.add(backCard);
             gsap.to(cardCategory1.position, {duration: 1, x: 0, y:50})
@@ -820,7 +827,6 @@ window.addEventListener('keyup', (e) => {
             }
             break;
         case 'V':
-            resetVehicle();
             break;
     }
 });
