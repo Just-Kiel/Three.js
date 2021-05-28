@@ -272,3 +272,15 @@ window.addEventListener('keyup', (e) => {
             break;
     }
 });
+
+if ("ontouchstart" in document.documentElement)
+{
+    var replay = document.getElementById("replay")
+
+    replay.ontouchstart = function(){
+        resetVehicle()
+    }
+    replay.ontouchend = function(){
+        console.log("reset")
+    }
+}

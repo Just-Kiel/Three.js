@@ -396,6 +396,18 @@ window.addEventListener('keyup', (e) => {
     }
 });
 
+if ("ontouchstart" in document.documentElement)
+{
+    var replay = document.getElementById("replay")
+
+    replay.ontouchstart = function(){
+        resetVehicle()
+    }
+    replay.ontouchend = function(){
+        console.log("reset")
+    }
+}
+
 // instructionsCloseButton.addEventListener('click', () => {
 //     instructionsContainer.classList.add('hidden');
 // });

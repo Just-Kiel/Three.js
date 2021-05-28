@@ -144,21 +144,54 @@ html
 }
 
 #gauche{
+    border: none;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    width: 50%;
+    background-image: url(../../static/image/gauche.png);
     top: 95%;
-    left: 5%;
+    left: 1%;
 }
 
 #droite{
+    border: none;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    width: 50%;
+    background-image: url(../../static/image/droite.png);
     top: 95%;
-    left: 15%;
+    left: 10%;
 }
 
 #haut{
+    border: none;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    width: 50%;
+    background-image: url(../../static/image/haut.png);
     top: 75%;
-    left: 90%;
+    left: 100%;
 }
 
 #bas{
+    border: none;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    width: 50%;
+    background-image: url(../../static/image/bas.png);
     top: 95%;
-    left: 90%;
+    left: 100%;
+}
+
+#replay{
+    height: 150vh;
+    width: 80vw;
+    z-index: 997;
+    position: absolute;
+    transform: scale(0.1) translate(-400%, -400%);
+    border: none;
+    background-color: Transparent;
+    background-repeat:no-repeat;
+    background-image: url(../../static/image/replay.png);
+    left: 95%;
 }

@@ -8,10 +8,10 @@ import {cameraHelper} from '../cameraHelper.js';
 import vertexShader from '../shaders/vertex.glsl'
 import fragmentShader from '../shaders/fragment.glsl'
 
-import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
-import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
-import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
-// import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass'
+// import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
+// import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
+// import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
+// // import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass'
 
 
 const worldStep = 1/60;
@@ -61,15 +61,15 @@ camera.position.y = 3
 camera.position.z = -10
 gScene.add(camera)
 
- // EffectComposer
- const effectComposer = new EffectComposer(gRenderer)
- effectComposer.setSize(sizes.width, sizes.height)
- effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
- const renderPass = new RenderPass(gScene, camera)
- effectComposer.addPass(renderPass)
- // Antialiasing
- const smaaPass = new SMAAPass()
- effectComposer.addPass(smaaPass)
+//  // EffectComposer
+//  const effectComposer = new EffectComposer(gRenderer)
+//  effectComposer.setSize(sizes.width, sizes.height)
+//  effectComposer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+//  const renderPass = new RenderPass(gScene, camera)
+//  effectComposer.addPass(renderPass)
+//  // Antialiasing
+//  const smaaPass = new SMAAPass()
+//  effectComposer.addPass(smaaPass)
 
 //  // BloomPass
 //  const unrealBloomPass = new UnrealBloomPass()
@@ -93,55 +93,55 @@ pointLight.position.set(50, 1000, 150)
 gScene.add(pointLight)
 const horizonLight = new THREE.PointLight(0xffffff, 6, 2000)
 gScene.add(horizonLight)
-const spot1 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot1.position.set(-200, 0, -100)
-const spot2 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot2.position.set(-500, 0, 100)
-const spot3 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot3.position.set(-800, 0, -100)
-const spot4 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot4.position.set(-1100, 0, 100)
-const spot5 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot5.position.set(-1400, 0, -100)
-const spot6 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot6.position.set(-1700, 0, 100)
-const spot7 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot7.position.set(-2000, 0, -100)
-const spot8 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot8.position.set(-2300, 0, 100)
-const spot9 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot9.position.set(-2600, 0, -100)
-const spot10 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot10.position.set(-2900, 0, 100)
-const spot11 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot11.position.set(-3200, 0, -100)
-const spot12 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot12.position.set(-3500, 0, 100)
-const spot13 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot13.position.set(-3800, 0, -100)
-const spot14 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot14.position.set(-4100, 0, 100)
-const spot15 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot15.position.set(-4400, 0, -100)
-const spot16 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot16.position.set(-4700, 0, 100)
-const spot17 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot17.position.set(-5000, 0, -100)
-const spot18 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot18.position.set(-5300, 0, 100)
-const spot19 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot19.position.set(-5600, 0, -100)
-const spot20 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot20.position.set(-5900, 0, 100)
-const spot21 = new THREE.PointLight('#0DC6FD', 1, 200)
-spot21.position.set(-6200, 0, -100)
-// const spot22 = new THREE.PointLight('#0DC6FD', 1, 200)
-// spot22.position.set(-6500, 0, 100)
-// const spot23 = new THREE.PointLight('#0DC6FD', 1, 200)
-// spot23.position.set(-6800, 0, -100)
-// const spot24 = new THREE.PointLight('#0DC6FD', 1, 200)
-// spot24.position.set(-00, 0, 100)
-gScene.add(spot1, spot2, spot3, spot4, spot5, spot6, spot7, spot8, spot9, spot10, spot11, spot12, spot13, spot14, spot15, spot16, spot17, spot18, spot19, spot20, spot21)
+// const spot1 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot1.position.set(-200, 0, -100)
+// const spot2 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot2.position.set(-500, 0, 100)
+// const spot3 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot3.position.set(-800, 0, -100)
+// const spot4 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot4.position.set(-1100, 0, 100)
+// const spot5 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot5.position.set(-1400, 0, -100)
+// const spot6 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot6.position.set(-1700, 0, 100)
+// const spot7 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot7.position.set(-2000, 0, -100)
+// const spot8 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot8.position.set(-2300, 0, 100)
+// const spot9 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot9.position.set(-2600, 0, -100)
+// const spot10 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot10.position.set(-2900, 0, 100)
+// const spot11 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot11.position.set(-3200, 0, -100)
+// const spot12 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot12.position.set(-3500, 0, 100)
+// const spot13 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot13.position.set(-3800, 0, -100)
+// const spot14 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot14.position.set(-4100, 0, 100)
+// const spot15 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot15.position.set(-4400, 0, -100)
+// const spot16 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot16.position.set(-4700, 0, 100)
+// const spot17 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot17.position.set(-5000, 0, -100)
+// const spot18 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot18.position.set(-5300, 0, 100)
+// const spot19 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot19.position.set(-5600, 0, -100)
+// const spot20 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot20.position.set(-5900, 0, 100)
+// const spot21 = new THREE.PointLight('#0DC6FD', 1, 200)
+// spot21.position.set(-6200, 0, -100)
+// // const spot22 = new THREE.PointLight('#0DC6FD', 1, 200)
+// // spot22.position.set(-6500, 0, 100)
+// // const spot23 = new THREE.PointLight('#0DC6FD', 1, 200)
+// // spot23.position.set(-6800, 0, -100)
+// // const spot24 = new THREE.PointLight('#0DC6FD', 1, 200)
+// // spot24.position.set(-00, 0, 100)
+// gScene.add(spot1, spot2, spot3, spot4, spot5, spot6, spot7, spot8, spot9, spot10, spot11, spot12, spot13, spot14, spot15, spot16, spot17, spot18, spot19, spot20, spot21)
 
 const floorMaterial = new THREE.RawShaderMaterial({
     vertexShader: vertexShader,
@@ -211,13 +211,10 @@ var boutHorizon = [];
         utils.loadResource('fonts/Hanson_Bold.json'),
         utils.loadResource('model/Pont.gltf'),
         utils.loadResource('model/horizon_galerie.gltf'),
-        utils.loadResource('model/recognizer.gltf')
+        utils.loadResource('model/recognizer_optimized.gltf')
     ]);
 
     // Sol
-
-    // const fog = new THREE.Fog('#0DC6FD', 15, 120)
-    // gScene.fog = fog
     
     const floor = new THREE.Mesh(
         new THREE.PlaneGeometry(6000, 600),
@@ -282,7 +279,6 @@ var boutHorizon = [];
         gScene.add(panneaux[index])
     })
 
-    console.log(panneaux[1])
     
 
     // Pont retour vers Hub
@@ -690,7 +686,7 @@ function render() {
 
         const elapsedTime = clock.getElapsedTime()
 
-        effectComposer.render()
+        // effectComposer.render()
 
         floorMaterial.uniforms.uTime.value = elapsedTime
 
@@ -838,6 +834,18 @@ window.addEventListener('keyup', (e) => {
             break;
     }
 });
+
+if ("ontouchstart" in document.documentElement)
+{
+    var replay = document.getElementById("replay")
+
+    replay.ontouchstart = function(){
+        resetVehicle()
+    }
+    replay.ontouchend = function(){
+        console.log("reset")
+    }
+}
 
 // (function initResolutionController() {
 //     const maxWidth = window.screen.availWidth;

@@ -228,15 +228,19 @@ function initControls(vehicle) {
 
     if ("ontouchstart" in document.documentElement)
     {
-        console.log("touch")
         var left = document.getElementById("gauche")
         var right = document.getElementById("droite")
         var up = document.getElementById("haut")
         var down = document.getElementById("bas")
+        if(left){
         left.classList.remove("hidden")
+        }
+        if(right){
         right.classList.remove("hidden")
+        }
         up.classList.remove("hidden")
         down.classList.remove("hidden")
+        document.getElementById("replay").classList.remove("hidden")
     // var leftJoystick = new BABYLON.VirtualJoystick(true)
     // leftJoystick.setJoystickColor("#EC623F")
     }
@@ -256,9 +260,12 @@ function initControls(vehicle) {
 
     if ("ontouchstart" in document.documentElement)
     {
+        console.log("touch")
         steeringDirection = 0
+        direction = 0
 
-        left.onclick = function(){
+        if(left){
+        left.ontouchstart = function(){
             if(page != "gallery.html"){
             steeringDirection = 1
         } else {
@@ -267,7 +274,16 @@ function initControls(vehicle) {
         [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(maxSteeringValue * steeringDirection, wheelIndex));
         }
         
-        right.onclick = function(){
+        left.ontouchend = function(){
+            if(page != "gallery.html"){
+            steeringDirection = 0
+        }
+        [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(maxSteeringValue * steeringDirection, wheelIndex));
+        }
+        }
+        
+        if(right){
+        right.ontouchstart = function(){
             if(page != "gallery.html"){
             steeringDirection = -1
         } else {
@@ -276,28 +292,45 @@ function initControls(vehicle) {
         [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(maxSteeringValue * steeringDirection, wheelIndex));
         }
         
-        up.onclick = function(){
+        right.ontouchend = function(){
+            if(page != "gallery.html"){
+            steeringDirection = 0
+        }
+        [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(maxSteeringValue * steeringDirection, wheelIndex));
+        }
+        }
+        
+        up.ontouchstart = function(){
+            if(page != ""){
             direction =-1
+            }
             [0, 1].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnFrontWheels * direction, wheelIndex));
             [2, 3].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnRearWheels * direction, wheelIndex));
         }
         
-        up.onclick = function(){
+        up.ontouchend = function(){
+            if(page != ""){
+            direction =0
+            }
+            [0, 1].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnFrontWheels * direction, wheelIndex));
+            [2, 3].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnRearWheels * direction, wheelIndex));
+        }
+        
+        down.ontouchstart = function(){
+            if(page != ""){
             direction =1
+            }
             [0, 1].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnFrontWheels * direction, wheelIndex));
             [2, 3].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnRearWheels * direction, wheelIndex));
         }
         
-        // left.onclick = function(){
-        //     if(page != "gallery.html"){
-        //     steeringDirection = 1
-        // } else {
-        //     steeringDirection = 0
-        // }
-
-        // [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(maxSteeringValue * steeringDirection, wheelIndex));
-
-        // }
+        down.ontouchend = function(){
+            if(page != ""){
+            direction =0
+            }
+            [0, 1].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnFrontWheels * direction, wheelIndex));
+            [2, 3].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnRearWheels * direction, wheelIndex));
+        }
 
     // ontouchstart = ontouchmove = ontouchend = (e) => {
 
