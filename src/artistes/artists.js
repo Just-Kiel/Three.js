@@ -90,38 +90,48 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
 (async function init() {
 
-    const [manropeJSON] = await Promise.all([
-        utils.loadResource('fonts/Manrope_Bold.json'),
+    const [MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, AnimationPNG,
+            backCardPNG,
+            nomine1MultimediaPNG, nomine2MultimediaPNG, nomine3MultimediaPNG,
+            nomine1CommunicationPNG, nomine2CommunicationPNG, nomine3CommunicationPNG,
+            nomine1InfographiePNG, nomine2InfographiePNG, nomine3InfographiePNG,
+            nomine1AudiovisuelPNG, nomine2AudiovisuelPNG, nomine3AudiovisuelPNG,
+            nomine1WebPNG, nomine2WebPNG, nomine3WebPNG,
+            nomine1AnimationPNG, nomine2AnimationPNG, nomine3AnimationPNG
+        ] = await Promise.all([
+        utils.loadResource('image/artists/multimedia/multimedia.png'),
+        utils.loadResource('image/artists/communication/communication.png'),
+        utils.loadResource('image/artists/infographie/infographie.png'),
+        utils.loadResource('image/artists/audiovisuel/audiovisuel.png'),
+        utils.loadResource('image/artists/web/web.png'),
+        utils.loadResource('image/artists/animation/animation.png'),
+        utils.loadResource('image/artists/backCard.png'),
+        utils.loadResource('image/artists/multimedia/nomine_1.png'),
+        utils.loadResource('image/artists/multimedia/nomine_2.png'),
+        utils.loadResource('image/artists/multimedia/nomine_3.png'),
+        utils.loadResource('image/artists/communication/nomine_1.png'),
+        utils.loadResource('image/artists/communication/nomine_2.png'),
+        utils.loadResource('image/artists/communication/nomine_3.png'),
+        utils.loadResource('image/artists/infographie/nomine_1.png'),
+        utils.loadResource('image/artists/infographie/nomine_2.png'),
+        utils.loadResource('image/artists/infographie/nomine_3.png'),
+        utils.loadResource('image/artists/audiovisuel/nomine_1.png'),
+        utils.loadResource('image/artists/audiovisuel/nomine_2.png'),
+        utils.loadResource('image/artists/audiovisuel/nomine_3.png'),
+        utils.loadResource('image/artists/web/nomine_1.png'),
+        utils.loadResource('image/artists/web/nomine_2.png'),
+        utils.loadResource('image/artists/web/nomine_3.png'),
+        utils.loadResource('image/artists/animation/nomine_1.png'),
+        utils.loadResource('image/artists/animation/nomine_2.png'),
+        utils.loadResource('image/artists/animation/nomine_3.png'),
     ]);
-
-    
-
-    const textArtistsGeometry = new THREE.TextGeometry(
-        'Artistes', 
-        {
-            font: manropeJSON,
-            size: 15,
-            height: 2,
-            curveSegments: 12,
-            bevelEnabled: true,
-            bevelThickness: 0.03,
-            bevelSize: 0.02,
-            bevelOffset: 0,
-            bevelSegments: 5
-        }
-    )
-
-    const textMaterial = new THREE.MeshBasicMaterial()
-    const textArtists = new THREE.Mesh(textArtistsGeometry, textMaterial)
-    textArtistsGeometry.center()
-    // textArtists.position.y = 8
-    // gScene.add(textArtists)
 
     // Cartes catégories
     const cardGeometry = new THREE.PlaneGeometry(29.5, 45.5)
     cardCategory1 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#ABEDC6'}),
+        new THREE.MeshStandardMaterial({map: MultimediaPNG}),
+        // new THREE.MeshStandardMaterial({color: '#ABEDC6'}),
     )
     cardCategory1.name = "Multimédia"
     cardCategory1.position.set(coordCategoryCard[0], heightCard, 0)
@@ -129,7 +139,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
     cardCategory2 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
+        new THREE.MeshStandardMaterial({map: CommunicationPNG})
+        // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardCategory2.name = "Communication"
     cardCategory2.position.set(coordCategoryCard[1], heightCard, 0)
@@ -137,7 +148,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
     cardCategory3 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: InfographiePNG})
+        // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardCategory3.name = "Infographie"
     cardCategory3.position.set(coordCategoryCard[2], heightCard, 0)
@@ -145,7 +157,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
     cardCategory4 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#ABEDC6'})
+        new THREE.MeshStandardMaterial({map: AudiovisuelPNG})
+        // new THREE.MeshStandardMaterial({color: '#ABEDC6'})
     )
     cardCategory4.name = "Audiovisuel"
     cardCategory4.position.set(coordCategoryCard[3], heightCard, 0)
@@ -153,7 +166,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
     
     cardCategory5 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
+        new THREE.MeshStandardMaterial({map: WebPNG})
+        // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardCategory5.name = "Site Web"
     cardCategory5.position.set(coordCategoryCard[4], heightCard, 0)
@@ -161,7 +175,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
     
     cardCategory6 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: AnimationPNG})
+        // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardCategory6.name = "Animation"
     cardCategory6.position.set(coordCategoryCard[5], heightCard, 0)
@@ -171,7 +186,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
     backCard = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#ECF0F1'})
+        new THREE.MeshStandardMaterial({map: backCardPNG})
+        // new THREE.MeshStandardMaterial({color: '#ECF0F1'})
     )
     backCard.position.set(0, 50, -1)
     backCard.rotation.y = -3
@@ -179,7 +195,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
     // Cartes nominés multimédia
     cardMultimedia1 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: nomine1MultimediaPNG})
+        // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardMultimedia1.name = "Multimédia Nominé 1"
     cardMultimedia1.position.set(0, heightArtist, 0)
@@ -188,7 +205,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
     cardMultimedia2 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
+        new THREE.MeshStandardMaterial({map: nomine2MultimediaPNG})
+        // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardMultimedia2.name = "Nominé 2"
     cardMultimedia2.position.set(0, heightArtist, 0)
@@ -196,7 +214,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
     cardMultimedia3 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: nomine3MultimediaPNG})
+        // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardMultimedia3.name = "Nominé 3"
     cardMultimedia3.position.set(0, heightArtist, 0)
@@ -206,7 +225,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
     // Cartes nominés Communication
     cardCom1 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: nomine1CommunicationPNG})
+        // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardCom1.name = "Communication Nominé 1"
     cardCom1.position.set(0, heightArtist, 0)
@@ -215,7 +235,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
     cardCom2 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
+        new THREE.MeshStandardMaterial({map: nomine2CommunicationPNG})
+        // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardCom2.name = "Nominé 2"
     cardCom2.position.set(0, heightArtist, 0)
@@ -223,7 +244,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
     cardCom3 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: nomine3CommunicationPNG})
+        // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardCom3.name = "Nominé 3"
     cardCom3.position.set(0, heightArtist, 0)
@@ -233,7 +255,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
     // Cartes nominés Infographie
     cardInfo1 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: nomine1InfographiePNG})
+        // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardInfo1.name = "Infographie Nominé 1"
     cardInfo1.position.set(0, heightArtist, 0)
@@ -242,7 +265,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
     cardInfo2 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
+        new THREE.MeshStandardMaterial({map: nomine2InfographiePNG})
+        // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardInfo2.name = "Nominé 2"
     cardInfo2.position.set(0, heightArtist, 0)
@@ -250,7 +274,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
     cardInfo3 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: nomine3InfographiePNG})
+        // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardInfo3.name = "Nominé 3"
     cardInfo3.position.set(0, heightArtist, 0)
@@ -260,7 +285,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
     // Cartes nominés Audiovisuel
     cardAudio1 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: nomine1AudiovisuelPNG})
+        // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardAudio1.name = "Audiovisuel Nominé 1"
     cardAudio1.position.set(0, heightArtist, 0)
@@ -269,7 +295,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
     cardAudio2 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
+        new THREE.MeshStandardMaterial({map: nomine2AudiovisuelPNG})
+        // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardAudio2.name = "Nominé 2"
     cardAudio2.position.set(0, heightArtist, 0)
@@ -277,7 +304,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
     cardAudio3 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: nomine3AudiovisuelPNG})
+        // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardAudio3.name = "Nominé 3"
     cardAudio3.position.set(0, heightArtist, 0)
@@ -287,7 +315,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
     // Cartes nominés Site Web
     cardWeb1 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8A7BE'})
+        new THREE.MeshStandardMaterial({map: nomine1WebPNG})
+        // new THREE.MeshStandardMaterial({color: '#E8A7BE'})
     )
     cardWeb1.name = "Site Web Nominé 1"
     cardWeb1.position.set(0, heightArtist, 0)
@@ -296,7 +325,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
     cardWeb2 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
+        new THREE.MeshStandardMaterial({map: nomine2WebPNG})
+        // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardWeb2.name = "Nominé 2"
     cardWeb2.position.set(0, heightArtist, 0)
@@ -304,7 +334,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
     cardWeb3 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: nomine3WebPNG})
+        // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardWeb3.name = "Nominé 3"
     cardWeb3.position.set(0, heightArtist, 0)
@@ -314,7 +345,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
     // Cartes nominés Animation
     cardAnim1 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#D46F4D'})
+        new THREE.MeshStandardMaterial({map: nomine1AnimationPNG})
+        // new THREE.MeshStandardMaterial({color: '#D46F4D'})
     )
     cardAnim1.name = "Animation Nominé 1"
     cardAnim1.position.set(0, heightArtist, 0)
@@ -323,7 +355,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
     cardAnim2 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
+        new THREE.MeshStandardMaterial({map: nomine2AnimationPNG})
+        // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardAnim2.name = "Nominé 2"
     cardAnim2.position.set(0, heightArtist, 0)
@@ -331,7 +364,8 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
     cardAnim3 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({color: '#08C5D1'})
+        new THREE.MeshStandardMaterial({map: nomine3AnimationPNG})
+        // new THREE.MeshStandardMaterial({color: '#08C5D1'})
     )
     cardAnim3.name = "Nominé 3"
     cardAnim3.position.set(0, heightArtist, 0)
@@ -402,12 +436,12 @@ window.addEventListener('click', () => {
                 gScene.add(cardCategory1, cardCategory2, cardCategory3, cardCategory4, cardCategory5, cardCategory6)
                 gsap.to(backCard.rotation, {duration: 1, y:-3})
                 gsap.to(backCard.position, {duration: 1, z: -1})
-                gsap.to(cardCategory1.rotation, {duration: 1, y:0})
-                gsap.to(cardCategory2.rotation, {duration: 1, y:0})
-                gsap.to(cardCategory3.rotation, {duration: 1, y:0})
-                gsap.to(cardCategory4.rotation, {duration: 1, y:0})
-                gsap.to(cardCategory5.rotation, {duration: 1, y:0})
-                gsap.to(cardCategory6.rotation, {duration: 1, y:0})
+                gsap.to(cardCategory1.rotation, {duration: 1, y:0, z:0})
+                gsap.to(cardCategory2.rotation, {duration: 1, y:0, z:0})
+                gsap.to(cardCategory3.rotation, {duration: 1, y:0, z:0})
+                gsap.to(cardCategory4.rotation, {duration: 1, y:0, z:0})
+                gsap.to(cardCategory5.rotation, {duration: 1, y:0, z:0})
+                gsap.to(cardCategory6.rotation, {duration: 1, y:0, z:0})
             }, 3000)
 
             setTimeout(function(){
@@ -427,7 +461,7 @@ window.addEventListener('click', () => {
             document.getElementById("hub_arrow").classList.add("hidden")
             document.getElementById("arrow").classList.remove("hidden")
             gScene.add(backCard);
-            gsap.to(cardCategory1.position, {duration: 1, x: 0, y:50})
+            gsap.to(cardCategory1.position, {duration: 1, x: 0, y:50, z:0.01})
             gsap.to(cardCategory2.position, {duration: 1, x: 0, y:50})
             gsap.to(cardCategory3.position, {duration: 1, x: 0, y:50})
             gsap.to(cardCategory4.position, {duration: 1, x: 0, y:50})
@@ -475,7 +509,7 @@ window.addEventListener('click', () => {
             document.getElementById("arrow").classList.remove("hidden")
             gScene.add(backCard);
             gsap.to(cardCategory1.position, {duration: 1, x: 0, y:50})
-            gsap.to(cardCategory2.position, {duration: 1, x: 0, y:50})
+            gsap.to(cardCategory2.position, {duration: 1, x: 0, y:50, z:0.01})
             gsap.to(cardCategory3.position, {duration: 1, x: 0, y:50})
             gsap.to(cardCategory4.position, {duration: 1, x: 0, y:50})
             gsap.to(cardCategory5.position, {duration: 1, x: 0, y:50})
@@ -521,7 +555,7 @@ window.addEventListener('click', () => {
             gScene.add(backCard);
             gsap.to(cardCategory1.position, {duration: 1, x: 0, y:50})
             gsap.to(cardCategory2.position, {duration: 1, x: 0, y:50})
-            gsap.to(cardCategory3.position, {duration: 1, x: 0, y:50})
+            gsap.to(cardCategory3.position, {duration: 1, x: 0, y:50, z:0.01})
             gsap.to(cardCategory4.position, {duration: 1, x: 0, y:50})
             gsap.to(cardCategory5.position, {duration: 1, x: 0, y:50})
             gsap.to(cardCategory6.position, {duration: 1, x: 0, y:50})
@@ -567,7 +601,7 @@ window.addEventListener('click', () => {
             gsap.to(cardCategory1.position, {duration: 1, x: 0, y:50})
             gsap.to(cardCategory2.position, {duration: 1, x: 0, y:50})
             gsap.to(cardCategory3.position, {duration: 1, x: 0, y:50})
-            gsap.to(cardCategory4.position, {duration: 1, x: 0, y:50})
+            gsap.to(cardCategory4.position, {duration: 1, x: 0, y:50, z:0.01})
             gsap.to(cardCategory5.position, {duration: 1, x: 0, y:50})
             gsap.to(cardCategory6.position, {duration: 1, x: 0, y:50})
 
@@ -612,7 +646,7 @@ window.addEventListener('click', () => {
             gsap.to(cardCategory2.position, {duration: 1, x: 0, y:50})
             gsap.to(cardCategory3.position, {duration: 1, x: 0, y:50})
             gsap.to(cardCategory4.position, {duration: 1, x: 0, y:50})
-            gsap.to(cardCategory5.position, {duration: 1, x: 0, y:50})
+            gsap.to(cardCategory5.position, {duration: 1, x: 0, y:50, z:0.01})
             gsap.to(cardCategory6.position, {duration: 1, x: 0, y:50})
 
             setTimeout(function(){
@@ -657,7 +691,7 @@ window.addEventListener('click', () => {
             gsap.to(cardCategory3.position, {duration: 1, x: 0, y:50})
             gsap.to(cardCategory4.position, {duration: 1, x: 0, y:50})
             gsap.to(cardCategory5.position, {duration: 1, x: 0, y:50})
-            gsap.to(cardCategory6.position, {duration: 1, x: 0, y:50})
+            gsap.to(cardCategory6.position, {duration: 1, x: 0, y:50, z:0.01})
 
             setTimeout(function(){
                 gsap.to(backCard.rotation, {duration: 1, y: 0})
