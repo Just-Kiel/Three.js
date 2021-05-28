@@ -1,7 +1,7 @@
 // import controllerSocketHandler from './socketHandler.js';
 import * as CANNON from 'cannon-es'
 import * as THREE from 'three'
-import * as BABYLON from 'babylonjs'
+// import * as BABYLON from 'babylonjs'
 
 export default function createVehicle() {
     const chassisBody = new CANNON.Body({mass: 100});
@@ -228,8 +228,17 @@ function initControls(vehicle) {
 
     if ("ontouchstart" in document.documentElement)
     {
-    var leftJoystick = new BABYLON.VirtualJoystick(true)
-    leftJoystick.setJoystickColor("#EC623F")
+        console.log("touch")
+        var left = document.getElementById("gauche")
+        var right = document.getElementById("droite")
+        var up = document.getElementById("haut")
+        var down = document.getElementById("bas")
+        left.classList.remove("hidden")
+        right.classList.remove("hidden")
+        up.classList.remove("hidden")
+        down.classList.remove("hidden")
+    // var leftJoystick = new BABYLON.VirtualJoystick(true)
+    // leftJoystick.setJoystickColor("#EC623F")
     }
 
     var direction
@@ -247,24 +256,71 @@ function initControls(vehicle) {
 
     if ("ontouchstart" in document.documentElement)
     {
-    ontouchstart = ontouchmove = ontouchend = (e) => {
-            direction = leftJoystick.deltaPosition.y > 0 ? -2 : leftJoystick.deltaPosition.y < 0 ? 3 : 0;
+        steeringDirection = 0
 
+        left.onclick = function(){
             if(page != "gallery.html"){
-                steeringDirection = leftJoystick.deltaPosition.x < 0 ? 1 : leftJoystick.deltaPosition.x > 0 ? -1 : 0;
-            } else {
-                steeringDirection = 0
-            }
-
-            if(!leftJoystick.pressed){
-                direction = 0
-                steeringDirection = 0
-            }
+            steeringDirection = 1
+        } else {
+            steeringDirection = 0
+        }
+        [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(maxSteeringValue * steeringDirection, wheelIndex));
+        }
+        
+        right.onclick = function(){
+            if(page != "gallery.html"){
+            steeringDirection = -1
+        } else {
+            steeringDirection = 0
+        }
+        [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(maxSteeringValue * steeringDirection, wheelIndex));
+        }
+        
+        up.onclick = function(){
+            direction =-1
             [0, 1].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnFrontWheels * direction, wheelIndex));
             [2, 3].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnRearWheels * direction, wheelIndex));
+        }
+        
+        up.onclick = function(){
+            direction =1
+            [0, 1].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnFrontWheels * direction, wheelIndex));
+            [2, 3].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnRearWheels * direction, wheelIndex));
+        }
+        
+        // left.onclick = function(){
+        //     if(page != "gallery.html"){
+        //     steeringDirection = 1
+        // } else {
+        //     steeringDirection = 0
+        // }
 
-            [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(joystickMaxSteeringValue * steeringDirection, wheelIndex));
-    }
+        // [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(maxSteeringValue * steeringDirection, wheelIndex));
+
+        // }
+
+    // ontouchstart = ontouchmove = ontouchend = (e) => {
+
+
+            // direction = leftJoystick.deltaPosition.y > 0 ? -2 : leftJoystick.deltaPosition.y < 0 ? 3 : 0;
+
+
+
+            // if(page != "gallery.html"){
+            //     // steeringDirection = leftJoystick.deltaPosition.x < 0 ? 1 : leftJoystick.deltaPosition.x > 0 ? -1 : 0;
+            // } else {
+            //     steeringDirection = 0
+            // }
+
+            // if(!leftJoystick.pressed){
+            //     direction = 0
+            //     steeringDirection = 0
+            // }
+            // [0, 1].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnFrontWheels * direction, wheelIndex));
+            // [2, 3].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnRearWheels * direction, wheelIndex));
+
+            // [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(joystickMaxSteeringValue * steeringDirection, wheelIndex));
+    // }
 }
 
     onkeydown = onkeyup = (e) => {

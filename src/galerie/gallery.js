@@ -184,7 +184,7 @@ const mouse = new THREE.Vector2();
 
 var vehicle, chassis
 
-const multimedia = [40, 37, 0];
+const multimedia = [40, 80, 0];
 var oeuvre1, oeuvre2, oeuvre3;
 const hauteurOeuvre = 70;
 const ecartOeuvre = 225;
@@ -205,19 +205,16 @@ var boutHorizon = [];
 
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF, hansonJSON, pontTronGLTF, horizonGLTF] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, hansonJSON, pontTronGLTF, horizonGLTF, recognizerGLTF] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
         utils.loadResource('fonts/Hanson_Bold.json'),
         utils.loadResource('model/Pont.gltf'),
-        utils.loadResource('model/horizon_galerie.gltf')
+        utils.loadResource('model/horizon_galerie.gltf'),
+        utils.loadResource('model/recognizer.gltf')
     ]);
 
     // Sol
-
-    // floorMaskMaterial.alphaMap.magFilter = THREE.NearestFilter;
-    // floorMaskMaterial.alphaMap.wrapT = THREE.RepeatWrapping;
-    // floorMaskMaterial.alphaMap.repeat.y = 1;
 
     // const fog = new THREE.Fog('#0DC6FD', 15, 120)
     // gScene.fog = fog
@@ -267,6 +264,26 @@ var boutHorizon = [];
 
     // console.log(horizonGLTF.scene)
     gScene.add(horizonGalerie)
+
+    // Recognizers
+    const recognizer = recognizerGLTF.scene
+    recognizer.scale.set(10, 10, 10)
+    recognizer.rotation.y = -Math.PI*0.5
+    var panneaux = [
+        recognizer,
+        recognizer.clone(),
+        recognizer.clone(),
+        recognizer.clone(),
+        recognizer.clone(),
+        recognizer.clone()
+    ]
+
+    panneaux.forEach(function(item, index){
+        gScene.add(panneaux[index])
+    })
+
+    console.log(panneaux[1])
+    
 
     // Pont retour vers Hub
     pontTron = pontTronGLTF.scene
@@ -335,7 +352,7 @@ var boutHorizon = [];
         'multimédia',
         {
             font: hansonJSON,
-            size: 15,
+            size: 10,
             height: 4,
             curveSegments: 12,
             bevelEnabled: true,
@@ -346,15 +363,16 @@ var boutHorizon = [];
         }
     )
     const textMultimedia = new THREE.Mesh(textMultimediaGeometry, textGalleryMaterial)
-    textMultimedia.rotation.y = Math.PI/2
+    textMultimedia.rotateY(Math.PI/2)
+    textMultimedia.rotateX(Math.PI*0.1)
     textMultimediaGeometry.center()
-    textMultimedia.position.set(multimedia[0], multimedia[1], multimedia[2])
+    textMultimedia.position.set(multimedia[0]-30, multimedia[1], multimedia[2])
     
     const textCommunicationGeometry = new THREE.TextGeometry(
         'communication',
         {
             font: hansonJSON,
-            size: 15,
+            size: 8,
             height: 4,
             curveSegments: 12,
             bevelEnabled: true,
@@ -365,15 +383,17 @@ var boutHorizon = [];
         }
     )
     const textCommunication = new THREE.Mesh(textCommunicationGeometry, textGalleryMaterial)
-    textCommunication.rotation.y = Math.PI/2
+    textCommunication.rotateY(Math.PI/2)
+    textCommunication.rotateX(Math.PI*0.1)
     textCommunicationGeometry.center()
     textCommunication.position.set(communication[0], communication[1], communication[2])
+    panneaux[1].position.x = communication[0]-10
 
     const textInfoGeometry = new THREE.TextGeometry(
         'infographie',
         {
             font: hansonJSON,
-            size: 15,
+            size: 10,
             height: 4,
             curveSegments: 12,
             bevelEnabled: true,
@@ -384,15 +404,17 @@ var boutHorizon = [];
         }
     )
     const textInfo = new THREE.Mesh(textInfoGeometry, textGalleryMaterial)
-    textInfo.rotation.y = Math.PI/2
+    textInfo.rotateY(Math.PI/2)
+    textInfo.rotateX(Math.PI*0.1)
     textInfoGeometry.center()
     textInfo.position.set(infographie[0], infographie[1], infographie[2])
+    panneaux[2].position.x = infographie[0]-10
     
     const textAudioGeometry = new THREE.TextGeometry(
         'audiovisuel',
         {
             font: hansonJSON,
-            size: 15,
+            size: 10,
             height: 4,
             curveSegments: 12,
             bevelEnabled: true,
@@ -403,15 +425,17 @@ var boutHorizon = [];
         }
     )
     const textAudio = new THREE.Mesh(textAudioGeometry, textGalleryMaterial)
-    textAudio.rotation.y = Math.PI/2
+    textAudio.rotateY(Math.PI/2)
+    textAudio.rotateX(Math.PI*0.1)
     textAudioGeometry.center()
     textAudio.position.set(audiovisuel[0], audiovisuel[1], audiovisuel[2])
-    
+    panneaux[3].position.x = audiovisuel[0] -10
+
     const textWebGeometry = new THREE.TextGeometry(
         'site web',
         {
             font: hansonJSON,
-            size: 15,
+            size: 10,
             height: 4,
             curveSegments: 12,
             bevelEnabled: true,
@@ -422,15 +446,17 @@ var boutHorizon = [];
         }
     )
     const textWeb = new THREE.Mesh(textWebGeometry, textGalleryMaterial)
-    textWeb.rotation.y = Math.PI/2
+    textWeb.rotateY(Math.PI*0.5)
+    textWeb.rotateX(Math.PI*0.1)
     textWebGeometry.center()
     textWeb.position.set(web[0], web[1], web[2])
+    panneaux[4].position.x = web[0] - 10
     
     const textAnimGeometry = new THREE.TextGeometry(
         'animation',
         {
             font: hansonJSON,
-            size: 15,
+            size: 10,
             height: 4,
             curveSegments: 12,
             bevelEnabled: true,
@@ -441,10 +467,11 @@ var boutHorizon = [];
         }
     )
     const textAnim = new THREE.Mesh(textAnimGeometry, textGalleryMaterial)
-    textAnim.rotation.y = Math.PI/2
+    textAnim.rotateY(Math.PI*0.5)
+    textAnim.rotateX(Math.PI*0.1)
     textAnimGeometry.center()
     textAnim.position.set(animation[0], animation[1], animation[2])
-
+    panneaux[5].position.x = animation[0]-10
 
     gScene.add(textMultimedia, textCommunication, textInfo, textAudio, textWeb, textAnim)
 

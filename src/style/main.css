@@ -136,10 +136,29 @@ html
     position: absolute;
 }
 
-/* @media only screen and (orientation:portrait){
-    body {
-      height: 200vw;
-      width: 100vw;
-      transform: rotate(90deg);
-    }
-  } */
+.direction {
+    z-index: 998;
+    height: 100vh;
+    position: absolute;
+    transform: scale(0.2) translate(-200%, -200%);
+}
+
+#gauche{
+    top: 95%;
+    left: 5%;
+}
+
+#droite{
+    top: 95%;
+    left: 15%;
+}
+
+#haut{
+    top: 75%;
+    left: 90%;
+}
+
+#bas{
+    top: 95%;
+    left: 90%;
+}
