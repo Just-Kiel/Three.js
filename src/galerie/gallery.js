@@ -210,7 +210,7 @@ var boutHorizon = [];
         utils.loadResource('model/van.gltf'),
         utils.loadResource('fonts/Hanson_Bold.json'),
         utils.loadResource('model/Pont.gltf'),
-        utils.loadResource('model/horizon_galerie.gltf'),
+        utils.loadResource('model/horizon_optimized.gltf'),
         utils.loadResource('model/recognizer_optimized.gltf')
     ]);
 
