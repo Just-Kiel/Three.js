@@ -18,10 +18,46 @@ html
     height: 100vh;
 }
 
+#among_us{
+    background-color: black;
+    background-image: url(../../static/image/Ciel_Among_us.svg);
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+}
+
 #tattoine h1{
     position: relative;
     top: 50%;
     text-align: center;
+}
+
+#among_us h1{
+    position: absolute;
+    top: 50%;
+    width: 100%;
+    text-align: center;
+    color: white;
+    transform: translateY(-50%);
+}
+
+#van_ejected img{
+    height: 600px;
+  position: absolute;
+  left: 0%;
+  top: 50%;
+  animation: eject 9s linear;
+  transform-origin: 45vmin 45vmin;
+  transform: translate3d(-50vmin, -45vmin, 0px) rotate(0turn);
+}
+
+@keyframes eject {
+  0% {
+    transform: translate3d(-50vmin, -45vmin, 0px) rotate(0turn);
+  }
+  50%, 100% {
+    transform: translate3d(100vw, -45vmin, 0px) rotate(-2turn);
+  }
 }
 
 .webgl
@@ -99,3 +135,11 @@ html
     z-index: 998;
     position: absolute;
 }
+
+/* @media only screen and (orientation:portrait){
+    body {
+      height: 200vw;
+      width: 100vw;
+      transform: rotate(90deg);
+    }
+  } */

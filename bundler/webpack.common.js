@@ -12,7 +12,7 @@ module.exports = {
         new_game: path.resolve(__dirname, '../src/jeux/new_game.js'),
         gallery: path.resolve(__dirname, '../src/galerie/gallery.js'),
         artists: path.resolve(__dirname, '../src/artistes/artists.js'),
-        mentions: path.resolve(__dirname, '../src/mentions_legales/mentions_legales.js')
+        mentions: path.resolve(__dirname, '../src/mentions_legales/mentions_legales.js'),
     },
     output:
     {

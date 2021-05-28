@@ -279,6 +279,7 @@ function updatePhysics() {
 }
 
 function render() {
+                
 
     if (pause) {
         return;
@@ -302,6 +303,8 @@ function render() {
     gRenderer.render(gScene, camera);
 
     requestAnimationFrame(render);
+
+    
 }
 
 // function setMaterials(wheel, chassis) {

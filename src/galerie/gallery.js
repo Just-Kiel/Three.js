@@ -276,11 +276,11 @@ var boutHorizon = [];
     gScene.add(pontTron)
 
     // Collider vers hub
-    const collideShape = new CANNON.Box(new CANNON.Vec3(50, 10, 22))
+    const collideShape = new CANNON.Box(new CANNON.Vec3(10, 10, 20))
     const collideHub = new CANNON.Body({
         mass:1000,
         shape: collideShape,
-        position: new CANNON.Vec3(-5800, 15,0),
+        position: new CANNON.Vec3(-5850, 15,0),
         // quaternion: new CANNON.Quaternion(0, -0.47, 0)
     })
     const collideBehind = new CANNON.Body({
