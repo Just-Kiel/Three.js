@@ -14,9 +14,16 @@ const loadingManager = new THREE.LoadingManager(
     () =>
     {
         console.log('charged')
-        document.getElementById("load").style.cursor = "pointer"
+        document.getElementById("eye").style.cursor = "pointer"
+        document.getElementById("complete").addEventListener("animationend", function() {
+            document.getElementById("eye").classList.remove("hidden")
+            document.getElementById("not_complete").classList.remove("hidden")
+            document.getElementById("complete").classList.add("hidden")
+        }, false);
+        
         document.getElementById("load").onclick = function(){
         document.getElementById("load").classList.add("hidden");
+        document.getElementById("load").style.cursor = "auto"
         }
     }
 )

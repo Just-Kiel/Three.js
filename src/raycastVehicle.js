@@ -84,6 +84,7 @@ export default function createVehicle() {
     
     vehicle.detectBody = function(interactBodies){
         chassisBody.addEventListener('collide', interact)
+        wheelBodies[1].addEventListener('collide', interact)
         function interact(i){
             var path = window.location.pathname;
             var page = path.split("/").pop();
@@ -128,7 +129,11 @@ export default function createVehicle() {
 
             if(page == "gallery.html"){
                 if(i.body.id == interactBodies[0].id){
-                    window.location.pathname = "./immersions/index.html";
+                    document.getElementById("blackscreen").classList.remove("hidden")
+                    document.getElementById("blackscreen").classList.remove("blackscreen-non")
+                    document.getElementById("blackscreen").classList.add("blackscreen-active")
+                    
+                    setTimeout(function(){window.location.pathname = "./immersions/index.html";}, 4000)
                     // window.location.pathname = "./index.html";
                 }
             }
@@ -301,7 +306,7 @@ function initControls(vehicle) {
         }
         
         up.ontouchstart = function(){
-            if(page != ""){
+            if(page != "test"){
             direction =-1
             }
             [0, 1].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnFrontWheels * direction, wheelIndex));
@@ -309,7 +314,7 @@ function initControls(vehicle) {
         }
         
         up.ontouchend = function(){
-            if(page != ""){
+            if(page != "test"){
             direction =0
             }
             [0, 1].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnFrontWheels * direction, wheelIndex));
@@ -317,7 +322,7 @@ function initControls(vehicle) {
         }
         
         down.ontouchstart = function(){
-            if(page != ""){
+            if(page != "test"){
             direction =1
             }
             [0, 1].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnFrontWheels * direction, wheelIndex));
@@ -325,7 +330,7 @@ function initControls(vehicle) {
         }
         
         down.ontouchend = function(){
-            if(page != ""){
+            if(page != "test"){
             direction =0
             }
             [0, 1].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnFrontWheels * direction, wheelIndex));

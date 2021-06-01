@@ -5,8 +5,6 @@ const path = require('path')
 
 module.exports = {
     entry: {
-        main: path.resolve(__dirname, '../src/app.js'),
-        test: path.resolve(__dirname, '../src/test.js'),
         vehicle: path.resolve(__dirname, '../src/vehicle.js'),
         new: path.resolve(__dirname, '../src/new.js'),
         new_game: path.resolve(__dirname, '../src/jeux/new_game.js'),

@@ -106,6 +106,28 @@ html
     animation-duration: 2.5s;
 }
 
+.eye_van{
+    position: absolute;
+    display: block;
+    width: 100vw;
+    height: 100vh;
+    transform: scale(0.1) rotate(0turn);
+    animation: eyeSpin 4s infinite alternate;
+}
+
+#complete{
+    z-index: 999;
+}
+
+@keyframes eyeSpin{
+    0%{
+        transform: rotate(0turn) scale(0.1);
+    }
+    100%{
+        transform: rotate(2turn) scale(0.1);
+    }
+}
+
 @keyframes loader{
     0% {clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);}
     50% {clip-path: polygon(0% 50%, 100% 50%, 100% 100%, 0% 100%);}
@@ -122,6 +144,20 @@ html
     transform: translate(-50%, -50%);
     pointer-events: none;
     background-image: url(../../static/image/cross.svg);
+}
+
+.look {
+    width: 3rem;
+    height: 3rem;
+    /* border: 2px solid red; */
+    /* border-radius: 50%; */
+    position: absolute;
+    z-index: 999;
+    transform: translate(-50%, -25%);
+    background-size: 100%;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    background-image: url(../../static/image/oeil.svg);
 }
 
 #arrow{
@@ -168,7 +204,7 @@ html
     background-color: Transparent;
     background-repeat:no-repeat;
     width: 50%;
-    background-image: url(../../static/image/haut.png);
+    background-image: url(../../static/image/Bouton_avancer.png);
     top: 75%;
     left: 100%;
 }
@@ -194,4 +230,28 @@ html
     background-repeat:no-repeat;
     background-image: url(../../static/image/replay.png);
     left: 95%;
+}
+
+.blackscreen-active{
+    
+    background-color: rgb(0, 0, 0, 1);
+    
+}
+
+.blackscreen-non{
+    
+    background-color: rgba(0, 0, 0, 0.1);
+    
+}
+
+#blackscreen{
+    position: absolute;
+    z-index: 999;
+    width: 100vw;
+    height: 100vh;
+    transition: all 2s ease;
+    -webkit-transition: all 2s ease;  
+    -moz-transition: all 2s ease;  
+    -o-transition: all 2s ease;  
+    -ms-transition: all 2s ease; 
 }

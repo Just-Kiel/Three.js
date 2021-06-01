@@ -13,6 +13,42 @@ import fragmentShader from '../shaders/fragment.glsl'
 // import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
 // // import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass'
 
+// Contenu pour le multimédia (hors lien de redirection)
+var Multimedia1
+var Multimedia2
+var Multimedia3
+var artistsMultimedia
+var Communication1
+var Communication2
+var Communication3
+var artistsCommunication
+var Infographie1
+var Infographie2
+var Infographie3
+var artistsInfographie
+var Audiovisuel1
+var Audiovisuel2
+var Audiovisuel3
+var artistsAudiovisuel
+var Web1
+var Web2
+var Web3
+var artistsWeb
+var Animation1
+var Animation2
+var Animation3
+var artistsAnimation
+var infos
+
+var Son1
+var Son2
+var Son3
+var artistsSon
+var Public1
+var Public2
+var Public3
+var artistsPublic
+
 
 const worldStep = 1/60;
 
@@ -135,12 +171,6 @@ gScene.add(horizonLight)
 // spot20.position.set(-5900, 0, 100)
 // const spot21 = new THREE.PointLight('#0DC6FD', 1, 200)
 // spot21.position.set(-6200, 0, -100)
-// // const spot22 = new THREE.PointLight('#0DC6FD', 1, 200)
-// // spot22.position.set(-6500, 0, 100)
-// // const spot23 = new THREE.PointLight('#0DC6FD', 1, 200)
-// // spot23.position.set(-6800, 0, -100)
-// // const spot24 = new THREE.PointLight('#0DC6FD', 1, 200)
-// // spot24.position.set(-00, 0, 100)
 // gScene.add(spot1, spot2, spot3, spot4, spot5, spot6, spot7, spot8, spot9, spot10, spot11, spot12, spot13, spot14, spot15, spot16, spot17, spot18, spot19, spot20, spot21)
 
 const floorMaterial = new THREE.RawShaderMaterial({
@@ -202,17 +232,82 @@ var pontTron, pontTronBody;
 var horizonGalerie;
 var positionHorizon = -6500;
 var boutHorizon = [];
+var fontUsed;
 
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF, hansonJSON, pontTronGLTF, horizonGLTF, recognizerGLTF] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, hansonJSON, pontTronGLTF, horizonGLTF, recognizerGLTF,
+        MultimediaOeuvre1PNG, MultimediaOeuvre2PNG, MultimediaOeuvre3PNG,
+        CommunicationOeuvre1PNG, CommunicationOeuvre2PNG, CommunicationOeuvre3PNG,
+        InfographieOeuvre1PNG, InfographieOeuvre2PNG, InfographieOeuvre3PNG,
+        AudiovisuelOeuvre1PNG, AudiovisuelOeuvre2PNG, AudiovisuelOeuvre3PNG,
+        WebOeuvre1PNG, WebOeuvre2PNG, WebOeuvre3PNG,
+        AnimationOeuvre1PNG, AnimationOeuvre2PNG, AnimationOeuvre3PNG] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
         utils.loadResource('fonts/Hanson_Bold.json'),
         utils.loadResource('model/Pont.gltf'),
         utils.loadResource('model/horizon_optimized.gltf'),
-        utils.loadResource('model/recognizer_optimized.gltf')
+        utils.loadResource('model/recognizer_optimized.gltf'),
+        utils.loadResource('image/oeuvres/multimedia/oeuvre_1.png'),
+        utils.loadResource('image/oeuvres/multimedia/oeuvre_2.png'),
+        utils.loadResource('image/oeuvres/multimedia/oeuvre_3.png'),
+        utils.loadResource('image/oeuvres/communication/oeuvre_1.png'),
+        utils.loadResource('image/oeuvres/communication/oeuvre_2.png'),
+        utils.loadResource('image/oeuvres/communication/oeuvre_3.png'),
+        utils.loadResource('image/oeuvres/infographie/oeuvre_1.png'),
+        utils.loadResource('image/oeuvres/infographie/oeuvre_2.png'),
+        utils.loadResource('image/oeuvres/infographie/oeuvre_3.png'),
+        utils.loadResource('image/oeuvres/audiovisuel/oeuvre_1.png'),
+        utils.loadResource('image/oeuvres/audiovisuel/oeuvre_2.png'),
+        utils.loadResource('image/oeuvres/audiovisuel/oeuvre_3.png'),
+        utils.loadResource('image/oeuvres/web/oeuvre_1.png'),
+        utils.loadResource('image/oeuvres/web/oeuvre_2.png'),
+        utils.loadResource('image/oeuvres/web/oeuvre_3.png'),
+        utils.loadResource('image/oeuvres/animation/oeuvre_1.png'),
+        utils.loadResource('image/oeuvres/animation/oeuvre_2.png'),
+        utils.loadResource('image/oeuvres/animation/oeuvre_3.png'),
     ]);
+
+    // Contenu pour le multimédia (Texture/Nom/IUT/Description/Lien)
+    Multimedia1 = [MultimediaOeuvre1PNG, "Maman", "IUT de Troyes", "C'est fort en chocolat", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
+    Multimedia2 = [MultimediaOeuvre2PNG, "Papa", "IUT de Puy en Velay", "Mais tu m'avais dit qu'on mangerait des knackis", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
+    Multimedia3 = [MultimediaOeuvre3PNG, "Frangin", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
+    artistsMultimedia = [Multimedia1, Multimedia2, Multimedia3];
+
+    // Contenu pour la communication (Texture/Nom/IUT/Description/Lien)
+    Communication1 = [CommunicationOeuvre1PNG, "Hello", "IUT de Troyes", "C'est fort en chocolat", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
+    Communication2 = [CommunicationOeuvre2PNG, "Hola", "IUT de Puy en Velay", "Mais tu m'avais dit qu'on mangerait des knackis", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
+    Communication3 = [CommunicationOeuvre3PNG, "Bonjour", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
+    artistsCommunication = [Communication1, Communication2, Communication3]
+
+    // Contenu pour l'infographie (Texture/Nom/IUT/Description/Lien)
+    Infographie1 = [InfographieOeuvre1PNG, "Fun", "IUT de Troyes", "C'est fort en chocolat", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
+    Infographie2 = [InfographieOeuvre2PNG, "Cool", "IUT de Puy en Velay", "Mais tu m'avais dit qu'on mangerait des knackis", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
+    Infographie3 = [InfographieOeuvre3PNG, "Amusement", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
+    artistsInfographie = [Infographie1, Infographie2, Infographie3]
+
+    // Contenu pour l'audiovisuel (Texture/Nom/IUT/Description/Lien)
+    Audiovisuel1 = [AudiovisuelOeuvre1PNG, "Petit Prince", "IUT de Troyes", "C'est fort en chocolat", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
+    Audiovisuel2 = [AudiovisuelOeuvre2PNG, "Saint-Exupéry", "IUT de Puy en Velay", "Mais tu m'avais dit qu'on mangerait des knackis", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
+    Audiovisuel3 = [AudiovisuelOeuvre3PNG, "Mouton", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
+    artistsAudiovisuel = [Audiovisuel1, Audiovisuel2, Audiovisuel3]
+    
+    // Contenu pour le web (Texture/Nom/IUT/Description/Lien)
+    Web1 = [WebOeuvre1PNG, "Petit Prince", "IUT de Troyes", "C'est fort en chocolat", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
+    Web2 = [WebOeuvre2PNG, "Saint-Exupéry", "IUT de Puy en Velay", "Mais tu m'avais dit qu'on mangerait des knackis", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
+    Web3 = [WebOeuvre3PNG, "Mouton", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
+    artistsWeb = [Web1, Web2, Web3]
+    
+    // Contenu pour l'animation (Texture/Nom/IUT/Description/Lien)
+    Animation1 = [AnimationOeuvre1PNG, "Petit Prince", "IUT de Troyes", "C'est fort en chocolat", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
+    Animation2 = [AnimationOeuvre2PNG, "Saint-Exupéry", "IUT de Puy en Velay", "Mais tu m'avais dit qu'on mangerait des knackis", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
+    Animation3 = [AnimationOeuvre3PNG, "Mouton", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
+    artistsAnimation = [Animation1, Animation2, Animation3]
+
+    infos = [artistsMultimedia, artistsCommunication, artistsInfographie, artistsAudiovisuel, artistsWeb, artistsAnimation];
+
+    fontUsed = hansonJSON
 
     // Sol
     
@@ -291,11 +386,11 @@ var boutHorizon = [];
     // Collider vers hub
     const collideShape = new CANNON.Box(new CANNON.Vec3(10, 10, 20))
     const collideHub = new CANNON.Body({
-        mass:1000,
+        mass:0,
         shape: collideShape,
-        position: new CANNON.Vec3(-5850, 15,0),
-        // quaternion: new CANNON.Quaternion(0, -0.47, 0)
+        position: new CANNON.Vec3(-5600, 0,0),
     })
+    collideHub.collisionResponse = 0
     const collideBehind = new CANNON.Body({
         mass:1000,
         shape: collideShape,
@@ -475,21 +570,23 @@ var boutHorizon = [];
     const oeuvreGeometry = new THREE.PlaneGeometry(152, 88)
     oeuvre1 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#ABEDC6'})
+        new THREE.MeshStandardMaterial({map: infos[0][0][0]})
+        // new THREE.MeshStandardMaterial({color: '#ABEDC6'})
     )
     oeuvre1.rotation.y = Math.PI * 0.5
     oeuvre1.position.set(multimedia[0]-ecartOeuvre, hauteurOeuvre, 0)
     
     oeuvre2 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: infos[0][1][0]})
+        // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     oeuvre2.rotation.y = Math.PI * 0.5
     oeuvre2.position.set(multimedia[0]-(ecartOeuvre*2), hauteurOeuvre, 0)
    
     oeuvre3 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
+        new THREE.MeshStandardMaterial({map: infos[0][2][0]})
     )
     oeuvre3.rotation.y = Math.PI * 0.5
     oeuvre3.position.set(multimedia[0]-(ecartOeuvre*3), hauteurOeuvre, 0)
@@ -498,21 +595,21 @@ var boutHorizon = [];
     // Oeuvres flottantes Communication
     oeuvreCom1 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#ABEDC6'})
+        new THREE.MeshStandardMaterial({map: CommunicationOeuvre1PNG})
     )
     oeuvreCom1.rotation.y = Math.PI * 0.5
     oeuvreCom1.position.set(communication[0]-ecartOeuvre, hauteurOeuvre, 0)
     
     oeuvreCom2 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: CommunicationOeuvre2PNG})
     )
     oeuvreCom2.rotation.y = Math.PI * 0.5
     oeuvreCom2.position.set(communication[0]-(ecartOeuvre*2), hauteurOeuvre, 0)
    
     oeuvreCom3 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
+        new THREE.MeshStandardMaterial({map: CommunicationOeuvre3PNG})
     )
     oeuvreCom3.rotation.y = Math.PI * 0.5
     oeuvreCom3.position.set(communication[0]-(ecartOeuvre*3), hauteurOeuvre, 0)
@@ -521,21 +618,21 @@ var boutHorizon = [];
     // Oeuvres flottantes Infographie
     oeuvreInfo1 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#ABEDC6'})
+        new THREE.MeshStandardMaterial({map: InfographieOeuvre1PNG})
     )
     oeuvreInfo1.rotation.y = Math.PI * 0.5
     oeuvreInfo1.position.set(infographie[0]-ecartOeuvre, hauteurOeuvre, 0)
     
     oeuvreInfo2 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: InfographieOeuvre2PNG})
     )
     oeuvreInfo2.rotation.y = Math.PI * 0.5
     oeuvreInfo2.position.set(infographie[0]-(ecartOeuvre*2), hauteurOeuvre, 0)
    
     oeuvreInfo3 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
+        new THREE.MeshStandardMaterial({map: InfographieOeuvre3PNG})
     )
     oeuvreInfo3.rotation.y = Math.PI * 0.5
     oeuvreInfo3.position.set(infographie[0]-(ecartOeuvre*3), hauteurOeuvre, 0)
@@ -544,21 +641,21 @@ var boutHorizon = [];
     // Oeuvres flottantes Audiovisuel
     oeuvreAudio1 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#ABEDC6'})
+        new THREE.MeshStandardMaterial({map: AudiovisuelOeuvre1PNG})
     )
     oeuvreAudio1.rotation.y = Math.PI * 0.5
     oeuvreAudio1.position.set(audiovisuel[0]-ecartOeuvre, hauteurOeuvre, 0)
     
     oeuvreAudio2 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: AudiovisuelOeuvre2PNG})
     )
     oeuvreAudio2.rotation.y = Math.PI * 0.5
     oeuvreAudio2.position.set(audiovisuel[0]-(ecartOeuvre*2), hauteurOeuvre, 0)
    
     oeuvreAudio3 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
+        new THREE.MeshStandardMaterial({map: AudiovisuelOeuvre3PNG})
     )
     oeuvreAudio3.rotation.y = Math.PI * 0.5
     oeuvreAudio3.position.set(audiovisuel[0]-(ecartOeuvre*3), hauteurOeuvre, 0)
@@ -567,21 +664,21 @@ var boutHorizon = [];
     // Oeuvres flottantes Web
     oeuvreWeb1 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#ABEDC6'})
+        new THREE.MeshStandardMaterial({map: WebOeuvre1PNG})
     )
     oeuvreWeb1.rotation.y = Math.PI * 0.5
     oeuvreWeb1.position.set(web[0]-ecartOeuvre, hauteurOeuvre, 0)
     
     oeuvreWeb2 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: WebOeuvre2PNG})
     )
     oeuvreWeb2.rotation.y = Math.PI * 0.5
     oeuvreWeb2.position.set(web[0]-(ecartOeuvre*2), hauteurOeuvre, 0)
    
     oeuvreWeb3 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
+        new THREE.MeshStandardMaterial({map: WebOeuvre3PNG})
     )
     oeuvreWeb3.rotation.y = Math.PI * 0.5
     oeuvreWeb3.position.set(web[0]-(ecartOeuvre*3), hauteurOeuvre, 0)
@@ -590,21 +687,21 @@ var boutHorizon = [];
     // Oeuvres flottantes Animation
     oeuvreAnim1 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#ABEDC6'})
+        new THREE.MeshStandardMaterial({map: AnimationOeuvre1PNG})
     )
     oeuvreAnim1.rotation.y = Math.PI * 0.5
     oeuvreAnim1.position.set(animation[0]-ecartOeuvre, hauteurOeuvre, 0)
     
     oeuvreAnim2 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
+        new THREE.MeshStandardMaterial({map: AnimationOeuvre2PNG})
     )
     oeuvreAnim2.rotation.y = Math.PI * 0.5
     oeuvreAnim2.position.set(animation[0]-(ecartOeuvre*2), hauteurOeuvre, 0)
    
     oeuvreAnim3 = new THREE.Mesh(
         oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
+        new THREE.MeshStandardMaterial({map: AnimationOeuvre3PNG})
     )
     oeuvreAnim3.rotation.y = Math.PI * 0.5
     oeuvreAnim3.position.set(animation[0]-(ecartOeuvre*3), hauteurOeuvre, 0)
@@ -665,17 +762,98 @@ function onMouseMove(event){
     mouse.y = - (event.clientY / window.innerHeight) *2 +1;
 }
 
+const textCurrentMaterial = new THREE.MeshBasicMaterial()
+var nameCurrent, nameCurrentGeometry, iutCurrent, iutCurrentGeometry, descCurrent, descCurrentGeometry;
+var displayed = false;
+
 window.addEventListener('click', () => {
+    if(document.getElementById("cursor").classList.contains('look') && displayed == true){
+        if(currentIntersect){
+            for(var cat in infos){
+                for(var nomin in infos[cat]){
+                    if(currentIntersect.object.material.map == infos[cat][nomin][0]){
+                        window.open(infos[cat][nomin][4])
+                    }
+                }
+            }
+        }
+    }else 
     if(document.getElementById("cursor").classList.contains('cross')){
         document.getElementById("cursor").classList.remove("cross")
         cameraHelper.init(camera, chassis, gRenderer.domElement, 2);
+        gScene.remove(nameCurrent, iutCurrent/*, descCurrent*/)
+        displayed = false
     } else
     if(currentIntersect){
-        console.log('clicliclic')
-        document.getElementById("cursor").classList.add("cross")
+        displayed = true;
+            for(var cat in infos){
+                for(var nomin in infos[cat]){
+                    if(currentIntersect.object.material.map == infos[cat][nomin][0]){
+                        nameCurrentGeometry = new THREE.TextGeometry(
+                            infos[cat][nomin][1],
+                            {
+                                font: fontUsed,
+                                size: 5,
+                                height: 0.5,
+                                curveSegments: 12,
+                                bevelEnabled: true,
+                                bevelThickness: 0.03,
+                                bevelSize: 0.02,
+                                bevelOffset: 0,
+                                bevelSegments: 5
+                            }
+                        )
+                        iutCurrentGeometry = new THREE.TextGeometry(
+                            infos[cat][nomin][2],
+                            {
+                                font: fontUsed,
+                                size: 5,
+                                height: 0.5,
+                                curveSegments: 12,
+                                bevelEnabled: true,
+                                bevelThickness: 0.03,
+                                bevelSize: 0.02,
+                                bevelOffset: 0,
+                                bevelSegments: 5
+                            }
+                        )
+                        // descCurrentGeometry = new THREE.TextGeometry(
+                        //     infos[cat][nomin][3],
+                        //     {
+                        //         font: fontUsed,
+                        //         size: 3,
+                        //         height: 0.5,
+                        //         curveSegments: 12,
+                        //         bevelEnabled: true,
+                        //         bevelThickness: 0.03,
+                        //         bevelSize: 0.02,
+                        //         bevelOffset: 0,
+                        //         bevelSegments: 5
+                        //     }
+                        // )
+                    }
+                }
+            }
+        nameCurrentGeometry.center();
+        nameCurrent = new THREE.Mesh(nameCurrentGeometry, textCurrentMaterial)
+        nameCurrent.rotation.y = -Math.PI*1.5
+        nameCurrent.position.set(currentIntersect.object.position.x, 90, 125)
+
+        iutCurrentGeometry.center()
+        iutCurrent = new THREE.Mesh(iutCurrentGeometry, textCurrentMaterial)
+        iutCurrent.rotation.y = -Math.PI*1.5
+        iutCurrent.position.set(currentIntersect.object.position.x, 50, 125)
+        
+        // descCurrent = new THREE.Mesh(descCurrentGeometry, textCurrentMaterial)
+        // descCurrent.rotation.y = -Math.PI*1.5
+        // descCurrent.position.set(currentIntersect.object.position.x, 70, -25)
+
+
+        gScene.add(nameCurrent, iutCurrent/*, descCurrent*/)
+        // }
+        document.getElementById("cursor").classList.add("look")
         if(chassis != undefined){
-            console.log("g fin")
-            cameraHelper.switch(currentIntersect, chassis)
+            cameraHelper.switch(currentIntersect)
         }
     }
     
@@ -704,6 +882,12 @@ function render() {
 
     if(intersects.length){
         if(!currentIntersect){
+            if(displayed == true){
+            document.getElementById("cursor").classList.add("look")
+            document.getElementById("cursor").classList.remove("cross")
+            } else {
+            document.getElementById("cursor").classList.remove("look")
+            }
             // console.log('mouse enter')
             // console.log(intersects[0])
         }
@@ -712,6 +896,10 @@ function render() {
         //currentIntersect.object.material.color.set("#0000ff")
     } else {
         if(currentIntersect){
+            if(displayed == true){
+            document.getElementById("cursor").classList.remove("look")
+            document.getElementById("cursor").classList.add("cross")
+            }
             // console.log('mouse leave')
         }
         currentIntersect = null
