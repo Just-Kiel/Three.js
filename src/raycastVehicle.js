@@ -101,7 +101,11 @@ export default function createVehicle() {
                 if(i.body.id == interactBodies[2].id){
                     window.open("https://www.youtube.com/channel/UCNiWu4M9VCs8Sn-x9lcQjag")
                 }
-                // if(i.body.id == interactBodies[3].id){
+                if(i.body.id == interactBodies[3].id){
+                    console.log("enter")
+                }
+                
+                // if(i.body.id == interactBodies[4].id){
                 //     // window.location.pathname = "./game.html";
                 //     window.location.pathname = "./immersions/game.html";
                 // }
@@ -140,7 +144,11 @@ export default function createVehicle() {
 
             if(page == "mentions_legales.html"){
                 if(i.body.id == interactBodies[0].id){
-                    window.location.pathname = "./immersions/index.html";
+                    document.getElementById("blackscreen").classList.remove("hidden")
+                    document.getElementById("blackscreen").classList.remove("blackscreen-non")
+                    document.getElementById("blackscreen").classList.add("blackscreen-active")
+
+                    setTimeout(function(){window.location.pathname = "./immersions/index.html";}, 2000)
                     // window.location.pathname = "./index.html"
                 }
             }
@@ -271,7 +279,7 @@ function initControls(vehicle) {
 
         if(left){
         left.ontouchstart = function(){
-            if(page != "gallery.html"){
+            if(page != "gallery.html" && page != "mentions_legales.html"){
             steeringDirection = 1
         } else {
             steeringDirection = 0
@@ -280,7 +288,7 @@ function initControls(vehicle) {
         }
         
         left.ontouchend = function(){
-            if(page != "gallery.html"){
+            if(page != "gallery.html" && page != "mentions_legales.html"){
             steeringDirection = 0
         }
         [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(maxSteeringValue * steeringDirection, wheelIndex));
@@ -289,7 +297,7 @@ function initControls(vehicle) {
         
         if(right){
         right.ontouchstart = function(){
-            if(page != "gallery.html"){
+            if(page != "gallery.html" && page != "mentions_legales.html"){
             steeringDirection = -1
         } else {
             steeringDirection = 0
@@ -298,7 +306,7 @@ function initControls(vehicle) {
         }
         
         right.ontouchend = function(){
-            if(page != "gallery.html"){
+            if(page != "gallery.html" && page != "mentions_legales.html"){
             steeringDirection = 0
         }
         [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(maxSteeringValue * steeringDirection, wheelIndex));
@@ -393,7 +401,7 @@ function initControls(vehicle) {
         [2, 3].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnRearWheels * direction, wheelIndex));
         
 
-        if(page != "gallery.html"){
+        if(page != "gallery.html" && page != "mentions_legales.html"){
             steeringDirection = isKeyDown('Q') ? 1 : isKeyDown('D') ? -1 : 0;
         } else {
             steeringDirection = 0

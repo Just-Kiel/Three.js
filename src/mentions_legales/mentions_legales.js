@@ -4,7 +4,7 @@ import * as THREE from 'three'
 import * as utils from '../utils.js';
 import createVehicle from '../raycastVehicle.js';
 import {cameraHelper} from '../cameraHelper.js';
-// import cannonDebugger from 'cannon-es-debugger'
+import cannonDebugger from 'cannon-es-debugger'
 
 const worldStep = 1/60;
 
@@ -18,7 +18,7 @@ const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
 
 const clock = new THREE.Clock()
 
-// cannonDebugger(gScene, gWorld.bodies, {color: "red"})
+cannonDebugger(gScene, gWorld.bodies, {color: "red"})
 
 /**
  * Sizes
@@ -106,16 +106,17 @@ const ecartOeuvre = 155;
 
     const collideShape = new CANNON.Box(new CANNON.Vec3(50, 10, 22))
     const collideBehind = new CANNON.Body({
-        mass:1000,
+        mass:0,
         shape: collideShape,
-        position: new CANNON.Vec3(50, 15,0)
+        position: new CANNON.Vec3(50, 0,0)
     })
     gWorld.addBody(collideBehind)
     const collideFront = new CANNON.Body({
-        mass:1000,
+        mass:0,
         shape: collideShape,
-        position: new CANNON.Vec3(-950, 15,0)
+        position: new CANNON.Vec3(-950, 0,0)
     })
+    collideFront.collisionResponse = 0
     gWorld.addBody(collideFront)
 
 

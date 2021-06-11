@@ -25,6 +25,7 @@ var artistsCommunication
 var Infographie1
 var Infographie2
 var Infographie3
+var Infographie4
 var artistsInfographie
 var Audiovisuel1
 var Audiovisuel2
@@ -220,9 +221,9 @@ const hauteurOeuvre = 70;
 const ecartOeuvre = 225;
 const communication = [multimedia[0]-(ecartOeuvre*4), multimedia[1], multimedia[2]];
 var oeuvreCom1, oeuvreCom2, oeuvreCom3;
-const infographie = [communication[0]-(ecartOeuvre*4), communication[1], communication[2]];
-var oeuvreInfo1, oeuvreInfo2, oeuvreInfo3;
-const audiovisuel = [infographie[0]-(ecartOeuvre*4), infographie[1], infographie[2]];
+const infographie = [communication[0]-(ecartOeuvre*3), communication[1], communication[2]];
+var oeuvreInfo1, oeuvreInfo2, oeuvreInfo3, oeuvreInfo4;
+const audiovisuel = [infographie[0]-(ecartOeuvre*5), infographie[1], infographie[2]];
 var oeuvreAudio1, oeuvreAudio2, oeuvreAudio3;
 const web = [audiovisuel[0]-(ecartOeuvre*4), audiovisuel[1], audiovisuel[2]];
 var oeuvreWeb1, oeuvreWeb2, oeuvreWeb3;
@@ -238,8 +239,8 @@ var fontUsed;
 
     const [wheelGLTF, chassisGLTF, hansonJSON, pontTronGLTF, horizonGLTF, recognizerGLTF,
         MultimediaOeuvre1PNG, MultimediaOeuvre2PNG, MultimediaOeuvre3PNG,
-        CommunicationOeuvre1PNG, CommunicationOeuvre2PNG, CommunicationOeuvre3PNG,
-        InfographieOeuvre1PNG, InfographieOeuvre2PNG, InfographieOeuvre3PNG,
+        CommunicationOeuvre1PNG, CommunicationOeuvre2PNG,
+        InfographieOeuvre1PNG, InfographieOeuvre2PNG, InfographieOeuvre3PNG, InfographieOeuvre4PNG,
         AudiovisuelOeuvre1PNG, AudiovisuelOeuvre2PNG, AudiovisuelOeuvre3PNG,
         WebOeuvre1PNG, WebOeuvre2PNG, WebOeuvre3PNG,
         AnimationOeuvre1PNG, AnimationOeuvre2PNG, AnimationOeuvre3PNG] = await Promise.all([
@@ -254,10 +255,10 @@ var fontUsed;
         utils.loadResource('image/oeuvres/multimedia/oeuvre_3.png'),
         utils.loadResource('image/oeuvres/communication/oeuvre_1.png'),
         utils.loadResource('image/oeuvres/communication/oeuvre_2.png'),
-        utils.loadResource('image/oeuvres/communication/oeuvre_3.png'),
         utils.loadResource('image/oeuvres/infographie/oeuvre_1.png'),
         utils.loadResource('image/oeuvres/infographie/oeuvre_2.png'),
         utils.loadResource('image/oeuvres/infographie/oeuvre_3.png'),
+        utils.loadResource('image/oeuvres/infographie/oeuvre_4.png'),
         utils.loadResource('image/oeuvres/audiovisuel/oeuvre_1.png'),
         utils.loadResource('image/oeuvres/audiovisuel/oeuvre_2.png'),
         utils.loadResource('image/oeuvres/audiovisuel/oeuvre_3.png'),
@@ -278,14 +279,15 @@ var fontUsed;
     // Contenu pour la communication (Texture/Nom/IUT/Description/Lien)
     Communication1 = [CommunicationOeuvre1PNG, "Hello", "IUT de Troyes", "C'est fort en chocolat", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
     Communication2 = [CommunicationOeuvre2PNG, "Hola", "IUT de Puy en Velay", "Mais tu m'avais dit qu'on mangerait des knackis", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
-    Communication3 = [CommunicationOeuvre3PNG, "Bonjour", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
-    artistsCommunication = [Communication1, Communication2, Communication3]
+    // Communication3 = [CommunicationOeuvre3PNG, "Bonjour", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
+    artistsCommunication = [Communication1, Communication2]
 
     // Contenu pour l'infographie (Texture/Nom/IUT/Description/Lien)
     Infographie1 = [InfographieOeuvre1PNG, "Fun", "IUT de Troyes", "C'est fort en chocolat", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
     Infographie2 = [InfographieOeuvre2PNG, "Cool", "IUT de Puy en Velay", "Mais tu m'avais dit qu'on mangerait des knackis", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
     Infographie3 = [InfographieOeuvre3PNG, "Amusement", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
-    artistsInfographie = [Infographie1, Infographie2, Infographie3]
+    Infographie4 = [InfographieOeuvre4PNG, "Bien", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
+    artistsInfographie = [Infographie1, Infographie2, Infographie3, Infographie4]
 
     // Contenu pour l'audiovisuel (Texture/Nom/IUT/Description/Lien)
     Audiovisuel1 = [AudiovisuelOeuvre1PNG, "Petit Prince", "IUT de Troyes", "C'est fort en chocolat", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
@@ -607,13 +609,13 @@ var fontUsed;
     oeuvreCom2.rotation.y = Math.PI * 0.5
     oeuvreCom2.position.set(communication[0]-(ecartOeuvre*2), hauteurOeuvre, 0)
    
-    oeuvreCom3 = new THREE.Mesh(
-        oeuvreGeometry,
-        new THREE.MeshStandardMaterial({map: CommunicationOeuvre3PNG})
-    )
-    oeuvreCom3.rotation.y = Math.PI * 0.5
-    oeuvreCom3.position.set(communication[0]-(ecartOeuvre*3), hauteurOeuvre, 0)
-    gScene.add(oeuvreCom1, oeuvreCom2, oeuvreCom3)
+    // oeuvreCom3 = new THREE.Mesh(
+    //     oeuvreGeometry,
+    //     new THREE.MeshStandardMaterial({map: CommunicationOeuvre3PNG})
+    // )
+    // oeuvreCom3.rotation.y = Math.PI * 0.5
+    // oeuvreCom3.position.set(communication[0]-(ecartOeuvre*3), hauteurOeuvre, 0)
+    gScene.add(oeuvreCom1, oeuvreCom2)
     
     // Oeuvres flottantes Infographie
     oeuvreInfo1 = new THREE.Mesh(
@@ -636,7 +638,14 @@ var fontUsed;
     )
     oeuvreInfo3.rotation.y = Math.PI * 0.5
     oeuvreInfo3.position.set(infographie[0]-(ecartOeuvre*3), hauteurOeuvre, 0)
-    gScene.add(oeuvreInfo1, oeuvreInfo2, oeuvreInfo3)
+    
+    oeuvreInfo4 = new THREE.Mesh(
+        oeuvreGeometry,
+        new THREE.MeshStandardMaterial({map: InfographieOeuvre4PNG})
+    )
+    oeuvreInfo4.rotation.y = Math.PI * 0.5
+    oeuvreInfo4.position.set(infographie[0]-(ecartOeuvre*4), hauteurOeuvre, 0)
+    gScene.add(oeuvreInfo1, oeuvreInfo2, oeuvreInfo3, oeuvreInfo4)
     
     // Oeuvres flottantes Audiovisuel
     oeuvreAudio1 = new THREE.Mesh(
@@ -780,6 +789,7 @@ window.addEventListener('click', () => {
     }else 
     if(document.getElementById("cursor").classList.contains('cross')){
         document.getElementById("cursor").classList.remove("cross")
+        document.getElementById("canvas").style.cursor = "auto"
         cameraHelper.init(camera, chassis, gRenderer.domElement, 2);
         gScene.remove(nameCurrent, iutCurrent/*, descCurrent*/)
         displayed = false
@@ -851,6 +861,7 @@ window.addEventListener('click', () => {
 
         gScene.add(nameCurrent, iutCurrent/*, descCurrent*/)
         // }
+        document.getElementById('canvas').style.cursor = "none"
         document.getElementById("cursor").classList.add("look")
         if(chassis != undefined){
             cameraHelper.switch(currentIntersect)
@@ -874,19 +885,19 @@ function render() {
             horizonGalerie.position.set(positionHorizon, 1, -180)
         }
 
-        horizonLight.position.set(horizonGalerie.position.x, 700 , 150)
+        horizonLight.position.set(horizonGalerie.position.x+ 250, 700 , 150)
 
     raycaster.setFromCamera(mouse, camera)
-    const objectsToTest = [oeuvre1, oeuvre2, oeuvre3, oeuvreCom1, oeuvreCom2, oeuvreCom3, oeuvreInfo1, oeuvreInfo2, oeuvreInfo3, oeuvreAudio1, oeuvreAudio2, oeuvreAudio3, oeuvreWeb1, oeuvreWeb2, oeuvreWeb3, oeuvreAnim1, oeuvreAnim2, oeuvreAnim3]
+    const objectsToTest = [oeuvre1, oeuvre2, oeuvre3, oeuvreCom1, oeuvreCom2, oeuvreInfo1, oeuvreInfo2, oeuvreInfo3, oeuvreInfo4, oeuvreAudio1, oeuvreAudio2, oeuvreAudio3, oeuvreWeb1, oeuvreWeb2, oeuvreWeb3, oeuvreAnim1, oeuvreAnim2, oeuvreAnim3]
     const intersects = raycaster.intersectObjects(objectsToTest);
 
     if(intersects.length){
         if(!currentIntersect){
+            document.getElementById("canvas").style.cursor = "none"
+            document.getElementById("cursor").classList.add("look")
             if(displayed == true){
             document.getElementById("cursor").classList.add("look")
             document.getElementById("cursor").classList.remove("cross")
-            } else {
-            document.getElementById("cursor").classList.remove("look")
             }
             // console.log('mouse enter')
             // console.log(intersects[0])
@@ -898,8 +909,12 @@ function render() {
         if(currentIntersect){
             if(displayed == true){
             document.getElementById("cursor").classList.remove("look")
+            document.getElementById("canvas").style.cursor = "none"
             document.getElementById("cursor").classList.add("cross")
+            }else{
+            document.getElementById("canvas").style.cursor = "auto"
             }
+            document.getElementById('cursor').classList.remove('look')
             // console.log('mouse leave')
         }
         currentIntersect = null

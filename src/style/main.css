@@ -18,13 +18,13 @@ html
     height: 100vh;
 }
 
-#among_us{
+/* #among_us{
     background-color: black;
-    background-image: url(../../static/image/Ciel_Among_us.svg);
+    background-image: url(image/Ciel_Among_us.svg);
     position: absolute;
     width: 100vw;
     height: 100vh;
-}
+} */
 
 #tattoine h1{
     position: relative;
@@ -48,15 +48,15 @@ html
   top: 50%;
   animation: eject 9s linear;
   transform-origin: 45vmin 45vmin;
-  transform: translate3d(-50vmin, -45vmin, 0px) rotate(0turn);
+  transform: translate3d(-50vmin, -45vmin, 0px) rotate(0turn) scale(0.15);
 }
 
 @keyframes eject {
   0% {
-    transform: translate3d(-50vmin, -45vmin, 0px) rotate(0turn);
+    transform: translate3d(-50vmin, -45vmin, 0px) rotate(0turn) scale(0.15);
   }
   50%, 100% {
-    transform: translate3d(100vw, -45vmin, 0px) rotate(-2turn);
+    transform: translate3d(100vw, -45vmin, 0px) rotate(-2turn) scale(0.15);
   }
 }
 
@@ -67,16 +67,28 @@ html
     left: 0;
     width: 100%;
     height: 100%;
-    background: #000000;
+    /* background: #000000; */
 }
 
 #load{
+    transition: all 2s ease;
+    -webkit-transition: all 2s ease;  
+    -moz-transition: all 2s ease;  
+    -o-transition: all 2s ease;  
+    -ms-transition: all 2s ease;
     background-color: #4960A9;
     position: absolute;
     z-index: 999;
     /* background-image: url(/images/Emprunte_Van.svg); */
     width: 100vw;
     height: 100vh;
+}
+
+.load-non {
+    opacity: 100%;
+}
+.load-active {
+    opacity: 0%;
 }
 
 .hidden{
@@ -102,31 +114,33 @@ html
     left: 50%;
     height: 75vh;
     transform: translate(-50%, -50%);
-    animation-name: loader;
-    animation-duration: 2.5s;
+    /* animation-name: loader; */
+    /* animation-duration: 2.5s; */
 }
 
-.eye_van{
+/* .eye_van{
     position: absolute;
     display: block;
     width: 100vw;
     height: 100vh;
     transform: scale(0.1) rotate(0turn);
-    animation: eyeSpin 4s infinite alternate;
-}
+    animation: eyeSpin 4s alternate;
+} */
 
 #complete{
     z-index: 999;
+    animation-name: loader;
+    animation-duration: 2.5s;
 }
 
-@keyframes eyeSpin{
+/* @keyframes eyeSpin{
     0%{
         transform: rotate(0turn) scale(0.1);
     }
     100%{
         transform: rotate(2turn) scale(0.1);
     }
-}
+} */
 
 @keyframes loader{
     0% {clip-path: polygon(0% 100%, 100% 100%, 100% 100%, 0% 100%);}
@@ -147,8 +161,8 @@ html
 }
 
 .look {
-    width: 3rem;
-    height: 3rem;
+    width: 6rem;
+    height: 6rem;
     /* border: 2px solid red; */
     /* border-radius: 50%; */
     position: absolute;
@@ -157,19 +171,21 @@ html
     background-size: 100%;
     background-repeat: no-repeat;
     pointer-events: none;
-    background-image: url(../../static/image/oeil.svg);
+    background-image: url(../../static/image/Oeil_Loading.svg);
 }
 
 #arrow{
     z-index: 997;
     position: absolute;
-    top: 2%;
-    left: 2%;
+    top: 1%;
+    left: 1%;
 }
 
 #hub_arrow{
     z-index: 998;
     position: absolute;
+    top: 1%;
+    left: 1%;
 }
 
 .direction {
