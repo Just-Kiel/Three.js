@@ -118,10 +118,11 @@ var mentionsBody;
 var mentionsLength = 20;
 var mentionsZ = 8;
 var planeEnter;
+var commandes;
 
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF, /*gameTpGLTF,*/ pontGalleryGLTF, pupitreArtistsGLTF, theatreGLTF, hansonJSON, SolGLTF] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, /*gameTpGLTF,*/ pontGalleryGLTF, pupitreArtistsGLTF, theatreGLTF, hansonJSON, SolGLTF, CommandesPNG/*, testJSON*/] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
         // utils.loadResource('model/teleport_game.gltf'),
@@ -129,8 +130,14 @@ var planeEnter;
         utils.loadResource('model/Pupitre.gltf'),
         utils.loadResource('model/theatre.gltf'),
         utils.loadResource('fonts/Hanson_Bold.json'),
-        utils.loadResource('model/petits_cailloux.gltf')
+        utils.loadResource('model/petits_cailloux.gltf'),
+        utils.loadResource('image/Commandes_site.png'),
+        // utils.loadResource('infos/test.txt')
     ]);
+
+    // console.log(testJSON)
+    // const test = JSON.parse(testJSON)
+    // console.log(test.messages)
 
     const wheel = wheelGLTF.scene;
     const chassis = chassisGLTF.scene;
@@ -156,11 +163,6 @@ var planeEnter;
         // cailloux.clone(),
         // cailloux.clone()
     ]
-    // deco[1].children[0].position.set()
-    // console.log(deco[1])
-
-    // deco[0].rotation.z = Math.PI*0.5
-    // deco[1].rotateX(-Math.PI*0.5)
     deco[1].scale.set(0.3, 0.3, 0.3)
     console.log(deco[0])
     // deco[0].children[2].material = caillouxMaterial
@@ -229,6 +231,18 @@ var planeEnter;
     planeEnter.name = "Mentions"
     planeEnter.rotateX(Math.PI * 0.5)
     planeEnter.position.set(mentionsBody.position.x, 0, mentionsBody.position.z)
+
+    // Commandes
+    commandes = new THREE.Mesh(
+        new THREE.PlaneGeometry(30, 19),
+        new THREE.MeshStandardMaterial({map: CommandesPNG, transparent: true})
+    )
+    commandes.rotateX(-Math.PI*0.5)
+    commandes.position.set(45, 1, 10)
+    if ("ontouchstart" in document.documentElement){}else{
+        gScene.add(commandes)
+    }
+    
 
     // Théâtre vers la cérémonie
     ceremonie = theatreGLTF.scene
@@ -317,7 +331,7 @@ var planeEnter;
 
     // Texte des nominés
     const textNominGeometry = new THREE.TextGeometry(
-        'Les nominés',
+        'Les nommés',
         {
             font: hansonJSON,
             size: 3,

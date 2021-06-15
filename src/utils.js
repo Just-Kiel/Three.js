@@ -42,8 +42,8 @@ function loadResource(url) {
 
     switch (extension) {
         case 'jpg':
-            loader = new THREE.ImageLoader();
-            break;
+            // loader = new THREE.ImageLoader();
+            // break;
         case 'png':
             loader = new THREE.TextureLoader(loadingManager);
             break;
@@ -53,6 +53,9 @@ function loadResource(url) {
             break;
         case 'json':
             loader = new THREE.FontLoader(loadingManager)
+            break;
+        case 'txt':
+            loader = new THREE.FileLoader(loadingManager)
             break;
         default:
             return Promise.reject(new Error(`unknown resource type [${extension}]`));

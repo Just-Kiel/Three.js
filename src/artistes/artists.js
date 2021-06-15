@@ -90,7 +90,7 @@ var heightCard = 50;
 var heightArtist = -25;
 var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
-var fond;
+var fond, planeFond;
 
 
 
@@ -104,7 +104,8 @@ var fond;
             nomine1InfographiePNG, nomine2InfographiePNG, nomine3InfographiePNG, nomine4InfographiePNG,
             nomine1AudiovisuelPNG, nomine2AudiovisuelPNG, nomine3AudiovisuelPNG,
             nomine1WebPNG, nomine2WebPNG, nomine3WebPNG,
-            nomine1AnimationPNG, nomine2AnimationPNG, nomine3AnimationPNG
+            nomine1AnimationPNG, nomine2AnimationPNG, nomine3AnimationPNG,
+            fondAnimationPNG
         ] = await Promise.all([
         utils.loadResource('image/artists/multimedia/multimedia.png'),
         utils.loadResource('image/artists/communication/communication.png'),
@@ -133,6 +134,7 @@ var fond;
         utils.loadResource('image/artists/animation/nomine_1.png'),
         utils.loadResource('image/artists/animation/nomine_2.png'),
         utils.loadResource('image/artists/animation/nomine_3.png'),
+        utils.loadResource('image/artists/animation/fond.png')
     ]);
 
     // Modele
@@ -152,6 +154,14 @@ var fond;
     const redPointLight = new THREE.PointLight('#FF0000', 2, 400)
     redPointLight.position.set(100, 0, -50)
     gScene.add(redPointLight)
+
+    // Plane pour décorer
+    planeFond = new THREE.Mesh(
+        new THREE.PlaneGeometry(1280, 720),
+        new THREE.MeshStandardMaterial({map: fondAnimationPNG})
+    )
+    planeFond.position.set(0, 50, -300)
+    
 
     // Cartes catégories
     const cardGeometry = new THREE.PlaneGeometry(29.5, 45.5)
@@ -472,6 +482,7 @@ window.addEventListener('click', () => {
                 for(var card in currentArtistsClicked){
                     gScene.remove(currentArtistsClicked[card])
                 }
+                gScene.remove(planeFond)
                 gsap.to(backCard.position, {duration: speedAnim, y:heightCard})
             }, speedAnim * 1000 *2)
             setTimeout(function(){
@@ -744,6 +755,7 @@ window.addEventListener('click', () => {
             document.getElementById("hub_arrow").classList.add("hidden")
             document.getElementById("arrow").classList.remove("hidden")
             gScene.add(backCard);
+            gScene.add(planeFond)
             gsap.to(cardCategory1.position, {duration: speedAnim, x: 0, y:50})
             gsap.to(cardCategory2.position, {duration: speedAnim, x: 0, y:50})
             gsap.to(cardCategory3.position, {duration: speedAnim, x: 0, y:50})

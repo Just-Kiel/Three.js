@@ -13,7 +13,7 @@ import fragmentShader from '../shaders/fragment.glsl'
 // import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
 // // import { UnrealBloomPass } from 'three/examples/jsm/postprocessing/UnrealBloomPass'
 
-// Contenu pour le multimédia (hors lien de redirection)
+// Contenu pour le multimédia
 var Multimedia1
 var Multimedia2
 var Multimedia3
@@ -130,6 +130,11 @@ pointLight.position.set(50, 1000, 150)
 gScene.add(pointLight)
 const horizonLight = new THREE.PointLight(0xffffff, 6, 2000)
 gScene.add(horizonLight)
+
+const directionLight = new THREE.DirectionalLight(0xffffff, 0.5);
+gScene.add(directionLight, directionLight.target)
+// const helper = new THREE.DirectionalLightHelper(directionLight, 5);
+// gScene.add(helper)
 // const spot1 = new THREE.PointLight('#0DC6FD', 1, 200)
 // spot1.position.set(-200, 0, -100)
 // const spot2 = new THREE.PointLight('#0DC6FD', 1, 200)
@@ -234,82 +239,110 @@ var horizonGalerie;
 var positionHorizon = -6500;
 var boutHorizon = [];
 var fontUsed;
+var objJSON;
+var i = -1;
+var textures = [];
 
 (async function init() {
 
     const [wheelGLTF, chassisGLTF, hansonJSON, pontTronGLTF, horizonGLTF, recognizerGLTF,
-        MultimediaOeuvre1PNG, MultimediaOeuvre2PNG, MultimediaOeuvre3PNG,
+        /*MultimediaOeuvre1PNG, */MultimediaOeuvre2PNG, MultimediaOeuvre3PNG,
         CommunicationOeuvre1PNG, CommunicationOeuvre2PNG,
         InfographieOeuvre1PNG, InfographieOeuvre2PNG, InfographieOeuvre3PNG, InfographieOeuvre4PNG,
         AudiovisuelOeuvre1PNG, AudiovisuelOeuvre2PNG, AudiovisuelOeuvre3PNG,
         WebOeuvre1PNG, WebOeuvre2PNG, WebOeuvre3PNG,
-        AnimationOeuvre1PNG, AnimationOeuvre2PNG, AnimationOeuvre3PNG] = await Promise.all([
+        AnimationOeuvre1PNG, AnimationOeuvre2PNG, AnimationOeuvre3PNG,
+        testJSON] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
         utils.loadResource('fonts/Hanson_Bold.json'),
         utils.loadResource('model/Pont.gltf'),
         utils.loadResource('model/horizon_optimized.gltf'),
         utils.loadResource('model/recognizer_optimized.gltf'),
-        utils.loadResource('image/oeuvres/multimedia/oeuvre_1.png'),
-        utils.loadResource('image/oeuvres/multimedia/oeuvre_2.png'),
-        utils.loadResource('image/oeuvres/multimedia/oeuvre_3.png'),
-        utils.loadResource('image/oeuvres/communication/oeuvre_1.png'),
-        utils.loadResource('image/oeuvres/communication/oeuvre_2.png'),
-        utils.loadResource('image/oeuvres/infographie/oeuvre_1.png'),
-        utils.loadResource('image/oeuvres/infographie/oeuvre_2.png'),
-        utils.loadResource('image/oeuvres/infographie/oeuvre_3.png'),
-        utils.loadResource('image/oeuvres/infographie/oeuvre_4.png'),
-        utils.loadResource('image/oeuvres/audiovisuel/oeuvre_1.png'),
-        utils.loadResource('image/oeuvres/audiovisuel/oeuvre_2.png'),
-        utils.loadResource('image/oeuvres/audiovisuel/oeuvre_3.png'),
-        utils.loadResource('image/oeuvres/web/oeuvre_1.png'),
-        utils.loadResource('image/oeuvres/web/oeuvre_2.png'),
-        utils.loadResource('image/oeuvres/web/oeuvre_3.png'),
-        utils.loadResource('image/oeuvres/animation/oeuvre_1.png'),
-        utils.loadResource('image/oeuvres/animation/oeuvre_2.png'),
-        utils.loadResource('image/oeuvres/animation/oeuvre_3.png'),
+        // utils.loadResource('image/oeuvres/multimedia/oeuvre_1.jpg'),
+        utils.loadResource('image/oeuvres/multimedia/oeuvre_2.jpg'),
+        utils.loadResource('image/oeuvres/multimedia/oeuvre_3.jpg'),
+        utils.loadResource('image/oeuvres/communication/oeuvre_1.jpg'),
+        utils.loadResource('image/oeuvres/communication/oeuvre_2.jpg'),
+        utils.loadResource('image/oeuvres/infographie/oeuvre_1.jpg'),
+        utils.loadResource('image/oeuvres/infographie/oeuvre_2.jpg'),
+        utils.loadResource('image/oeuvres/infographie/oeuvre_3.jpg'),
+        utils.loadResource('image/oeuvres/infographie/oeuvre_4.jpg'),
+        utils.loadResource('image/oeuvres/audiovisuel/oeuvre_1.jpg'),
+        utils.loadResource('image/oeuvres/audiovisuel/oeuvre_2.jpg'),
+        utils.loadResource('image/oeuvres/audiovisuel/oeuvre_3.jpg'),
+        utils.loadResource('image/oeuvres/web/oeuvre_1.jpg'),
+        utils.loadResource('image/oeuvres/web/oeuvre_2.jpg'),
+        utils.loadResource('image/oeuvres/web/oeuvre_3.jpg'),
+        utils.loadResource('image/oeuvres/animation/oeuvre_1.jpg'),
+        utils.loadResource('image/oeuvres/animation/oeuvre_2.jpg'),
+        utils.loadResource('image/oeuvres/animation/oeuvre_3.jpg'),
+        utils.loadResource('infos/test.txt')
     ]);
 
-    // Contenu pour le multimédia (Texture/Nom/IUT/Description/Lien)
-    Multimedia1 = [MultimediaOeuvre1PNG, "Maman", "IUT de Troyes", "C'est fort en chocolat", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
-    Multimedia2 = [MultimediaOeuvre2PNG, "Papa", "IUT de Puy en Velay", "Mais tu m'avais dit qu'on mangerait des knackis", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
-    Multimedia3 = [MultimediaOeuvre3PNG, "Frangin", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
+    objJSON = JSON.parse(testJSON)
+
+    
+    for(var cat in objJSON.categories){
+        for(var oeuvre in objJSON.categories[cat].oeuvres){
+            i = i+1
+            console.log(i)
+            textures[i] = await Promise.all([
+                utils.loadResource(objJSON.categories[0].oeuvres[oeuvre].texture)
+            ]);
+        }
+    }
+
+    console.log(textures)
+
+    const [MultimediaOeuvre1PNG] = await Promise.all([
+        utils.loadResource(objJSON.categories[0].oeuvres[0].texture)
+    ]);
+
+
+    // Contenu pour le multimédia (Texture/Nom/IUT/Lien)
+    Multimedia1 = [MultimediaOeuvre1PNG, "Ecobook", "IUT de Chambéry",  "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=1039"];
+    Multimedia2 = [MultimediaOeuvre2PNG, "Trieste", "IUT de Bordeaux Montaigne",  "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=885"];
+    Multimedia3 = [MultimediaOeuvre3PNG, "Amoco Cadiz - Histoire d'une marée noire", "IUT de Laval", "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=1040"];
     artistsMultimedia = [Multimedia1, Multimedia2, Multimedia3];
 
-    // Contenu pour la communication (Texture/Nom/IUT/Description/Lien)
-    Communication1 = [CommunicationOeuvre1PNG, "Hello", "IUT de Troyes", "C'est fort en chocolat", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
-    Communication2 = [CommunicationOeuvre2PNG, "Hola", "IUT de Puy en Velay", "Mais tu m'avais dit qu'on mangerait des knackis", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
-    // Communication3 = [CommunicationOeuvre3PNG, "Bonjour", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
+    // Contenu pour la communication (Texture/Nom/IUT/Lien)
+    Communication1 = [CommunicationOeuvre1PNG, "Quel métier après MMI ? - Webdesigner", "IUT de Sénart Fontainebleau", "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=966"];
+    Communication2 = [CommunicationOeuvre2PNG, "Quel métier après MMI ? Motion Designer", "IUT de Béziers", "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=901"];
+    // Communication3 = [CommunicationOeuvre3PNG, "Bonjour", "IUT de Champs-sur-Marne", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
     artistsCommunication = [Communication1, Communication2]
 
-    // Contenu pour l'infographie (Texture/Nom/IUT/Description/Lien)
-    Infographie1 = [InfographieOeuvre1PNG, "Fun", "IUT de Troyes", "C'est fort en chocolat", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
-    Infographie2 = [InfographieOeuvre2PNG, "Cool", "IUT de Puy en Velay", "Mais tu m'avais dit qu'on mangerait des knackis", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
-    Infographie3 = [InfographieOeuvre3PNG, "Amusement", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
-    Infographie4 = [InfographieOeuvre4PNG, "Bien", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
+    // Contenu pour l'infographie (Texture/Nom/IUT/Lien)
+    Infographie1 = [InfographieOeuvre1PNG, "MMI Foundry", "IUT de Elbeuf",  "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=829"];
+    Infographie2 = [InfographieOeuvre2PNG, "Missing Passenger", "IUT de Nouméa", "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=1012"];
+    Infographie3 = [InfographieOeuvre3PNG, "Pourquoi ?", "IUT de Haguenau", "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=824"];
+    Infographie4 = [InfographieOeuvre4PNG, "Jack Daniel's and cigarette", "IUT de Saint-Dié-Des-Vosges", "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=873"];
     artistsInfographie = [Infographie1, Infographie2, Infographie3, Infographie4]
 
-    // Contenu pour l'audiovisuel (Texture/Nom/IUT/Description/Lien)
-    Audiovisuel1 = [AudiovisuelOeuvre1PNG, "Petit Prince", "IUT de Troyes", "C'est fort en chocolat", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
-    Audiovisuel2 = [AudiovisuelOeuvre2PNG, "Saint-Exupéry", "IUT de Puy en Velay", "Mais tu m'avais dit qu'on mangerait des knackis", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
-    Audiovisuel3 = [AudiovisuelOeuvre3PNG, "Mouton", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
+    // Contenu pour l'audiovisuel (Texture/Nom/IUT/Lien)
+    Audiovisuel1 = [AudiovisuelOeuvre1PNG, "Ascension", "IUT de Montbéliard", "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=714"];
+    Audiovisuel2 = [AudiovisuelOeuvre2PNG, "Aujourd'hui, c'est quoi avoir 20 ans ?", "IUT du Puy en Velay", "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=1035"];
+    Audiovisuel3 = [AudiovisuelOeuvre3PNG, "La salle des rêves", "IUT de Grenoble", "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=915"];
     artistsAudiovisuel = [Audiovisuel1, Audiovisuel2, Audiovisuel3]
     
-    // Contenu pour le web (Texture/Nom/IUT/Description/Lien)
-    Web1 = [WebOeuvre1PNG, "Petit Prince", "IUT de Troyes", "C'est fort en chocolat", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
-    Web2 = [WebOeuvre2PNG, "Saint-Exupéry", "IUT de Puy en Velay", "Mais tu m'avais dit qu'on mangerait des knackis", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
-    Web3 = [WebOeuvre3PNG, "Mouton", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
+    // Contenu pour le web (Texture/Nom/IUT/Lien)
+    Web1 = [WebOeuvre1PNG, "Immersions Digitales 2021", "IUT de Tarbes", "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=833"];
+    Web2 = [WebOeuvre2PNG, "REAH", "IUT de Champs-sur-Marne", "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=911"];
+    Web3 = [WebOeuvre3PNG, "Tactical", "IUT de Bordeaux Montaigne", "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=847"];
     artistsWeb = [Web1, Web2, Web3]
     
-    // Contenu pour l'animation (Texture/Nom/IUT/Description/Lien)
-    Animation1 = [AnimationOeuvre1PNG, "Petit Prince", "IUT de Troyes", "C'est fort en chocolat", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
-    Animation2 = [AnimationOeuvre2PNG, "Saint-Exupéry", "IUT de Puy en Velay", "Mais tu m'avais dit qu'on mangerait des knackis", "https://www.youtube.com/watch?v=MUS5h5251tQ"];
-    Animation3 = [AnimationOeuvre3PNG, "Mouton", "IUT de Champs-sur-Marne", "T'es bête Oror", "https://www.youtube.com/watch?v=1V_xRb0x9aw"];
+    // Contenu pour l'animation (Texture/Nom/IUT/Lien)
+    Animation1 = [AnimationOeuvre1PNG, "CGI 3D court-métrage: 'Liechi'", "IUT de Béziers", "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=842"];
+    Animation2 = [AnimationOeuvre2PNG, "CV Vidéo Motion Design - 2020", "IUT de Laval", "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=942"];
+    Animation3 = [AnimationOeuvre3PNG, "Ken : Final Mix (Autoportrait)", "IUT de Nouméa", "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=1004"];
     artistsAnimation = [Animation1, Animation2, Animation3]
 
     infos = [artistsMultimedia, artistsCommunication, artistsInfographie, artistsAudiovisuel, artistsWeb, artistsAnimation];
 
     fontUsed = hansonJSON
+
+    
+
 
     // Sol
     
@@ -339,24 +372,6 @@ var fontUsed;
     horizonGalerie = horizonGLTF.scene
     horizonGalerie.scale.set(15, 15, 15)
     horizonGalerie.rotation.set(0, Math.PI*0.5, 0)
-
-    // boutHorizon[0] = horizonGLTF.scene.children[5]
-    // boutHorizon[0].scale.set(12, 12, 12)
-    // boutHorizon[0].position.set(-200, 12, 150)
-    // boutHorizon[0].rotation.set(0, Math.PI*0.5, 0)
-
-    // boutHorizon[1] = horizonGLTF.scene.children[1]
-    // boutHorizon[1].scale.set(12, 12, 12)
-    // boutHorizon[1].position.set(-450, 9, -150)
-    // boutHorizon[1].rotation.set(0, Math.PI*0.5, Math.PI*0.4)
-    
-    // boutHorizon[2] = horizonGLTF.scene.children[0]
-    // boutHorizon[2].scale.set(8, 8, 8)
-    // boutHorizon[2].position.set(-900, 9, 150)
-    // boutHorizon[2].rotation.set(Math.PI*0.5, 0, Math.PI*0.5)
-
-
-    // console.log(horizonGLTF.scene)
     gScene.add(horizonGalerie)
 
     // Recognizers
@@ -772,16 +787,19 @@ function onMouseMove(event){
 }
 
 const textCurrentMaterial = new THREE.MeshBasicMaterial()
-var nameCurrent, nameCurrentGeometry, iutCurrent, iutCurrentGeometry, descCurrent, descCurrentGeometry;
+var nameCurrent, nameCurrentGeometry, iutCurrent, iutCurrentGeometry, descCurrent, descCurrentGeometry, avertCurrentGeometry, avertCurrent;
 var displayed = false;
 
 window.addEventListener('click', () => {
     if(document.getElementById("cursor").classList.contains('look') && displayed == true){
         if(currentIntersect){
-            for(var cat in infos){
-                for(var nomin in infos[cat]){
-                    if(currentIntersect.object.material.map == infos[cat][nomin][0]){
-                        window.open(infos[cat][nomin][4])
+            for(var cat in objJSON.categories){
+                for(var nomin in objJSON.categories[cat].oeuvres){
+                    var path = currentIntersect.object.material.map.image.src;
+                    var page = path.split("image").pop();
+                    var compare = objJSON.categories[cat].oeuvres[nomin].texture.split("image").pop();
+                    if(page == compare){
+                        window.open(objJSON.categories[cat].oeuvres[nomin].link)
                     }
                 }
             }
@@ -791,16 +809,19 @@ window.addEventListener('click', () => {
         document.getElementById("cursor").classList.remove("cross")
         document.getElementById("canvas").style.cursor = "auto"
         cameraHelper.init(camera, chassis, gRenderer.domElement, 2);
-        gScene.remove(nameCurrent, iutCurrent/*, descCurrent*/)
+        gScene.remove(nameCurrent, iutCurrent/*, descCurrent*/, avertCurrent)
         displayed = false
     } else
     if(currentIntersect){
         displayed = true;
-            for(var cat in infos){
-                for(var nomin in infos[cat]){
-                    if(currentIntersect.object.material.map == infos[cat][nomin][0]){
+            for(var cat in objJSON.categories){
+                for(var nomin in objJSON.categories[cat].oeuvres){
+                    var path = currentIntersect.object.material.map.image.src;
+                    var page = path.split("image").pop();
+                    var compare = objJSON.categories[cat].oeuvres[nomin].texture.split("image").pop();
+                    if(page == compare){
                         nameCurrentGeometry = new THREE.TextGeometry(
-                            infos[cat][nomin][1],
+                            objJSON.categories[cat].oeuvres[nomin].name,
                             {
                                 font: fontUsed,
                                 size: 5,
@@ -814,10 +835,24 @@ window.addEventListener('click', () => {
                             }
                         )
                         iutCurrentGeometry = new THREE.TextGeometry(
-                            infos[cat][nomin][2],
+                            objJSON.categories[cat].oeuvres[nomin].iut,
                             {
                                 font: fontUsed,
                                 size: 5,
+                                height: 0.5,
+                                curveSegments: 12,
+                                bevelEnabled: true,
+                                bevelThickness: 0.03,
+                                bevelSize: 0.02,
+                                bevelOffset: 0,
+                                bevelSegments: 5
+                            }
+                        )
+                        avertCurrentGeometry = new THREE.TextGeometry(
+                            "Cliquez sur l'oeuvre pour en savoir plus",
+                            {
+                                font: fontUsed,
+                                size: 3,
                                 height: 0.5,
                                 curveSegments: 12,
                                 bevelEnabled: true,
@@ -847,19 +882,24 @@ window.addEventListener('click', () => {
         nameCurrentGeometry.center();
         nameCurrent = new THREE.Mesh(nameCurrentGeometry, textCurrentMaterial)
         nameCurrent.rotation.y = -Math.PI*1.5
-        nameCurrent.position.set(currentIntersect.object.position.x, 90, 125)
+        nameCurrent.position.set(currentIntersect.object.position.x, 130, 0)
 
         iutCurrentGeometry.center()
         iutCurrent = new THREE.Mesh(iutCurrentGeometry, textCurrentMaterial)
         iutCurrent.rotation.y = -Math.PI*1.5
-        iutCurrent.position.set(currentIntersect.object.position.x, 50, 125)
+        iutCurrent.position.set(currentIntersect.object.position.x, 120, 0)
+        
+        avertCurrentGeometry.center()
+        avertCurrent = new THREE.Mesh(avertCurrentGeometry, textCurrentMaterial)
+        avertCurrent.rotation.y = -Math.PI*1.5
+        avertCurrent.position.set(currentIntersect.object.position.x, 20, 0)
         
         // descCurrent = new THREE.Mesh(descCurrentGeometry, textCurrentMaterial)
         // descCurrent.rotation.y = -Math.PI*1.5
         // descCurrent.position.set(currentIntersect.object.position.x, 70, -25)
 
 
-        gScene.add(nameCurrent, iutCurrent/*, descCurrent*/)
+        gScene.add(nameCurrent, iutCurrent, avertCurrent/*, descCurrent*/)
         // }
         document.getElementById('canvas').style.cursor = "none"
         document.getElementById("cursor").classList.add("look")
@@ -877,13 +917,15 @@ function render() {
 
         // effectComposer.render()
 
-        floorMaterial.uniforms.uTime.value = elapsedTime
-
         if(chassis.position.x >= web[0]){
             horizonGalerie.position.set(chassis.position.x - 3000, 1, -180)
         } else {
             horizonGalerie.position.set(positionHorizon, 1, -180)
         }
+
+        directionLight.position.copy(chassis.position)
+        directionLight.target.position.set(chassis.position.x-150, 50, 0)
+
 
         horizonLight.position.set(horizonGalerie.position.x+ 250, 700 , 150)
 

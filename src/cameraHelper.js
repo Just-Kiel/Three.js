@@ -63,7 +63,7 @@ function initCameraHelper(camera, target, controllerScope, cameraId) {
                 cameraHelper.update = () => 
                 {
                     camera.lookAt(target.position)
-                    camera.position.set(target.position.x, target.position.y + 25, target.position.z + 60)
+                    camera.position.set(target.position.x, target.position.y + 35, target.position.z + 60)
                 };
                 break;
             default:

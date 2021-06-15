@@ -1,0 +1,26 @@
+{"categories":
+    [
+        {"name_cat" : "multimédia",
+        "oeuvres":
+            [{"value": "MultimediaOeuvre1PNG",
+            "texture": "image/oeuvres/multimedia/oeuvre_1.jpg",
+            "name": "Ecobook",
+            "iut": "IUT de Chambéry",
+            "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=1039"
+            },
+            {"value": "MultimediaOeuvre2PNG",
+            "texture": "image/oeuvres/multimedia/oeuvre_2.jpg",
+            "name": "Trieste",
+            "iut": "IUT de Bordeaux Montaigne",
+            "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=885"
+            },
+            {"value": "MultimediaOeuvre3PNG",
+            "texture": "image/oeuvres/multimedia/oeuvre_3.jpg",
+            "name": "Amoco Cadiz - Histoire d'une marée noire",
+            "iut": "IUT de Laval",
+            "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=1040"
+            }
+            ]
+        }
+    ]
+}
