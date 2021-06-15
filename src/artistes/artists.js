@@ -55,10 +55,10 @@ let wireframeRenderer = null;
 let pause = false;
 
 
-const ambientLight = new THREE.AmbientLight('#686868', 1);
+var ambientLight = new THREE.AmbientLight('#686868', 1);
 gScene.add(ambientLight);
-const pointLight = new THREE.PointLight(0xffffff, 2, 1000);
-pointLight.position.set(50, 500, 150);
+var pointLight = new THREE.PointLight(0xffffff, 2, 1000);
+pointLight.position.set(50, 500, 120);
 gScene.add(pointLight);
 
 
@@ -92,12 +92,22 @@ var coordCategoryCard = [-75, -45, -15, 15, 45, 75];
 
 var fond, planeFond;
 
+var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, AnimationPNG,
+    backCardPNG, modelGLTF,
+    nomine1MultimediaPNG, nomine2MultimediaPNG, nomine3MultimediaPNG,
+    nomine1CommunicationPNG, nomine2CommunicationPNG, 
+    nomine1InfographiePNG, nomine2InfographiePNG, nomine3InfographiePNG, nomine4InfographiePNG,
+    nomine1AudiovisuelPNG, nomine2AudiovisuelPNG, nomine3AudiovisuelPNG,
+    nomine1WebPNG, nomine2WebPNG, nomine3WebPNG,
+    nomine1AnimationPNG, nomine2AnimationPNG, nomine3AnimationPNG,
+    fondAnimationPNG, fondMultimediaPNG, fondAudiovisuelPNG, fondWebPNG, fondCommunicationPNG, fondInfographiePNG;
+
 
 
 
 (async function init() {
 
-    const [MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, AnimationPNG,
+    [MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, AnimationPNG,
             backCardPNG, modelGLTF,
             nomine1MultimediaPNG, nomine2MultimediaPNG, nomine3MultimediaPNG,
             nomine1CommunicationPNG, nomine2CommunicationPNG, 
@@ -105,7 +115,7 @@ var fond, planeFond;
             nomine1AudiovisuelPNG, nomine2AudiovisuelPNG, nomine3AudiovisuelPNG,
             nomine1WebPNG, nomine2WebPNG, nomine3WebPNG,
             nomine1AnimationPNG, nomine2AnimationPNG, nomine3AnimationPNG,
-            fondAnimationPNG
+            fondAnimationPNG, fondMultimediaPNG, fondAudiovisuelPNG, fondWebPNG, fondCommunicationPNG, fondInfographiePNG
         ] = await Promise.all([
         utils.loadResource('image/artists/multimedia/multimedia.png'),
         utils.loadResource('image/artists/communication/communication.png'),
@@ -134,14 +144,19 @@ var fond, planeFond;
         utils.loadResource('image/artists/animation/nomine_1.png'),
         utils.loadResource('image/artists/animation/nomine_2.png'),
         utils.loadResource('image/artists/animation/nomine_3.png'),
-        utils.loadResource('image/artists/animation/fond.png')
+        utils.loadResource('image/artists/animation/fond.png'),
+        utils.loadResource('image/artists/multimedia/fond.png'),
+        utils.loadResource('image/artists/audiovisuel/fond.png'),
+        utils.loadResource('image/artists/web/fond.png'),
+        utils.loadResource('image/artists/communication/fond.png'),
+        utils.loadResource('image/artists/infographie/fond.png'),
     ]);
 
     // Modele
     fond = modelGLTF.scene
     fond.scale.set(20, 20, 20)
-    fond.position.z = -200
-    fond.position.y = -120
+    fond.position.z = -250
+    fond.position.y = -180
     gScene.add(fond)
 
     const ambientLight = new THREE.AmbientLight('#706F6F', 0.5);
@@ -158,16 +173,17 @@ var fond, planeFond;
     // Plane pour décorer
     planeFond = new THREE.Mesh(
         new THREE.PlaneGeometry(1280, 720),
-        new THREE.MeshStandardMaterial({map: fondAnimationPNG})
+        new THREE.MeshBasicMaterial({opacity: 0, transparent: true})
     )
-    planeFond.position.set(0, 50, -300)
+    planeFond.name = "ecran"
+    planeFond.position.set(0, 50, -700)
     
 
     // Cartes catégories
     const cardGeometry = new THREE.PlaneGeometry(29.5, 45.5)
     cardCategory1 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: MultimediaPNG, transparent: true}),
+        new THREE.MeshBasicMaterial({map: MultimediaPNG, transparent: true}),
         // new THREE.MeshStandardMaterial({color: '#ABEDC6'}),
     )
     cardCategory1.name = "Multimédia"
@@ -176,7 +192,7 @@ var fond, planeFond;
 
     cardCategory2 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: CommunicationPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: CommunicationPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardCategory2.name = "Communication"
@@ -185,7 +201,7 @@ var fond, planeFond;
 
     cardCategory3 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: InfographiePNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: InfographiePNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardCategory3.name = "Infographie"
@@ -194,7 +210,7 @@ var fond, planeFond;
 
     cardCategory4 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: AudiovisuelPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: AudiovisuelPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#ABEDC6'})
     )
     cardCategory4.name = "Audiovisuel"
@@ -203,7 +219,7 @@ var fond, planeFond;
     
     cardCategory5 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: WebPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: WebPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardCategory5.name = "Site Web"
@@ -212,7 +228,7 @@ var fond, planeFond;
     
     cardCategory6 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: AnimationPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: AnimationPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardCategory6.name = "Animation"
@@ -447,11 +463,14 @@ function onMouseMove(event){
 var intersects
 var artistesClicked = false;
 var currentArtistsClicked = [];
+var retour = false;
 
 var speedAnim = 0.5 ;
 
 
 window.addEventListener('click', () => {
+    console.log(retour)
+    console.log(planeFond.material.opacity)
     document.getElementById("hub_arrow").onclick = function(){
         window.location.pathname = "./immersions/index.html";
         // window.location.pathname = "./index.html";
@@ -462,6 +481,7 @@ window.addEventListener('click', () => {
     if(currentIntersect){
         
         document.getElementById("arrow").onclick = function(){
+            retour = true;
             for(var card in currentArtistsClicked){
                 gsap.to(currentArtistsClicked[card].position, {duration: speedAnim, x:0, y:heightArtist, z: 0})
                 gsap.to(currentArtistsClicked[card].rotation, {duration: speedAnim, z:0})
@@ -517,8 +537,9 @@ window.addEventListener('click', () => {
                 gsap.to(cardCategory5.position, {duration: speedAnim, z: 0})
                 gsap.to(cardCategory6.position, {duration: speedAnim, z: 0})
                 artistesClicked = false
-                
+                retour = false
             }, speedAnim * 1000 * 5)
+            
         }
         if(currentIntersect.object.name == "Multimédia")
         {
@@ -546,6 +567,8 @@ window.addEventListener('click', () => {
             setTimeout(function(){
                 gScene.remove(cardCategory1, cardCategory2, cardCategory3, cardCategory4, cardCategory5, cardCategory6);
                 gsap.to(backCard.position, {duration: speedAnim, y: -25})
+                planeFond.material.map = fondMultimediaPNG
+                gScene.add(planeFond)
             }, speedAnim * 1000 * 2)
 
             setTimeout(function(){
@@ -593,6 +616,8 @@ window.addEventListener('click', () => {
             setTimeout(function(){
                 gScene.remove(cardCategory1, cardCategory2, cardCategory3, cardCategory4, cardCategory5, cardCategory6);
                 gsap.to(backCard.position, {duration: speedAnim, y: -25})
+                planeFond.material.map = fondCommunicationPNG
+                gScene.add(planeFond)
             }, speedAnim * 1000 * 2)
 
             setTimeout(function(){
@@ -639,6 +664,8 @@ window.addEventListener('click', () => {
             setTimeout(function(){
                 gScene.remove(cardCategory1, cardCategory2, cardCategory3, cardCategory4, cardCategory5, cardCategory6);
                 gsap.to(backCard.position, {duration: speedAnim, y: -25})
+                planeFond.material.map = fondInfographiePNG
+                gScene.add(planeFond)
             }, speedAnim * 1000*2)
 
             setTimeout(function(){
@@ -688,6 +715,8 @@ window.addEventListener('click', () => {
             setTimeout(function(){
                 gScene.remove(cardCategory1, cardCategory2, cardCategory3, cardCategory4, cardCategory5, cardCategory6);
                 gsap.to(backCard.position, {duration: speedAnim, y: -25})
+                planeFond.material.map = fondAudiovisuelPNG
+                gScene.add(planeFond)
             }, speedAnim * 1000*2)
 
             setTimeout(function(){
@@ -732,6 +761,8 @@ window.addEventListener('click', () => {
             setTimeout(function(){
                 gScene.remove(cardCategory1, cardCategory2, cardCategory3, cardCategory4, cardCategory5, cardCategory6);
                 gsap.to(backCard.position, {duration: speedAnim, y: -25})
+                planeFond.material.map = fondWebPNG
+                gScene.add(planeFond)
             }, speedAnim * 1000 *2)
 
             setTimeout(function(){
@@ -752,10 +783,12 @@ window.addEventListener('click', () => {
                 gsap.to(cardWeb3.rotation, {duration: speedAnim, z: rotatNomin[2]})
             }, speedAnim * 1000*4)
         }else if(currentIntersect.object.name == "Animation"){
+
+            
+
             document.getElementById("hub_arrow").classList.add("hidden")
             document.getElementById("arrow").classList.remove("hidden")
             gScene.add(backCard);
-            gScene.add(planeFond)
             gsap.to(cardCategory1.position, {duration: speedAnim, x: 0, y:50})
             gsap.to(cardCategory2.position, {duration: speedAnim, x: 0, y:50})
             gsap.to(cardCategory3.position, {duration: speedAnim, x: 0, y:50})
@@ -777,6 +810,8 @@ window.addEventListener('click', () => {
             setTimeout(function(){
                 gScene.remove(cardCategory1, cardCategory2, cardCategory3, cardCategory4, cardCategory5, cardCategory6);
                 gsap.to(backCard.position, {duration: speedAnim, y: -25})
+                planeFond.material.map = fondAnimationPNG
+                gScene.add(planeFond)
             }, speedAnim * 1000*2)
 
             setTimeout(function(){
@@ -816,7 +851,6 @@ window.addEventListener('click', () => {
                             gsap.to(currentArtist.object.rotation, {duration: 1, z: rotatNomin[0]})
                         }
                 } else if(!gScene.getObjectByName('Nominé 3')){
-                    console.log('owa impressive')
                     if(currentArtist.object.name == "Nominé 2"){
                         gsap.to(currentArtist.object.position, {duration: 1, x: coordNomin2[0]+10, y:coordNomin2[1]+1, z: coordNomin2[2]})
                         gsap.to(currentArtist.object.rotation, {duration: 1, z: rotatNomin[2]})
@@ -846,6 +880,7 @@ window.addEventListener('click', () => {
 
 function render() {
     if(document.getElementById("load").classList.contains("hidden")){
+
     const categoryToTest = [cardCategory1, cardCategory2, cardCategory3, cardCategory4, cardCategory4, cardCategory5, cardCategory6];
     const multimediaToTest = [cardMultimedia1, cardMultimedia2, cardMultimedia3]
     const communicationToTest = [cardCom1, cardCom2]
@@ -856,11 +891,14 @@ function render() {
 
     const elapsedTime = clock.getElapsedTime()
 
-    // console.log(elapsedTime)
+    
+    if(retour == true && planeFond.material.opacity>0){
+        planeFond.material.opacity -=0.02
+    } else if(gScene.getObjectByName("ecran") && planeFond.material.opacity<1){
+        planeFond.material.opacity += 0.02
+    }
 
-    // for(let i = 0; i <= 1005 i++ ){
         gsap.to(fond.rotation, {repeat: -1, y: elapsedTime})
-    // }
 
     
 

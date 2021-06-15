@@ -288,7 +288,7 @@ var textures = [];
             i = i+1
             console.log(i)
             textures[i] = await Promise.all([
-                utils.loadResource(objJSON.categories[0].oeuvres[oeuvre].texture)
+                utils.loadResource(objJSON.categories[cat].oeuvres[oeuvre].texture)
             ]);
         }
     }
