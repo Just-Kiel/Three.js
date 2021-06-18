@@ -184,7 +184,6 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
     cardCategory1 = new THREE.Mesh(
         cardGeometry,
         new THREE.MeshBasicMaterial({map: MultimediaPNG, transparent: true}),
-        // new THREE.MeshStandardMaterial({color: '#ABEDC6'}),
     )
     cardCategory1.name = "Multimédia"
     cardCategory1.position.set(coordCategoryCard[0], heightCard, 0)
@@ -193,7 +192,6 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
     cardCategory2 = new THREE.Mesh(
         cardGeometry,
         new THREE.MeshBasicMaterial({map: CommunicationPNG, transparent: true})
-        // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardCategory2.name = "Communication"
     cardCategory2.position.set(coordCategoryCard[1], heightCard, 0)
@@ -202,7 +200,6 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
     cardCategory3 = new THREE.Mesh(
         cardGeometry,
         new THREE.MeshBasicMaterial({map: InfographiePNG, transparent: true})
-        // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardCategory3.name = "Infographie"
     cardCategory3.position.set(coordCategoryCard[2], heightCard, 0)
@@ -239,7 +236,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
 
     backCard = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: backCardPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: backCardPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#ECF0F1'})
     )
     backCard.position.set(0, 50, -1)
@@ -248,7 +245,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
     // Cartes nominés multimédia
     cardMultimedia1 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine1MultimediaPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine1MultimediaPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardMultimedia1.name = "Multimédia Nominé 1"
@@ -258,7 +255,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
 
     cardMultimedia2 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine2MultimediaPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine2MultimediaPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardMultimedia2.name = "Nominé 2"
@@ -267,7 +264,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
 
     cardMultimedia3 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine3MultimediaPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine3MultimediaPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardMultimedia3.name = "Nominé 3"
@@ -278,7 +275,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
     // Cartes nominés Communication
     cardCom1 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine1CommunicationPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine1CommunicationPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardCom1.name = "Communication Nominé 1"
@@ -288,7 +285,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
 
     cardCom2 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine2CommunicationPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine2CommunicationPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardCom2.name = "Nominé 2"
@@ -308,7 +305,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
     // Cartes nominés Infographie
     cardInfo1 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine1InfographiePNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine1InfographiePNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardInfo1.name = "Infographie Nominé 1"
@@ -318,7 +315,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
 
     cardInfo2 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine2InfographiePNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine2InfographiePNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardInfo2.name = "Nominé 2"
@@ -327,7 +324,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
 
     cardInfo3 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine3InfographiePNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine3InfographiePNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardInfo3.name = "Nominé 3"
@@ -337,7 +334,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
     
     cardInfo4 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine4InfographiePNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine4InfographiePNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardInfo4.name = "Nominé 4"
@@ -348,7 +345,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
     // Cartes nominés Audiovisuel
     cardAudio1 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine1AudiovisuelPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine1AudiovisuelPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardAudio1.name = "Audiovisuel Nominé 1"
@@ -358,7 +355,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
 
     cardAudio2 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine2AudiovisuelPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine2AudiovisuelPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardAudio2.name = "Nominé 2"
@@ -367,7 +364,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
 
     cardAudio3 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine3AudiovisuelPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine3AudiovisuelPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardAudio3.name = "Nominé 3"
@@ -378,7 +375,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
     // Cartes nominés Site Web
     cardWeb1 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine1WebPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine1WebPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#E8A7BE'})
     )
     cardWeb1.name = "Site Web Nominé 1"
@@ -388,7 +385,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
 
     cardWeb2 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine2WebPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine2WebPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardWeb2.name = "Nominé 2"
@@ -397,7 +394,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
 
     cardWeb3 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine3WebPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine3WebPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#E8AABE'})
     )
     cardWeb3.name = "Nominé 3"
@@ -408,7 +405,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
     // Cartes nominés Animation
     cardAnim1 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine1AnimationPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine1AnimationPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#D46F4D'})
     )
     cardAnim1.name = "Animation Nominé 1"
@@ -418,7 +415,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
 
     cardAnim2 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine2AnimationPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine2AnimationPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#FFBF66'})
     )
     cardAnim2.name = "Nominé 2"
@@ -427,7 +424,7 @@ var MultimediaPNG, CommunicationPNG, InfographiePNG, AudiovisuelPNG, WebPNG, Ani
 
     cardAnim3 = new THREE.Mesh(
         cardGeometry,
-        new THREE.MeshStandardMaterial({map: nomine3AnimationPNG, transparent: true})
+        new THREE.MeshBasicMaterial({map: nomine3AnimationPNG, transparent: true})
         // new THREE.MeshStandardMaterial({color: '#08C5D1'})
     )
     cardAnim3.name = "Nominé 3"
@@ -472,8 +469,8 @@ window.addEventListener('click', () => {
     console.log(retour)
     console.log(planeFond.material.opacity)
     document.getElementById("hub_arrow").onclick = function(){
-        window.location.pathname = "./immersions/index.html";
-        // window.location.pathname = "./index.html";
+        // window.location.pathname = "./immersions/index.html";
+        window.location.pathname = "./index.html";
     }
     if(document.getElementById("cursor").classList.contains('cross')){
         document.getElementById("cursor").classList.remove("cross")
@@ -922,16 +919,20 @@ function render() {
 
     // if(currentArtist != currentIntersect || currentArtist == null){
     if(intersects.length){
-        // console.log(currentArtist)
+        
 
         if(!currentIntersect && !artistesClicked){
             console.log('mouse enter')
+            // document.getElementById("cursor").classList.remove("cursor")
+            // document.getElementById("cursor").classList.add('look')
             
             intersects[0].object.translateZ(5)
             // intersects[0].object.translateZ(1)
         }
 
         if(currentIntersect && currentIntersect.object.name !== intersects[0].object.name && !artistesClicked){
+            // document.getElementById("cursor").classList.remove("cursor")
+            // document.getElementById("cursor").classList.add('look')
             // console.log('change')
             intersects[0].object.translateZ(5)
             // intersects[0].object.translateZ(1)
@@ -945,8 +946,12 @@ function render() {
 
             currentIntersect.object.translateZ(-5)
             // currentIntersect.object.translateZ(-1)
-            console.log('mouse leave')
+            // document.getElementById("cursor").classList.remove("look")
+            // document.getElementById("cursor").classList.add('cursor')
+            // console.log('mouse leave')
         }
+        // document.getElementById("cursor").classList.remove("look")
+        //     document.getElementById("cursor").classList.add('cursor')
         
         currentIntersect = null
     }

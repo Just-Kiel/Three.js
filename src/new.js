@@ -119,10 +119,11 @@ var mentionsLength = 20;
 var mentionsZ = 8;
 var planeEnter;
 var commandes;
+var ecranCeremonie;
 
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF, /*gameTpGLTF,*/ pontGalleryGLTF, pupitreArtistsGLTF, theatreGLTF, hansonJSON, SolGLTF, CommandesPNG/*, testJSON*/] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, /*gameTpGLTF,*/ pontGalleryGLTF, pupitreArtistsGLTF, theatreGLTF, hansonJSON, SolGLTF, CommandesPNG/*, testJSON*/, visuelFestivalPNG] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
         // utils.loadResource('model/teleport_game.gltf'),
@@ -132,8 +133,11 @@ var commandes;
         utils.loadResource('fonts/Hanson_Bold.json'),
         utils.loadResource('model/petits_cailloux.gltf'),
         utils.loadResource('image/Commandes_site.png'),
-        // utils.loadResource('infos/test.txt')
+        // utils.loadResource('infos/test.txt'),
+        utils.loadResource('image/banniere.png'),
     ]);
+
+    
 
     // console.log(testJSON)
     // const test = JSON.parse(testJSON)
@@ -250,6 +254,14 @@ var commandes;
     ceremonie.position.set(-100, 0, -90)
     ceremonie.rotation.y = Math.PI*0.7
     gScene.add(ceremonie)
+
+    ecranCeremonie = new THREE.Mesh(
+        new THREE.PlaneGeometry(76, 40),
+        new THREE.MeshBasicMaterial({map: visuelFestivalPNG})
+    )
+    ecranCeremonie.position.set(ceremonie.position.x-20, 55, ceremonie.position.z-30)
+    ecranCeremonie.rotateY(Math.PI*0.2)
+    gScene.add(ecranCeremonie)
 
     // Collider théatre
     const theatreShape = new CANNON.Box(new CANNON.Vec3(30,15,25))
@@ -479,18 +491,18 @@ function render() {
     
     
 
-    if(vehicle.chassisBody.position.x >= mentionsBody.position.x - (mentionsLength) && vehicle.chassisBody.position.x <= mentionsBody.position.x + (mentionsLength) && vehicle.chassisBody.position.z >= mentionsBody.position.z - (mentionsZ) && vehicle.chassisBody.position.z <= mentionsBody.position.z + (mentionsZ)){
-        gScene.add(planeEnter)
-        gsap.to(planeEnter.position, {duration: 0.2, y: 6})
+    // if(vehicle.chassisBody.position.x >= mentionsBody.position.x - (mentionsLength) && vehicle.chassisBody.position.x <= mentionsBody.position.x + (mentionsLength) && vehicle.chassisBody.position.z >= mentionsBody.position.z - (mentionsZ) && vehicle.chassisBody.position.z <= mentionsBody.position.z + (mentionsZ)){
+    //     gScene.add(planeEnter)
+    //     gsap.to(planeEnter.position, {duration: 0.2, y: 6})
         
-    } else{
-        if(gScene.getObjectByName("Mentions")){
-            gsap.to(planeEnter.position, {duration: 0.15, y: -1})
-            setTimeout(function(){
-                gScene.remove(planeEnter)
-            }, 150)
-        }
-    }
+    // } else{
+    //     if(gScene.getObjectByName("Mentions")){
+    //         gsap.to(planeEnter.position, {duration: 0.15, y: -1})
+    //         setTimeout(function(){
+    //             gScene.remove(planeEnter)
+    //         }, 150)
+    //     }
+    // }
 
     requestAnimationFrame(render);
 
@@ -504,8 +516,8 @@ window.addEventListener('keyup', (e) => {
             break;
         case 'ENTER':
             if(gScene.getObjectByName("Mentions")){
-                window.location.pathname = "./immersions/mentions_legales.html"
-                // window.location.pathname = "./mentions_legales.html"
+                // window.location.pathname = "./immersions/mentions_legales.html"
+                window.location.pathname = "./mentions_legales.html"
             }
     }
 });

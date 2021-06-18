@@ -3,6 +3,7 @@
     padding: 0;
     margin: 0;
     font-family: 'Manrope', sans-serif;
+    /* cursor: none; */
 }
 
 body,
@@ -148,6 +149,16 @@ html
     100% {clip-path: polygon(0% 0%, 100% 0%, 100% 100%, 0% 100%);}
 }
 
+.cursor{
+    position: absolute;
+    transform: translate(-50%, -50%);
+    padding: 15px;
+    border-radius: 50%;
+    z-index: 998;
+    border: 5px solid #FFFFFF;
+    cursor: none;
+}
+
 .cross {
     width: 3rem;
     height: 3rem;
@@ -175,17 +186,18 @@ html
 }
 
 #arrow{
-    z-index: 997;
+    z-index: 998;
     position: absolute;
     top: 1%;
-    left: 1%;
+    left: 3%;
 }
 
 #hub_arrow{
     z-index: 998;
     position: absolute;
-    top: 1%;
-    left: 1%;
+    top: 4vh;
+    left: 3vw;
+    transform: scale(0.9);
 }
 
 .direction {

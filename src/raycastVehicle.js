@@ -91,15 +91,15 @@ export default function createVehicle() {
             
             if(page == "index.html" || page == ""){
                 if(i.body.id == interactBodies[0].id){
-                    // window.location.pathname = "./gallery.html";
-                    window.location.pathname = "./immersions/gallery.html";
+                    window.location.pathname = "./gallery.html";
+                    // window.location.pathname = "./immersions/gallery.html";
                 }
                 if(i.body.id == interactBodies[1].id){
-                    // window.location.pathname = './artists.html'
-                    window.location.pathname = "./immersions/artists.html";
+                    window.location.pathname = './artists.html'
+                    // window.location.pathname = "./immersions/artists.html";
                 }
                 if(i.body.id == interactBodies[2].id){
-                    window.open("https://www.youtube.com/channel/UCNiWu4M9VCs8Sn-x9lcQjag")
+                    window.open("https://youtu.be/AuOXgnmPF0Q")
                 }
                 if(i.body.id == interactBodies[3].id){
                     console.log("enter")
@@ -113,8 +113,8 @@ export default function createVehicle() {
 
             if(page == "game.html"){
                 if(i.body.id == interactBodies[0].id){
-                    window.location.pathname = "./immersions/index.html";
-                    // window.location.pathname = "./index.html";
+                    // window.location.pathname = "./immersions/index.html";
+                    window.location.pathname = "./index.html";
                 }
                 if(i.body.id == interactBodies[1].id){
                     console.log("start colormudar")
@@ -137,8 +137,11 @@ export default function createVehicle() {
                     document.getElementById("blackscreen").classList.remove("blackscreen-non")
                     document.getElementById("blackscreen").classList.add("blackscreen-active")
                     
-                    setTimeout(function(){window.location.pathname = "./immersions/index.html";}, 4000)
-                    // window.location.pathname = "./index.html";
+                    setTimeout(function(){
+                        // window.location.pathname = "./immersions/index.html";
+                        window.location.pathname = "./index.html";
+                    }, 4000)
+                    
                 }
             }
 
@@ -148,8 +151,11 @@ export default function createVehicle() {
                     document.getElementById("blackscreen").classList.remove("blackscreen-non")
                     document.getElementById("blackscreen").classList.add("blackscreen-active")
 
-                    setTimeout(function(){window.location.pathname = "./immersions/index.html";}, 2000)
-                    // window.location.pathname = "./index.html"
+                    setTimeout(function(){
+                        // window.location.pathname = "./immersions/index.html";
+                        window.location.pathname = "./index.html"
+                    }, 2000)
+                    
                 }
             }
         
@@ -260,6 +266,7 @@ function initControls(vehicle) {
 
     var direction
     var steeringDirection
+    var brakeMultiplier
     const maxSteeringValue = 0.7;
     const joystickMaxSteeringValue = 0.9;
     const maxForceOnFrontWheels = 150;
@@ -403,12 +410,13 @@ function initControls(vehicle) {
 
         if(page != "gallery.html" && page != "mentions_legales.html"){
             steeringDirection = isKeyDown('Q') ? 1 : isKeyDown('D') ? -1 : 0;
+            brakeMultiplier = isKeyDown(' ') ? 1 : 0;
         } else {
             steeringDirection = 0
         }
         [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(maxSteeringValue * steeringDirection, wheelIndex));
 
-        const brakeMultiplier = isKeyDown(' ') ? 1 : 0;
+        
         [0, 1].forEach(wheelIndex => vehicle.setBrake(brakeForce * brakeMultiplier, wheelIndex));
         // [2, 3].forEach(wheelIndex => vehicle.setBrake(brakeForce * brakeMultiplier *0.5, wheelIndex));
 

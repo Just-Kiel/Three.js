@@ -130,6 +130,28 @@
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=1004"
             }
             ]
+        },
+        {"name_cat" : "meilleur son",
+        "oeuvres":
+            [{"value": "SonOeuvre1PNG",
+            "texture": "image/oeuvres/audiovisuel/oeuvre_3.jpg",
+            "name": "La salle des rêves",
+            "iut": "IUT de Grenoble",
+            "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=915"
+            },
+            {"value": "SonOeuvre2PNG",
+            "texture": "image/oeuvres/audiovisuel/oeuvre_1.jpg",
+            "name": "Ascension",
+            "iut": "IUT de Montbéliard",
+            "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=714"
+            },
+            {"value": "SonOeuvre3PNG",
+            "texture": "image/oeuvres/animation/oeuvre_1.jpg",
+            "name": "CGI 3D court-métrage: 'Liechi'",
+            "iut": "IUT de Béziers",
+            "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=842"
+            }
+            ]
         }
     ]
 }
