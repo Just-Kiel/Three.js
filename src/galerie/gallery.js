@@ -241,7 +241,7 @@ var objectsToTest = [];
     textGallery.position.set(50, 7, 125)
 
     const textGallery2Geometry = new THREE.TextGeometry(
-        'des nominés',
+        'des nommés',
         {
             font: hansonJSON,
             size: 15,
