@@ -6,11 +6,13 @@ import createVehicle from './raycastVehicle.js';
 import {cameraHelper} from './cameraHelper.js';
 // import cannonDebugger from 'cannon-es-debugger'
 import { DoubleSide } from 'three';
-import gsap from 'gsap/gsap-core';
 
 const worldStep = 1/60;
 
 const gWorld = new CANNON.World();
+gWorld.broadphase = new CANNON.SAPBroadphase(gWorld);
+gWorld.gravity.set(0, -10, 0);
+gWorld.defaultContactMaterial.friction = 1;
 const gScene = new THREE.Scene();
 const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
     canvas: document.querySelector('.webgl')
@@ -39,45 +41,46 @@ const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
      gRenderer.setSize(sizes.width, sizes.height)
  })
 
- gRenderer.setPixelRatio(2)
+gRenderer.setPixelRatio(window.devicePixelRatio);
+gRenderer.setSize(window.innerWidth, window.innerHeight);
+gRenderer.setClearColor('#D9AE71')
+document.body.appendChild(gRenderer.domElement);
 
-// Camera
+/**
+ * Camera
+ */
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
-
 camera.position.y = 3
 camera.position.z = -10
 gScene.add(camera)
 
 
+/**
+ * Lights
+ */
 const ambientLight = new THREE.AmbientLight('#706F6F', 1);
 gScene.add(ambientLight);
 const pointLight = new THREE.PointLight(0xffffff, 2, 800)
 pointLight.position.set(50, 500, -150)
 gScene.add(pointLight)
-
 const secondLight = new THREE.PointLight(0xffffff, 1, 1200)
 secondLight.position.set(150, 0, 0)
 gScene.add(secondLight)
 
-gRenderer.setClearColor('#D9AE71')
-
+/**
+ * Floor
+ */
 const floor = new THREE.Mesh(
     new THREE.CylinderGeometry(200, 200, 600, 32),
     new THREE.MeshStandardMaterial({color: '#D9AE71'}),
 )
-// const floor = new THREE.Mesh(
-    // new THREE.BoxGeometry(400, 400, 600),
-    // new THREE.MeshStandardMaterial({color: '#D9AE71'}),
-// )
 floor.material.side = THREE.DoubleSide
-// floor.rotation.x = - Math.PI * 0.5
 floor.position.y = -300
 floor.position.z = 2
 gScene.add(floor)
 
 //Floor phys
 const floorShape = new CANNON.Cylinder(200, 200, 100, 32)
-// const floorShape = new CANNON.Box(new CANNON.Vec3(200, 1, 200))
 const floorBody = new CANNON.Body({
     mass: 0,
     shape: floorShape,
@@ -85,45 +88,34 @@ const floorBody = new CANNON.Body({
 })
 gWorld.addBody(floorBody)
 
-// //Axes Helper
-// const axesHelper = new THREE.AxesHelper(2)
-// gScene.add(axesHelper)
 
-gWorld.broadphase = new CANNON.SAPBroadphase(gWorld);
-gWorld.gravity.set(0, -10, 0);
-gWorld.defaultContactMaterial.friction = 1;
-
-gRenderer.setPixelRatio(window.devicePixelRatio);
-gRenderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(gRenderer.domElement);
-
+var vehicle
 const vehicleInitialPosition = new THREE.Vector3(0, 50, 0);
-// const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, -1, 0), -Math.PI / 2);
 const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI);
 let resetVehicle = () => {};
 
-var gameTp
-var gameTpBody;
-
-var vehicle
+var gameTp, gameTpBody;
 
 var pontGallery, pontGalleryBody
 
 var pupitreArtists, pupitreArtistsBody, textNomin
 
-var ceremonie, theatreBodyPart1, theatreBodyPart2, ceremonieBody, barriere1, barriere2;
+var ceremonie, theatreBodyPart1, theatreBodyPart2, ceremonieBody, barriere1, barriere2, ecranCeremonie;
 
 var mentionsBody;
-
 var mentionsLength = 20;
 var mentionsZ = 8;
 var planeEnter;
-var commandes;
-var ecranCeremonie;
+
+// var commandes;
+
+if ("ontouchstart" in document.documentElement){
+    document.getElementById('commande').classList.add("hidden")
+}
 
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF, /*gameTpGLTF,*/ pontGalleryGLTF, pupitreArtistsGLTF, theatreGLTF, hansonJSON, SolGLTF, CommandesPNG/*, testJSON*/, visuelFestivalPNG] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, /*gameTpGLTF,*/ pontGalleryGLTF, pupitreArtistsGLTF, theatreGLTF, hansonJSON, SolGLTF, /*CommandesPNG*/, visuelFestivalPNG] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
         // utils.loadResource('model/teleport_game.gltf'),
@@ -132,44 +124,35 @@ var ecranCeremonie;
         utils.loadResource('model/theatre.gltf'),
         utils.loadResource('fonts/Hanson_Bold.json'),
         utils.loadResource('model/petits_cailloux.gltf'),
-        utils.loadResource('image/Commandes_site.png'),
-        // utils.loadResource('infos/test.txt'),
+        // utils.loadResource('image/Commandes_site.png'),
         utils.loadResource('image/banniere.png'),
     ]);
-
-    
-
-    // console.log(testJSON)
-    // const test = JSON.parse(testJSON)
-    // console.log(test.messages)
 
     const wheel = wheelGLTF.scene;
     const chassis = chassisGLTF.scene;
     
+    /**
+     * Game Island
+     */
     // Téléporteur vers les iles
     // gameTp = gameTpGLTF.scene;
     // gameTp.position.set(7, 1.8, 12)
     // gameTp.scale.set(11, 11, 11)
-
     // gScene.add(gameTp)
 
-    // Sol
+    /**
+     * Décos
+     */
     const cailloux = SolGLTF.scene
     const caillouxMaterial = new THREE.MeshStandardMaterial({color: '#2D2B27'})
-    // cailloux.material = caillouxMaterial
     cailloux.scale.set(0.1, 0.1, 0.02)
     cailloux.rotation.x = -Math.PI*0.5
     var deco = [
         cailloux,
-        cailloux.clone(),
-        // cailloux.clone(),
-        // cailloux.clone(),
-        // cailloux.clone(),
-        // cailloux.clone()
+        cailloux.clone()
     ]
     deco[1].scale.set(0.3, 0.3, 0.3)
     console.log(deco[0])
-    // deco[0].children[2].material = caillouxMaterial
     deco.forEach(function(item, index){
         deco[index].traverse( function ( node ) {
 
@@ -178,7 +161,6 @@ var ecranCeremonie;
             }
         
           } );
-        // gScene.add(deco[index])
     })
 
     var display = [
@@ -213,12 +195,13 @@ var ecranCeremonie;
 
     display.forEach(function(item, index){
         console.log(display[index])
-        // display[index].scale.set(5, 0.5, 5)
         display[index].rotateX(-Math.PI*0.5)
         gScene.add(display[index])
     })
 
-    // Mentions légales
+    /**
+     * Mentions légales
+     */
     const mentionsShape = new CANNON.Box(new CANNON.Vec3(mentionsLength,5,mentionsZ))
     mentionsBody = new CANNON.Body({
         shape: mentionsShape,
@@ -235,20 +218,12 @@ var ecranCeremonie;
     planeEnter.name = "Mentions"
     planeEnter.rotateX(Math.PI * 0.5)
     planeEnter.position.set(mentionsBody.position.x, 0, mentionsBody.position.z)
-
-    // Commandes
-    commandes = new THREE.Mesh(
-        new THREE.PlaneGeometry(30, 19),
-        new THREE.MeshStandardMaterial({map: CommandesPNG, transparent: true})
-    )
-    commandes.rotateX(-Math.PI*0.5)
-    commandes.position.set(45, 1, 10)
-    if ("ontouchstart" in document.documentElement){}else{
-        gScene.add(commandes)
-    }
     
 
-    // Théâtre vers la cérémonie
+    /**
+     * Cérémonie
+     */
+    // Modèle 3D
     ceremonie = theatreGLTF.scene
     ceremonie.scale.set(8, 8, 8)
     ceremonie.position.set(-100, 0, -90)
@@ -269,9 +244,7 @@ var ecranCeremonie;
         mass: 0,
         shape: theatreShape,
         position: new CANNON.Vec3(-190, 10, -132),
-        // quaternion: new CANNON.Quaternion(0, )
     })
-    // theatreBodyPart1.rotation.y = Math.PI*0.7
     gWorld.addBody(theatreBodyPart1)
     theatreBodyPart2 = new CANNON.Body({
         mass: 0,
@@ -301,11 +274,13 @@ var ecranCeremonie;
         mass: 0,
         shape: ceremonieShape,
         position: new CANNON.Vec3(-150, 10, -160), 
-        // quaternion: new CANNON.Quaternion(0, 0.5, 0)
     })
     gWorld.addBody(ceremonieBody)
 
-    // Pupitre vers la page des Nominés
+    /**
+     * Nommés
+     */
+    // Modèle 3D
     pupitreArtists = pupitreArtistsGLTF.scene
     pupitreArtists.scale.set(12, 12, 12)
     pupitreArtists.rotation.y = -Math.PI*0.7
@@ -323,16 +298,7 @@ var ecranCeremonie;
     pupitreArtistsBody.addShape(pontArtistShape, new CANNON.Vec3(0, 0, 40), new CANNON.Quaternion(Math.PI*0.04, 0, 0))
     gWorld.addBody(pupitreArtistsBody)
 
-    // const pontArtistShape = new CANNON.Box(new CANNON.Vec3(10,1, 20))
-    // const pontArtists = new CANNON.Body({
-    //     mass: 0,
-    //     shape: pontArtistShape,
-    //     position: new CANNON.Vec3(120, 5, -90),
-    //     quaternion: new CANNON.Quaternion(0.15, 0, 0)
-    // })
-    // gWorld.addBody(pontArtists)
-
-    // Collider vers la page des nominés
+    // Collider vers la page des nommés
     const collideArtistsShape = new CANNON.Box(new CANNON.Vec3(5,5,5))
     const collideArtists = new CANNON.Body({
         mass: 0,
@@ -341,7 +307,7 @@ var ecranCeremonie;
     })
     gWorld.addBody(collideArtists)
 
-    // Texte des nominés
+    // Texte des nommés
     const textNominGeometry = new THREE.TextGeometry(
         'Les nommés',
         {
@@ -363,7 +329,9 @@ var ecranCeremonie;
     textNomin.position.set(pupitreArtistsBody.position.x-10, pupitreArtistsBody.position.y + 15, pupitreArtistsBody.position.z + 14)
     gScene.add(textNomin)
 
-
+/**
+ * Galerie
+ */
     // Pont vers la galerie
     pontGallery = pontGalleryGLTF.scene
     pontGallery.scale.set(3.3, 3.3, 3.3)

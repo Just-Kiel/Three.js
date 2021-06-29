@@ -1,7 +1,7 @@
 {
   "name": "festival-mmi",
   "version": "1.0.0",
-  "description": "oui",
+  "description": "Pour promouvoir la formation MMI mais aussi le Festival MMI.",
   "main": "app.js",
   "author": "IUT MMI Tarbes (by Baptiste Benjamoile et Aurore Lafaurie)",
   "license": "ISC",

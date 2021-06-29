@@ -358,8 +358,6 @@ function windowResizeHandler() {
     gRenderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-window.onresize = utils.debounce(windowResizeHandler, 500);
-
 const instructionsContainer = document.getElementById('instructions-container');
 const instructionsCloseButton = document.getElementById('instructions-close-button');
 const resolutionController = document.getElementById('resolution-controller');

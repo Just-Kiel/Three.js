@@ -1,15 +1,11 @@
-// import controllerSocketHandler from './socketHandler.js';
 import * as CANNON from 'cannon-es'
 import * as THREE from 'three'
-// import * as BABYLON from 'babylonjs'
 
 export default function createVehicle() {
     const chassisBody = new CANNON.Body({mass: 100});
     const chassisBaseShape = new CANNON.Box(new CANNON.Vec3(4, 1.6, 9.2));
     const chassisTopShape = new CANNON.Box(new CANNON.Vec3(4, 1.6, 9));
-    const chassisCylinderShape = new CANNON.Cylinder(2, 2, 10)
     chassisBody
-        //.addShape(chassisCylinderShape, new CANNON.Vec3(0, 0, 0), new CANNON.Quaternion(0.9, 0.1, 0.1))
         .addShape(chassisBaseShape, new CANNON.Vec3(0, -2, 0.5))
         .addShape(chassisTopShape, new CANNON.Vec3(0, 1, 0.8));
 
@@ -178,62 +174,7 @@ export default function createVehicle() {
         addToWorld(world);
     };
 
-    const maxAcceleration = 1000;
-    const maxSteeringValue = 0.4;
-    const maxBrakeForce = 700;
-    
-    const minValues = {
-        acceleration: -maxAcceleration,
-        steeringValue: -maxSteeringValue,
-        brakeForce: 0,
-    };
-    
-    const maxValues = {
-        acceleration: maxAcceleration,
-        steeringValue: maxSteeringValue,
-        brakeForce: maxBrakeForce,
-    };
-    
-    const state = {
-        acceleration: 0,
-        steeringValue: 0,
-        brakeForce: 0,
-    };
-
-    // controllerSocketHandler.connectToServer();
-    // controllerSocketHandler.onmessage = (action) => {
-    //     setState({[action.target]: action.value});
-    // };
-
-    function setState(properties) {
-        let stateChanged = false;
-        Object.keys(properties).forEach(property => {
-            if (state.hasOwnProperty(property) && state[property] !== properties[property]) {
-                state[property] = getLimitedValue(properties[property], minValues[property], maxValues[property]);
-                stateChanged = true;
-            }
-        });
-
-        if (stateChanged) {
-            onStateChange();
-        }
-    }
-
-    function onStateChange() {
-        [0, 1, 2, 3].forEach(wheelIndex => vehicle.applyEngineForce(state.acceleration * maxAcceleration, wheelIndex));
-    
-        [0, 1].forEach(wheelIndex => vehicle.setSteeringValue(state.steeringValue * -1, wheelIndex));
-    
-        [0, 1, 2, 3].forEach(wheelIndex => vehicle.setBrake(state.brakeForce, wheelIndex));
-    }
-
     return vehicle;
-}
-
-
-
-function getLimitedValue(value, min, max) {
-    return Math.max(min, Math.min(value, max));
 }
 
 //// keyboard controls ////
@@ -260,15 +201,12 @@ function initControls(vehicle) {
         up.classList.remove("hidden")
         down.classList.remove("hidden")
         document.getElementById("replay").classList.remove("hidden")
-    // var leftJoystick = new BABYLON.VirtualJoystick(true)
-    // leftJoystick.setJoystickColor("#EC623F")
     }
 
     var direction
     var steeringDirection
     var brakeMultiplier
     const maxSteeringValue = 0.7;
-    const joystickMaxSteeringValue = 0.9;
     const maxForceOnFrontWheels = 150;
     const maxForceOnRearWheels = 225;
     const brakeForce = 200;
@@ -351,34 +289,10 @@ function initControls(vehicle) {
             [0, 1].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnFrontWheels * direction, wheelIndex));
             [2, 3].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnRearWheels * direction, wheelIndex));
         }
-
-    // ontouchstart = ontouchmove = ontouchend = (e) => {
-
-
-            // direction = leftJoystick.deltaPosition.y > 0 ? -2 : leftJoystick.deltaPosition.y < 0 ? 3 : 0;
-
-
-
-            // if(page != "gallery.html"){
-            //     // steeringDirection = leftJoystick.deltaPosition.x < 0 ? 1 : leftJoystick.deltaPosition.x > 0 ? -1 : 0;
-            // } else {
-            //     steeringDirection = 0
-            // }
-
-            // if(!leftJoystick.pressed){
-            //     direction = 0
-            //     steeringDirection = 0
-            // }
-            // [0, 1].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnFrontWheels * direction, wheelIndex));
-            // [2, 3].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnRearWheels * direction, wheelIndex));
-
-            // [2, 3].forEach(wheelIndex => vehicle.setSteeringValue(joystickMaxSteeringValue * steeringDirection, wheelIndex));
-    // }
 }
 
     onkeydown = onkeyup = (e) => {
         pressedKey = e.key.toUpperCase();
-        //preventPageScrolling(e);
         if (isKeyDown('H')) {
             vehicle.chassisBody.quaternion.vmult(upAxis, liftingPoint);
             vehicle.chassisBody.position.vadd(liftingPoint, liftingPoint);
@@ -401,8 +315,6 @@ function initControls(vehicle) {
         }
 
         direction = isKeyDown('S') ? 1 : isKeyDown('Z') ? -1 : 0;
-
-        // const speed = vehicle.chassisBody.velocity.length();
         
         [0, 1].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnFrontWheels * direction, wheelIndex));
         [2, 3].forEach(wheelIndex => vehicle.applyEngineForce(maxForceOnRearWheels * direction, wheelIndex));
@@ -418,25 +330,5 @@ function initControls(vehicle) {
 
         
         [0, 1].forEach(wheelIndex => vehicle.setBrake(brakeForce * brakeMultiplier, wheelIndex));
-        // [2, 3].forEach(wheelIndex => vehicle.setBrake(brakeForce * brakeMultiplier *0.5, wheelIndex));
-
     };
-}
-
-function preventPageScrolling(e) {
-    const navigationKeys = [
-        ' ',
-        'PageUp',
-        'PageDown',
-        'End',
-        'Home',
-        'ArrowLeft',
-        'ArrowUp',
-        'ArrowRight',
-        'ArrowDown',
-    ];
-
-    if (navigationKeys.includes(e.key)) {
-        e.preventDefault();
-    }
 }

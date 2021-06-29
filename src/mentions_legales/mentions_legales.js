@@ -263,9 +263,6 @@ function windowResizeHandler() {
     gRenderer.setSize(window.innerWidth, window.innerHeight);
 }
 
-window.onresize = utils.debounce(windowResizeHandler, 500);
-
-
 window.addEventListener('keyup', (e) => {
     switch (e.key.toUpperCase()) {
         case 'V':

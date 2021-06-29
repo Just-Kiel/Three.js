@@ -283,3 +283,16 @@ html
     -o-transition: all 2s ease;  
     -ms-transition: all 2s ease; 
 }
+
+#commande{
+    position: absolute;
+    z-index: 998;
+    background-image: url(../../static/image/overlay_commandes.png);
+    background-size: contain;
+    background-repeat: no-repeat;
+    border: none;
+    width: 20%;
+    height: 20%;
+    bottom: 1%;
+    left: 1%;
+}

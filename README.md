@@ -1,6 +1,6 @@
 # Festival MMI
 
-Hi :)
+Hello it's me :)
 
 ## Setup
 

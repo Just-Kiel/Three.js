@@ -152,7 +152,7 @@ var objectsToTest = [];
         utils.loadResource('model/Pont.gltf'),
         utils.loadResource('model/horizon_optimized.gltf'),
         utils.loadResource('model/recognizer_optimized.gltf'),
-        utils.loadResource('infos/test.txt')
+        utils.loadResource('infos/gallery.txt')
     ]);
 
     objJSON = JSON.parse(testJSON)
@@ -614,8 +614,6 @@ function windowResizeHandler() {
     camera.updateProjectionMatrix();
     gRenderer.setSize(window.innerWidth, window.innerHeight);
 }
-
-window.onresize = utils.debounce(windowResizeHandler, 500);
 
 window.addEventListener('keyup', (e) => {
     switch (e.key.toUpperCase()) {

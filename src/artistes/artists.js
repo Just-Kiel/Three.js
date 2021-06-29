@@ -454,5 +454,3 @@ function windowResizeHandler() {
     gRenderer.setSize(window.innerWidth, window.innerHeight);
     // personControls.handleResize()
 }
-
-window.onresize = utils.debounce(windowResizeHandler, 500);
