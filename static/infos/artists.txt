@@ -1,23 +1,24 @@
 {"backCard" : "image/artists/backCard.png",
 "categories":
     [
-        {"name_cat" : "multimédia",
-        "background" : "image/artists/multimedia/fond.png", 
-        "oeuvres":
+        {"name_cat" : "multimedia",
+        "background" : "image/artists/multimedia/fond.png",
+        "texture" : "image/artists/multimedia/card.png",
+        "artists":
             [{"value": "MultimediaOeuvre1PNG",
-            "texture": "image/oeuvres/multimedia/oeuvre_1.jpg",
+            "texture": "image/artists/multimedia/nomine_1.png",
             "name": "Ecobook",
             "iut": "IUT de Chambéry",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=1039"
             },
             {"value": "MultimediaOeuvre2PNG",
-            "texture": "image/oeuvres/multimedia/oeuvre_2.jpg",
+            "texture": "image/artists/multimedia/nomine_2.png",
             "name": "Trieste",
             "iut": "IUT de Bordeaux Montaigne",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=885"
             },
             {"value": "MultimediaOeuvre3PNG",
-            "texture": "image/oeuvres/multimedia/oeuvre_3.jpg",
+            "texture": "image/artists/multimedia/nomine_3.png",
             "name": "Amoco Cadiz - Histoire d'une marée noire",
             "iut": "IUT de Laval",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=1040"
@@ -26,15 +27,16 @@
         },
         {"name_cat" : "communication",
         "background" : "image/artists/communication/fond.png", 
-        "oeuvres":
+        "texture" : "image/artists/communication/card.png",
+        "artists":
             [{"value": "CommunicationOeuvre1PNG",
-            "texture": "image/oeuvres/communication/oeuvre_1.jpg",
+            "texture": "image/artists/communication/nomine_1.png",
             "name": "Quel métier après MMI ? - Webdesigner",
             "iut": "IUT de Sénart Fontainebleau",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=966"
             },
             {"value": "CommunicationOeuvre2PNG",
-            "texture": "image/oeuvres/communication/oeuvre_2.jpg",
+            "texture": "image/artists/communication/nomine_2.png",
             "name": "Quel métier après MMI ? Motion Designer",
             "iut": "IUT de Béziers",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=901"
@@ -43,26 +45,27 @@
         },
         {"name_cat" : "infographie",
         "background" : "image/artists/infographie/fond.png", 
-        "oeuvres":
+        "texture" : "image/artists/infographie/card.png",
+        "artists":
             [{"value": "InfographieOeuvre1PNG",
-            "texture": "image/oeuvres/infographie/oeuvre_1.jpg",
+            "texture": "image/artists/infographie/nomine_1.png",
             "name": "MMI Foundry",
             "iut": "IUT de Elbeuf",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=829"
             },
             {"value": "InfographieOeuvre2PNG",
-            "texture": "image/oeuvres/infographie/oeuvre_2.jpg",
+            "texture": "image/artists/infographie/nomine_2.png",
             "name": "Missing Passenger",
             "iut": "IUT de Nouméa",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=1012"
             },{"value": "InfographieOeuvre3PNG",
-            "texture": "image/oeuvres/infographie/oeuvre_3.jpg",
+            "texture": "image/artists/infographie/nomine_3.png",
             "name": "Pourquoi ?",
             "iut": "IUT de Haguenau",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=824"
             },
             {"value": "InfographieOeuvre4PNG",
-            "texture": "image/oeuvres/infographie/oeuvre_4.jpg",
+            "texture": "image/artists/infographie/nomine_4.png",
             "name": "Jack Daniel's and cigarette",
             "iut": "IUT de Saint-Dié-Des-Vosges",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=873"
@@ -71,44 +74,46 @@
         },
         {"name_cat" : "audiovisuel",
         "background" : "image/artists/audiovisuel/fond.png", 
-        "oeuvres":
+        "texture" : "image/artists/audiovisuel/card.png",
+        "artists":
             [{"value": "AudiovisuelOeuvre1PNG",
-            "texture": "image/oeuvres/audiovisuel/oeuvre_1.jpg",
+            "texture": "image/artists/audiovisuel/nomine_1.png",
             "name": "Ascension",
             "iut": "IUT de Montbéliard",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=714"
             },
             {"value": "AudiovisuelOeuvre2PNG",
-            "texture": "image/oeuvres/audiovisuel/oeuvre_2.jpg",
+            "texture": "image/artists/audiovisuel/nomine_2.png",
             "name": "Aujourd'hui, c'est quoi avoir 20 ans ?",
             "iut": "IUT du Puy en Velay",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=1035"
             },
             {"value": "AudiovisuelOeuvre3PNG",
-            "texture": "image/oeuvres/audiovisuel/oeuvre_3.jpg",
+            "texture": "image/artists/audiovisuel/nomine_3.png",
             "name": "La salle des rêves",
             "iut": "IUT de Grenoble",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=915"
             }
             ]
         },
-        {"name_cat" : "site web",
-        "background" : "image/artists/web/fond.png", 
-        "oeuvres":
+        {"name_cat" : "web",
+        "background" : "image/artists/web/fond.png",
+        "texture" : "image/artists/web/card.png", 
+        "artists":
             [{"value": "WebOeuvre1PNG",
-            "texture": "image/oeuvres/web/oeuvre_1.jpg",
+            "texture": "image/artists/web/nomine_1.png",
             "name": "Immersions Digitales 2021",
             "iut": "IUT de Tarbes",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=833"
             },
             {"value": "WebOeuvre2PNG",
-            "texture": "image/oeuvres/web/oeuvre_2.jpg",
+            "texture": "image/artists/web/nomine_2.png",
             "name": "REAH",
             "iut": "IUT de Champs-sur-Marne",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=911"
             },
             {"value": "WebOeuvre3PNG",
-            "texture": "image/oeuvres/web/oeuvre_3.jpg",
+            "texture": "image/artists/web/nomine_3.png",
             "name": "Tactical",
             "iut": "IUT de Bordeaux Montaigne",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=847"
@@ -117,21 +122,22 @@
         },
         {"name_cat" : "animation",
         "background" : "image/artists/animation/fond.png", 
-        "oeuvres":
+        "texture" : "image/artists/animation/card.png",
+        "artists":
             [{"value": "AnimationOeuvre1PNG",
-            "texture": "image/oeuvres/animation/oeuvre_1.jpg",
+            "texture": "image/artists/animation/nomine_1.png",
             "name": "CGI 3D court-métrage: 'Liechi'",
             "iut": "IUT de Béziers",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=842"
             },
             {"value": "AnimationOeuvre2PNG",
-            "texture": "image/oeuvres/animation/oeuvre_2.jpg",
+            "texture": "image/artists/animation/nomine_2.png",
             "name": "CV Vidéo Motion Design - 2020",
             "iut": "IUT de Laval",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=942"
             },
             {"value": "AnimationOeuvre3PNG",
-            "texture": "image/oeuvres/animation/oeuvre_3.jpg",
+            "texture": "image/artists/animation/nomine_3.png",
             "name": "Ken : Final Mix (Autoportrait)",
             "iut": "IUT de Nouméa",
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=1004"
