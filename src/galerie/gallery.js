@@ -7,7 +7,6 @@ import {cameraHelper} from '../cameraHelper.js';
 // import cannonDebugger from 'cannon-es-debugger';
 import vertexShader from '../shaders/vertex.glsl'
 import fragmentShader from '../shaders/fragment.glsl'
-
 // import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 // import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 // import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
@@ -16,13 +15,17 @@ import fragmentShader from '../shaders/fragment.glsl'
 const worldStep = 1/60;
 
 const gWorld = new CANNON.World();
+gWorld.broadphase = new CANNON.SAPBroadphase(gWorld);
+gWorld.gravity.set(0, -10, 0);
+gWorld.defaultContactMaterial.friction = 1;
 const gScene = new THREE.Scene();
 const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
     canvas: document.querySelector('.webgl'),
     powerPreference: 'high-performance'
 });
-
-const clock = new THREE.Clock()
+gRenderer.setPixelRatio(window.devicePixelRatio);
+gRenderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(gRenderer.domElement);
 
 // cannonDebugger(gScene, gWorld.bodies, {color: "red"})
 
@@ -53,6 +56,10 @@ camera.position.y = 3
 camera.position.z = -10
 gScene.add(camera)
 
+
+/**
+ * Tests effets
+ */
 //  // EffectComposer
 //  const effectComposer = new EffectComposer(gRenderer)
 //  effectComposer.setSize(sizes.width, sizes.height)
@@ -82,7 +89,6 @@ pointLight.position.set(50, 1000, 150)
 gScene.add(pointLight)
 const horizonLight = new THREE.PointLight(0xffffff, 6, 2000)
 gScene.add(horizonLight)
-
 const directionLight = new THREE.DirectionalLight(0xffffff, 0.5);
 gScene.add(directionLight, directionLight.target)
 
@@ -97,23 +103,7 @@ const floorMaterial = new THREE.RawShaderMaterial({
     }
 })
 
-// // Floor phys
-// const floorShape = new CANNON.Box(new CANNON.Vec3(3200, 1, 100))
-// const floorBody = new CANNON.Body({
-//     mass: 0,
-//     shape: floorShape,
-//     position: new CANNON.Vec3(-2700, 0, 2)
-// })
-// gWorld.addBody(floorBody)
-
-gWorld.broadphase = new CANNON.SAPBroadphase(gWorld);
-gWorld.gravity.set(0, -10, 0);
-gWorld.defaultContactMaterial.friction = 1;
-
-gRenderer.setPixelRatio(window.devicePixelRatio);
-gRenderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(gRenderer.domElement);
-
+var vehicle, chassis
 const vehicleInitialPosition = new THREE.Vector3(180, 25, 2.5);
 const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI *0.50);
 let resetVehicle = () => {};
@@ -122,8 +112,6 @@ var vehicleNewPosition;
 
 const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2();
-
-var vehicle, chassis
 
 const hauteurOeuvre = 70;
 const ecartOeuvre = 225;
@@ -159,31 +147,9 @@ var objectsToTest = [];
 
     fontUsed = hansonJSON
 
-    // Sol
-    
-    // const floor = new THREE.Mesh(
-    //     new THREE.PlaneGeometry(6000, 600),
-    //     floorMaterial
-    // )
-    // floor.rotation.x = - Math.PI * 0.5
-    // floor.position.set(-2700, 0, 2)
-    
-    // const floorSecond = new THREE.Mesh(
-    //     new THREE.PlaneGeometry(6000, 600),
-    //     floorMaterial
-    // )
-    // floorSecond.rotation.x = - Math.PI * 0.5
-    // floorSecond.position.set(-8900, 0, 2)
-
-    // const mur = new THREE.Mesh(
-    //     new THREE.PlaneGeometry(6000, 600),
-    //     new THREE.MeshStandardMaterial({color: '#000000'})
-    // )
-    // mur.rotation.y = Math.PI * 0.5
-    // mur.position.set(-6000, -301, 2)
-    
-    // gScene.add(/*floor,*/ floorSecond, mur)
-
+    /**
+     * Horizon de la galerie
+     */
     horizonGalerie = horizonGLTF.scene
     horizonGalerie.scale.set(15, 15, 15)
     horizonGalerie.rotation.set(0, Math.PI*0.5, 0)
@@ -194,33 +160,21 @@ var objectsToTest = [];
     recognizer.scale.set(10, 10, 10)
     recognizer.rotation.y = -Math.PI*0.5
     var panneaux = []
-    
 
-    // // Pont retour vers Hub
-    // pontTron = pontTronGLTF.scene
-    // pontTron.scale.set(3.3, 3.3, 3.3)
-    // pontTron.rotation.set(0, -Math.PI*0.5, 0)
-    // pontTron.position.set(-5800,1,0)
-    // gScene.add(pontTron)
-
-    // Collider vers hub
+    /**
+     * Colliders
+     */
     const collideShape = new CANNON.Box(new CANNON.Vec3(10, 10, 20))
-    // const collideHub = new CANNON.Body({
-    //     mass:0,
-    //     shape: collideShape,
-    //     position: new CANNON.Vec3(-5600, 0,0),
-    // })
-    // collideHub.collisionResponse = 0
     const collideBehind = new CANNON.Body({
         mass:1000,
         shape: collideShape,
         position: new CANNON.Vec3(250, 15,0),
-        // quaternion: new CANNON.Quaternion(0, -0.47, 0)
     })
-    // gWorld.addBody(collideHub)
     gWorld.addBody(collideBehind)
 
-    // Texte
+    /**
+     * Textes
+     */
     const textGalleryGeometry = new THREE.TextGeometry(
         'galerie',
         {
@@ -259,6 +213,9 @@ var objectsToTest = [];
     textGallery2.position.set(50, 7, -20)
     gScene.add(textGallery, textGallery2)
 
+    /**
+     * Affichage des éléments avec le JSON
+     */
     for(var cat in objJSON.categories){
         j += 1
 
@@ -298,7 +255,6 @@ var objectsToTest = [];
         const oeuvreGeometry = new THREE.PlaneGeometry(152, 88)
         for(var oeuvre in objJSON.categories[cat].oeuvres){
             i = i+1
-            // j +=1
             textures[i] = await Promise.all([
                 utils.loadResource(objJSON.categories[cat].oeuvres[oeuvre].texture)
             ]);
@@ -321,6 +277,9 @@ var objectsToTest = [];
         }
     }
 
+    /**
+     * Floor
+     */
     const floor = new THREE.Mesh(
         new THREE.PlaneGeometry(335*i, 600),
         floorMaterial
@@ -328,39 +287,6 @@ var objectsToTest = [];
     floor.rotation.x = - Math.PI * 0.5
     floor.position.set(-(((335*i)/2)-300), 0, 2)
     gScene.add(floor)
-
-    // const floorSecond = new THREE.Mesh(
-    //     new THREE.PlaneGeometry(335*i, 600),
-    //     floorMaterial
-    // )
-    // floorSecond.rotation.x = - Math.PI * 0.5
-    // floorSecond.position.set(-((335*i)+(335*(i-2))), 0, 2)
-
-    const mur = new THREE.Mesh(
-        new THREE.PlaneGeometry(6000, 600),
-        new THREE.MeshStandardMaterial({color: '#000000'})
-    )
-    mur.rotation.y = Math.PI * 0.5
-    mur.position.set(-(335*i), -301, 2)
-    
-    gScene.add(mur)
-
-    // Pont retour vers Hub
-    pontTron = pontTronGLTF.scene
-    pontTron.scale.set(3.3, 3.3, 3.3)
-    pontTron.rotation.set(0, -Math.PI*0.5, 0)
-    pontTron.position.set(-(335*i)+200,1,0)
-    gScene.add(pontTron)
-
-    const collideHub = new CANNON.Body({
-        mass:0,
-        shape: collideShape,
-        position: new CANNON.Vec3(-(335*i)+400, 0,0),
-    })
-    collideHub.collisionResponse = 0
-    gWorld.addBody(collideHub)
-
-    positionHorizon = -(335*i)-500
 
     // Floor phys
     const floorShape = new CANNON.Box(new CANNON.Vec3(-(((335*i)/2)+100), 1, 100))
@@ -371,10 +297,55 @@ var objectsToTest = [];
     })
     gWorld.addBody(floorBody)
 
+    // const floorSecond = new THREE.Mesh(
+    //     new THREE.PlaneGeometry(335*i, 600),
+    //     floorMaterial
+    // )
+    // floorSecond.rotation.x = - Math.PI * 0.5
+    // floorSecond.position.set(-((335*i)+(335*(i-2))), 0, 2)
+
+    /**
+     * Mur du fond
+     */
+    const mur = new THREE.Mesh(
+        new THREE.PlaneGeometry(6000, 600),
+        new THREE.MeshStandardMaterial({color: '#000000'})
+    )
+    mur.rotation.y = Math.PI * 0.5
+    mur.position.set(-(335*i), -301, 2)
+    
+    gScene.add(mur)
+
+
+    /**
+     * Pont Hub
+     */
+    // Modèle 3D
+    pontTron = pontTronGLTF.scene
+    pontTron.scale.set(3.3, 3.3, 3.3)
+    pontTron.rotation.set(0, -Math.PI*0.5, 0)
+    pontTron.position.set(-(335*i)+200,1,0)
+    gScene.add(pontTron)
+
+    // Physique
+    const collideHub = new CANNON.Body({
+        mass:0,
+        shape: collideShape,
+        position: new CANNON.Vec3(-(335*i)+400, 0,0),
+    })
+    collideHub.collisionResponse = 0
+    gWorld.addBody(collideHub)
+
+
+    positionHorizon = -(335*i)-500
+
+    
+    /**
+     * Van
+     */
     const wheel = wheelGLTF.scene;
     chassis = chassisGLTF.scene;
 
-    //setMaterials(wheel, chassis);
     chassis.scale.set(2, 2, 2);
     wheel.scale.set(1.2, 1.2, 1.2)
 
@@ -416,7 +387,9 @@ function updatePhysics() {
 }
 
 let currentIntersect = null
-
+/**
+ * Curseur de souris
+ */
 let mouseCursor = document.querySelector("#cursor")
 window.addEventListener( 'mousemove', onMouseMove, false );
 function onMouseMove(event){
@@ -438,6 +411,7 @@ window.addEventListener('click', () => {
                     var path = currentIntersect.object.material.map.image.src;
                     var page = path.split("image").pop();
                     var compare = objJSON.categories[cat].oeuvres[nomin].texture.split("image").pop();
+                    // Clic sur le plane ouvert ouvre le lien
                     if(page == compare){
                         window.open(objJSON.categories[cat].oeuvres[nomin].link)
                     }
@@ -467,6 +441,7 @@ window.addEventListener('click', () => {
                     var path = currentIntersect.object.material.map.image.src;
                     var page = path.split("image").pop();
                     var compare = objJSON.categories[cat].oeuvres[nomin].texture.split("image").pop();
+                    // Affichage des informations liées au plane
                     if(page == compare){
                         nameCurrentGeometry = new THREE.TextGeometry(
                             objJSON.categories[cat].oeuvres[nomin].name,
@@ -532,7 +507,6 @@ window.addEventListener('click', () => {
         document.getElementById('canvas').style.cursor = "none"
         document.getElementById("cursor").classList.add("look")
         if(chassis != undefined){
-            console.log("oskur")
             cameraHelper.switch(currentIntersect)
         }
     }
@@ -542,11 +516,8 @@ window.addEventListener('click', () => {
 function render() {
     if(document.getElementById("load").classList.contains("hidden")){
 
-        const elapsedTime = clock.getElapsedTime()
-
         // effectComposer.render()
 
-        // if(chassis.position.x >= web[0]){
         if(chassis.position.x >= (textes[textes.length-2].position.x)){
             horizonGalerie.position.set(chassis.position.x - 3000, 1, -180)
         } else {
@@ -556,40 +527,34 @@ function render() {
         directionLight.position.copy(chassis.position)
         directionLight.target.position.set(chassis.position.x-150, 50, 0)
 
-
         horizonLight.position.set(horizonGalerie.position.x+ 250, 700 , 150)
 
-    raycaster.setFromCamera(mouse, camera)
-    const intersects = raycaster.intersectObjects(objectsToTest);
+        raycaster.setFromCamera(mouse, camera)
+        const intersects = raycaster.intersectObjects(objectsToTest);
 
-    if(intersects.length){
-        if(!currentIntersect){
-            // document.getElementById("canvas").style.cursor = "none"
-            document.getElementById("cursor").classList.remove('cursor')
-            document.getElementById("cursor").classList.add("look")
-            if(displayed == true){
-            document.getElementById("cursor").classList.add("look")
-            document.getElementById("cursor").classList.remove("cross")
-            }
-            // console.log('mouse enter')
-            // console.log(intersects[0])
-        }
-        
-        currentIntersect = intersects[0]
-    } else {
-        if(currentIntersect){
-            if(displayed == true){
+        if(intersects.length){
+            if(!currentIntersect){
                 document.getElementById("cursor").classList.remove('cursor')
-            document.getElementById("cursor").classList.remove("look")
-            // document.getElementById("canvas").style.cursor = "none"
-            document.getElementById("cursor").classList.add("cross")
-            }else{
-            document.getElementById("cursor").classList.add('cursor')
+                document.getElementById("cursor").classList.add("look")
+                if(displayed == true){
+                document.getElementById("cursor").classList.add("look")
+                document.getElementById("cursor").classList.remove("cross")
             }
-            document.getElementById('cursor').classList.remove('look')
         }
-        currentIntersect = null
-    }
+            currentIntersect = intersects[0]
+        } else {
+            if(currentIntersect){
+                if(displayed == true){
+                    document.getElementById("cursor").classList.remove('cursor')
+                    document.getElementById("cursor").classList.remove("look")
+                    document.getElementById("cursor").classList.add("cross")
+                }else{
+                    document.getElementById("cursor").classList.add('cursor')
+                }
+                document.getElementById('cursor').classList.remove('look')
+            }
+            currentIntersect = null
+        }
 
     if(chassis != undefined){
         pointLight.position.x = chassis.position.x
@@ -603,16 +568,6 @@ function render() {
     gRenderer.render(gScene, camera);
 
     requestAnimationFrame(render);
-}
-
-function getAspectRatio() {
-    return window.innerWidth / window.innerHeight;
-}
-
-function windowResizeHandler() {
-    camera.aspect = getAspectRatio();
-    camera.updateProjectionMatrix();
-    gRenderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 window.addEventListener('keyup', (e) => {
