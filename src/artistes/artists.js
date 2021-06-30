@@ -8,6 +8,9 @@ const gScene = new THREE.Scene();
 const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
     canvas: document.querySelector('.webgl')
 });
+gRenderer.setPixelRatio(window.devicePixelRatio);
+gRenderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(gRenderer.domElement);
 
 const clock = new THREE.Clock()
 
@@ -32,30 +35,35 @@ const clock = new THREE.Clock()
      gRenderer.setSize(sizes.width, sizes.height)
  })
 
-// Camera
+
+/**
+ * Camera
+ */
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
 camera.position.y = 40
 camera.position.z = 90
 gScene.add(camera)
 
-
+/**
+ * Lights
+ */
 var ambientLight = new THREE.AmbientLight('#686868', 1);
 gScene.add(ambientLight);
 var pointLight = new THREE.PointLight(0xffffff, 2, 1000);
 pointLight.position.set(50, 500, 120);
 gScene.add(pointLight);
-
-
-gRenderer.setPixelRatio(window.devicePixelRatio);
-gRenderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(gRenderer.domElement);
+const bluePointLight = new THREE.PointLight('#0000FF', 4, 400)
+bluePointLight.position.set(-100, -50, -50)
+gScene.add(bluePointLight)
+const redPointLight = new THREE.PointLight('#FF0000', 2, 400)
+redPointLight.position.set(100, 0, -50)
+gScene.add(redPointLight)
 
 
 const raycaster = new THREE.Raycaster()
 const mouse = new THREE.Vector2();
 
 var backCard
-
 
 var heightCard = 50;
 var heightArtist = -25;
@@ -86,6 +94,9 @@ var ecartCard = 30;
 
     const cardGeometry = new THREE.PlaneGeometry(29.5, 45.5)
 
+    /**
+     * Affichage des éléments en fonction du contenu JSON
+     */
     for(var each in objetJSON.categories){
         i++
 
@@ -130,30 +141,20 @@ var ecartCard = 30;
     };
 
 
-    [
-            backCardPNG, modelGLTF,       
-        ] = await Promise.all([
+    [backCardPNG, modelGLTF] = await Promise.all([
         utils.loadResource('image/artists/backCard.png'),
         utils.loadResource('model/artists.gltf')
     ]);
 
-    // Modele
+    /**
+     * Déco
+     */
+    // Modele 3D
     fond = modelGLTF.scene
     fond.scale.set(20, 20, 20)
     fond.position.z = -250
     fond.position.y = -180
     gScene.add(fond)
-
-    const ambientLight = new THREE.AmbientLight('#706F6F', 0.5);
-    gScene.add(ambientLight);
-
-    const bluePointLight = new THREE.PointLight('#0000FF', 4, 400)
-    bluePointLight.position.set(-100, -50, -50)
-    gScene.add(bluePointLight)
-    
-    const redPointLight = new THREE.PointLight('#FF0000', 2, 400)
-    redPointLight.position.set(100, 0, -50)
-    gScene.add(redPointLight)
 
     // Plane pour décorer
     planeFond = new THREE.Mesh(
@@ -163,7 +164,7 @@ var ecartCard = 30;
     planeFond.name = "ecran"
     planeFond.position.set(0, 50, -700)
     
-
+    // Dos de carte
     backCard = new THREE.Mesh(
         cardGeometry,
         new THREE.MeshBasicMaterial({map: backCardPNG, transparent: true})
@@ -177,6 +178,9 @@ var ecartCard = 30;
 let currentIntersect = null
 let currentArtist = null
 
+/**
+ * Curseur de souris
+ */
 let mouseCursor = document.querySelector("#cursor")
 window.addEventListener( 'mousemove', onMouseMove, false );
 function onMouseMove(event){
@@ -186,18 +190,14 @@ function onMouseMove(event){
     mouse.y = - (event.clientY / window.innerHeight) *2 +1;
 }
 
-
 var intersects
 var artistesClicked = false;
 var currentArtistsClicked = [];
 var retour = false;
-
 var speedAnim = 0.5 ;
 var ecartArtist = 20;
 
-
 window.addEventListener('click', () => {
-    console.log(retour)
     document.getElementById("hub_arrow").onclick = function(){
         // window.location.pathname = "./immersions/index.html";
         window.location.pathname = "./index.html";
@@ -206,8 +206,6 @@ window.addEventListener('click', () => {
         document.getElementById("cursor").classList.remove("cross")
     }else
     if(currentIntersect){
-
-        //à faire fonctionner
         document.getElementById("arrow").onclick = function(){
             retour = true;
             for(var card in currentArtistsClicked){
@@ -269,6 +267,9 @@ window.addEventListener('click', () => {
             
         }
 
+        /**
+         * Logique d'animation des cartes
+         */
         for(var variable in objetJSON.categories){
             var path = currentIntersect.object.material.map.image.src;
             var page = path.split("artists/").pop().split("/card")[0];
@@ -354,7 +355,6 @@ window.addEventListener('click', () => {
 
             }
             else if(retour == false){
-                // console.log(currentIntersect.object)
                 for(var artist in currentArtistsClicked){
                     if(currentIntersect.object == currentArtistsClicked[artist]){
                         gsap.to(currentIntersect.object.position, {duration: 1, x: 0, y: 45, z:50})
@@ -376,7 +376,6 @@ window.addEventListener('click', () => {
     }
             currentArtist = currentIntersect
         }
-        // document.getElementById("cursor").classList.add("cross")
     }
 })
 
@@ -385,29 +384,20 @@ window.addEventListener('click', () => {
 function render() {
     if(document.getElementById("load").classList.contains("hidden")){
 
-        
-
-    // const categoryToTest = [cardCategory1, cardCategory2, cardCategory3, cardCategory4, cardCategory4, cardCategory5, cardCategory6];
-    // const multimediaToTest = [cardMultimedia1, cardMultimedia2, cardMultimedia3]
-    // const communicationToTest = [cardCom1, cardCom2]
-    // const infographieToTest = [cardInfo1, cardInfo2, cardInfo3, cardInfo4]
-    // const audiovisuelToTest = [cardAudio1, cardAudio2, cardAudio3]
-    // const webToTest = [cardWeb1, cardWeb2, cardWeb3]
-    // const animationToTest = [cardAnim1, cardAnim2, cardAnim3]
-
     const elapsedTime = clock.getElapsedTime()
 
-    
+    // Opacité du fond
     if(retour == true && planeFond.material.opacity>0){
         planeFond.material.opacity -=0.02
     } else if(gScene.getObjectByName("ecran") && planeFond.material.opacity<1){
         planeFond.material.opacity += 0.02
     }
 
-        gsap.to(fond.rotation, {repeat: -1, y: elapsedTime})
+    gsap.to(fond.rotation, {repeat: -1, y: elapsedTime})
 
-    
-
+    /**
+     * Raycast
+     */
     raycaster.setFromCamera(mouse, camera)
 
     if(gScene.getObjectById(14)){
@@ -437,20 +427,8 @@ function render() {
         currentIntersect = null
     }   
 }
-cameraHelper.update();
-
+    cameraHelper.update();
     gRenderer.render(gScene, camera);
 
     requestAnimationFrame(render);
-}
-
-function getAspectRatio() {
-    return window.innerWidth / window.innerHeight;
-}
-
-function windowResizeHandler() {
-    camera.aspect = getAspectRatio();
-    camera.updateProjectionMatrix();
-    gRenderer.setSize(window.innerWidth, window.innerHeight);
-    // personControls.handleResize()
 }
