@@ -4,21 +4,23 @@ import * as THREE from 'three'
 import * as utils from '../utils.js';
 import createVehicle from '../raycastVehicle.js';
 import {cameraHelper} from '../cameraHelper.js';
-import cannonDebugger from 'cannon-es-debugger'
+// import cannonDebugger from 'cannon-es-debugger'
 
 const worldStep = 1/60;
 
 const gWorld = new CANNON.World();
+gWorld.broadphase = new CANNON.SAPBroadphase(gWorld);
+gWorld.gravity.set(0, -10, 0);
+gWorld.defaultContactMaterial.friction = 1;
 const gScene = new THREE.Scene();
 const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
     canvas: document.querySelector('.webgl')
 });
+gRenderer.setPixelRatio(window.devicePixelRatio);
+gRenderer.setSize(window.innerWidth, window.innerHeight);
+document.body.appendChild(gRenderer.domElement);
 
-
-
-const clock = new THREE.Clock()
-
-cannonDebugger(gScene, gWorld.bodies, {color: "red"})
+// cannonDebugger(gScene, gWorld.bodies, {color: "red"})
 
 /**
  * Sizes
@@ -41,23 +43,26 @@ cannonDebugger(gScene, gWorld.bodies, {color: "red"})
      gRenderer.setSize(sizes.width, sizes.height)
  })
 
-// Camera
+/**
+ * Camera
+ */
 const camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height)
-
 camera.position.y = 3
 camera.position.z = -10
 gScene.add(camera)
 
-let wireframeRenderer = null;
-let pause = false;
-
-
+/**
+ * Lights
+ */
 const ambientLight = new THREE.AmbientLight('#706F6F', 1);
 gScene.add(ambientLight);
 const pointLight = new THREE.PointLight(0xffffff, 2, 800)
 pointLight.position.set(50, 1000, -150)
 gScene.add(pointLight)
 
+/**
+ * Floor
+ */
 const floor = new THREE.Mesh(
     new THREE.PlaneGeometry(6000, 600),
     new THREE.MeshStandardMaterial({color: '#D9AE71'})
@@ -75,27 +80,19 @@ const floorBody = new CANNON.Body({
 })
 gWorld.addBody(floorBody)
 
-gWorld.broadphase = new CANNON.SAPBroadphase(gWorld);
-gWorld.gravity.set(0, -10, 0);
-gWorld.defaultContactMaterial.friction = 1;
 
-gRenderer.setPixelRatio(window.devicePixelRatio);
-gRenderer.setSize(window.innerWidth, window.innerHeight);
-document.body.appendChild(gRenderer.domElement);
-
+var vehicle, chassis
 const vehicleInitialPosition = new THREE.Vector3(-10, 25, -10);
 const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI *0.50);
 let resetVehicle = () => {};
 
-const mouse = new THREE.Vector2();
 
-var vehicle, chassis
+const mouse = new THREE.Vector2();
 
 const mentions = [40, 30, 150];
 var plane1, plane2, plane3, plane4, plane5;
 const hauteurOeuvre = 70;
 const ecartOeuvre = 155;
-
 
 (async function init() {
 
@@ -104,6 +101,9 @@ const ecartOeuvre = 155;
         utils.loadResource('model/van.gltf'),
     ]);
 
+    /**
+     * Colliders Mentions légales
+     */
     const collideShape = new CANNON.Box(new CANNON.Vec3(50, 10, 22))
     const collideBehind = new CANNON.Body({
         mass:0,
@@ -120,7 +120,9 @@ const ecartOeuvre = 155;
     gWorld.addBody(collideFront)
 
 
-    // Plane Mentions Légales
+    /**
+     * Affichage Mentions légales
+     */
     const oeuvreGeometry = new THREE.PlaneGeometry(152, 88)
     plane1 = new THREE.Mesh(
         oeuvreGeometry,
@@ -158,10 +160,12 @@ const ecartOeuvre = 155;
     plane5.position.set(mentions[0]-(ecartOeuvre*5), hauteurOeuvre, mentions[2])
     gScene.add(plane1, plane2, plane3, plane4, plane5)
 
+    /**
+     * Van
+     */
     const wheel = wheelGLTF.scene;
     chassis = chassisGLTF.scene;
 
-    //setMaterials(wheel, chassis);
     chassis.scale.set(2, 2, 2);
     wheel.scale.set(1.2, 1.2, 1.2)
 
@@ -204,6 +208,9 @@ function updatePhysics() {
 
 let currentIntersect = null
 
+/**
+ * Curseur de souris
+ */
 let mouseCursor = document.querySelector("#cursor")
 window.addEventListener( 'mousemove', onMouseMove, false );
 function onMouseMove(event){
@@ -222,7 +229,6 @@ window.addEventListener('click', () => {
         console.log('clicliclic')
         document.getElementById("cursor").classList.add("cross")
         if(chassis != undefined){
-            console.log("g fin")
             cameraHelper.switch(currentIntersect, chassis)
         }
     }
@@ -231,36 +237,15 @@ window.addEventListener('click', () => {
 
 function render() {
     if(document.getElementById("load").classList.contains("hidden")){
-
-
-    if(chassis != undefined){
-        pointLight.position.x = chassis.position.x
+        if(chassis != undefined){
+            pointLight.position.x = chassis.position.x
+        }
+        updatePhysics();
     }
-
-    
-    updatePhysics();
-
-    if (wireframeRenderer) {
-        wireframeRenderer.update();
-    }
-}
-
 
     cameraHelper.update();
-
     gRenderer.render(gScene, camera);
-
     requestAnimationFrame(render);
-}
-
-function getAspectRatio() {
-    return window.innerWidth / window.innerHeight;
-}
-
-function windowResizeHandler() {
-    camera.aspect = getAspectRatio();
-    camera.updateProjectionMatrix();
-    gRenderer.setSize(window.innerWidth, window.innerHeight);
 }
 
 window.addEventListener('keyup', (e) => {

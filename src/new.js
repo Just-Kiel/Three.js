@@ -140,6 +140,18 @@ if ("ontouchstart" in document.documentElement){
     // gameTp.scale.set(11, 11, 11)
     // gScene.add(gameTp)
 
+    // Teleport Game phys
+    // const gameTpShape = new CANNON.Box(new CANNON.Vec3(11, 11, 11))
+    // gameTpBody = new CANNON.Body({
+    //     mass: 1000,
+    //     position: new CANNON.Vec3(100, 22, 150),
+    //     shape: gameTpShape,
+    //     quaternion: new CANNON.Quaternion(1, 0, -0.5)
+    // })
+    // gWorld.addBody(gameTpBody)
+
+
+
     /**
      * Décos
      */
@@ -332,11 +344,10 @@ if ("ontouchstart" in document.documentElement){
 /**
  * Galerie
  */
-    // Pont vers la galerie
+    // Modèle 3D
     pontGallery = pontGalleryGLTF.scene
     pontGallery.scale.set(3.3, 3.3, 3.3)
     pontGallery.rotation.set(0, - Math.PI*0.3, 0)
-    // pontGallery.position.set(-295, 1, 255)
     gScene.add(pontGallery)
 
     const bridgeShape = new CANNON.Box(new CANNON.Vec3(22, 1, 140))
@@ -378,17 +389,9 @@ if ("ontouchstart" in document.documentElement){
     textGalerie.position.set(pontGalleryBody.position.x + 195, pontGalleryBody.position.y + 15, pontGalleryBody.position.z -95)
     gScene.add(textGalerie)
 
-    // Teleport Game phys
-    // const gameTpShape = new CANNON.Box(new CANNON.Vec3(11, 11, 11))
-    // gameTpBody = new CANNON.Body({
-    //     mass: 1000,
-    //     position: new CANNON.Vec3(100, 22, 150),
-    //     shape: gameTpShape,
-    //     quaternion: new CANNON.Quaternion(1, 0, -0.5)
-    // })
-    // gWorld.addBody(gameTpBody)
-
-    // setMaterials(wheel, chassis);
+    /**
+     * Van
+     */
     chassis.scale.set(2, 2, 2);
     wheel.scale.set(1.2, 1.2, 1.2)
 
@@ -412,6 +415,7 @@ if ("ontouchstart" in document.documentElement){
         vehicle.chassisBody.angularVelocity.set(0, 0, 0);
     };
     resetVehicle();
+
     // mirror meshes suffixed with '_l'
     Object.keys(meshes).forEach((meshName) => {
         if (meshName.split('_')[2] === 'l') {
@@ -429,36 +433,41 @@ function updatePhysics() {
     gWorld.step(worldStep);
 }
 
-
-
 function render() {
 
     updatePhysics();
 
     cameraHelper.update();
 
+    /**
+     * Game Island Update
+     */
     // gameTp.position.copy(gameTpBody.position)
     // gameTp.quaternion.copy(gameTpBody.quaternion)
 
+    /**
+     * Nommés Update
+     */
     pupitreArtists.position.copy(pupitreArtistsBody.position)
     pupitreArtists.position.y = 0
 
+    /**
+     * Cérémonie Update
+     */
     barriere1.quaternion.copy(ceremonie.quaternion)
     barriere2.quaternion.copy(ceremonie.quaternion)
     ceremonieBody.quaternion.copy(ceremonie.quaternion)
     theatreBodyPart1.quaternion.copy(ceremonie.quaternion)
     theatreBodyPart2.quaternion.copy(ceremonie.quaternion)
 
-    gRenderer.render(gScene, camera);
-
-    if(vehicle.chassisBody.position.y <= -100){
-        resetVehicle()
-    }
-
+    /**
+     * Galerie Update
+     */
     pontGallery.position.copy(pontGalleryBody.position)
-    
-    
 
+    /**
+     * Mentions légales Update
+     */
     // if(vehicle.chassisBody.position.x >= mentionsBody.position.x - (mentionsLength) && vehicle.chassisBody.position.x <= mentionsBody.position.x + (mentionsLength) && vehicle.chassisBody.position.z >= mentionsBody.position.z - (mentionsZ) && vehicle.chassisBody.position.z <= mentionsBody.position.z + (mentionsZ)){
     //     gScene.add(planeEnter)
     //     gsap.to(planeEnter.position, {duration: 0.2, y: 6})
@@ -472,9 +481,13 @@ function render() {
     //     }
     // }
 
-    requestAnimationFrame(render);
+    gRenderer.render(gScene, camera);
 
-    
+    if(vehicle.chassisBody.position.y <= -100){
+        resetVehicle()
+    }
+
+    requestAnimationFrame(render);    
 }
 
 window.addEventListener('keyup', (e) => {
@@ -487,6 +500,7 @@ window.addEventListener('keyup', (e) => {
                 // window.location.pathname = "./immersions/mentions_legales.html"
                 window.location.pathname = "./mentions_legales.html"
             }
+            break;
     }
 });
 
@@ -501,18 +515,3 @@ if ("ontouchstart" in document.documentElement)
         console.log("reset")
     }
 }
-
-(function initResolutionController() {
-    const maxWidth = window.screen.availWidth;
-    const maxHeight = window.screen.availHeight;
-
-    [1/1, 3/4, 1/2, 1/4].forEach(ratio => {
-        const option = document.createElement('option');
-        option.value = ratio;
-        option.innerText = `${Math.floor(maxWidth * ratio)} x ${Math.floor(maxHeight * ratio)}`;
-
-        //resolutionController.appendChild(option);
-    });
-
-    //resolutionController.addEventListener('change', (e) => gRenderer.setPixelRatio(e.currentTarget.value));
-})();
