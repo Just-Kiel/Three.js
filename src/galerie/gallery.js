@@ -1,4 +1,4 @@
-import '../style/main.css'
+import '../style/main.scss'
 import * as CANNON from 'cannon-es'
 import * as THREE from 'three'
 import * as utils from '../utils.js';
@@ -7,6 +7,7 @@ import {cameraHelper} from '../cameraHelper.js';
 // import cannonDebugger from 'cannon-es-debugger';
 import vertexShader from '../shaders/vertex.glsl'
 import fragmentShader from '../shaders/fragment.glsl'
+import '../menu.js'
 // import { EffectComposer } from 'three/examples/jsm/postprocessing/EffectComposer.js'
 // import { RenderPass } from 'three/examples/jsm/postprocessing/RenderPass.js'
 // import { SMAAPass } from 'three/examples/jsm/postprocessing/SMAAPass.js'
@@ -137,7 +138,7 @@ var objectsToTest = [];
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
         utils.loadResource('fonts/Hanson_Bold.json'),
-        utils.loadResource('model/Pont.gltf'),
+        utils.loadResource('model/pont_optimized.gltf'),
         utils.loadResource('model/horizon_optimized.gltf'),
         utils.loadResource('model/recognizer_optimized.gltf'),
         utils.loadResource('infos/gallery.txt')
@@ -323,7 +324,7 @@ var objectsToTest = [];
     // Modèle 3D
     pontTron = pontTronGLTF.scene
     pontTron.scale.set(3.3, 3.3, 3.3)
-    pontTron.rotation.set(0, -Math.PI*0.5, 0)
+    pontTron.rotateY(Math.PI*0.5)
     pontTron.position.set(-(335*i)+200,1,0)
     gScene.add(pontTron)
 

@@ -152,6 +152,28 @@
             "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=842"
             }
             ]
+        },
+        {"name_cat" : "prix du public",
+        "oeuvres":
+            [{"value": "PublicOeuvre1PNG",
+            "texture": "image/oeuvres/audiovisuel/oeuvre_3.jpg",
+            "name": "La salle des rêves",
+            "iut": "IUT de Grenoble",
+            "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=915"
+            },
+            {"value": "PublicOeuvre2PNG",
+            "texture": "image/oeuvres/web/oeuvre_2.jpg",
+            "name": "REAH",
+            "iut": "IUT de Champs-sur-Marne",
+            "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=911"
+            },
+            {"value": "PublicOeuvre3PNG",
+            "texture": "image/oeuvres/audiovisuel/oeuvre_1.jpg",
+            "name": "Ascension",
+            "iut": "IUT de Montbéliard",
+            "link": "https://www.festival2021.iutmmi.fr/2021.apercu.256_ybj.html?var=id&ch=714"
+            }
+            ]
         }
     ]
 }

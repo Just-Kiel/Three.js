@@ -1,11 +1,63 @@
-import './style/main.css'
+import './style/main.scss'
 import * as CANNON from 'cannon-es'
 import * as THREE from 'three'
 import * as utils from './utils.js';
 import createVehicle from './raycastVehicle.js';
 import {cameraHelper} from './cameraHelper.js';
-// import cannonDebugger from 'cannon-es-debugger'
+import cannonDebugger from 'cannon-es-debugger'
 import { DoubleSide } from 'three';
+import './menu.js'
+
+// document.body.addEventListener('contextmenu', e => e.preventDefault() & e.stopPropagation());
+// document.body.addEventListener('mousedown', onMouseDown);
+// document.body.addEventListener('touchstart', e => onMouseDown(e.touches[0]));
+// document.body.addEventListener('mouseup', onMouseUp);
+// document.body.addEventListener('touchend', e => onMouseUp(e.touches[0]));
+// document.body.addEventListener('mousemove', onMouseMove);
+// document.body.addEventListener('touchmove', e => onMouseMove(e.touches[0]));
+
+// let value, showing, anchorX, anchorY, min = 100;
+// const wheel = document.querySelector('.wheel');
+// const links = ["./index.html", "./gallery.html", './artists.html', "./iut.html", "./game.html", "./mentions_legales.html", "./anciens.html", "https://youtu.be/VrPx1opuGQM"]
+
+// function onMouseDown({ clientX: x, clientY: y }) {
+// 	showing = true;
+// 	anchorX = x;
+// 	anchorY = y;
+
+// 	wheel.style.setProperty('--x', `${x}px`);
+// 	wheel.style.setProperty('--y', `${y}px`);
+// 	wheel.classList.add('on');
+// }
+
+// function onMouseUp() {
+// 	showing = false;
+//     console.log(value)
+// 	wheel.setAttribute('data-chosen', 0);
+// 	wheel.classList.remove('on');
+//     if(value != undefined && value >=0){
+//         window.location.href = links[value]
+//     }
+// }
+
+// function onMouseMove({ clientX: x, clientY: y }) {
+// 	if (!showing) return;
+
+// 	let dx = x - anchorX;
+// 	let dy = y - anchorY;
+// 	let mag = Math.sqrt(dx * dx + dy * dy);
+// 	let index = 0;
+
+// 	if (mag >= min) {
+// 		let deg = Math.atan2(dy, dx) + 0.625 * Math.PI;
+// 		while (deg < 0) deg += Math.PI * 2;
+// 		index = Math.floor(deg / Math.PI * 4) + 1;
+// 	}
+
+// 	wheel.setAttribute('data-chosen', index);
+//     value = index-1;
+//     console.log(index)
+// }
 
 const worldStep = 1/60;
 
@@ -18,7 +70,7 @@ const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
     canvas: document.querySelector('.webgl')
 });
 
-// cannonDebugger(gScene, gWorld.bodies, {color: "red"})
+cannonDebugger(gScene, gWorld.bodies, {color: "red"})
 
 /**
  * Sizes
@@ -102,6 +154,10 @@ var pupitreArtists, pupitreArtistsBody, textNomin
 
 var ceremonie, theatreBodyPart1, theatreBodyPart2, ceremonieBody, barriere1, barriere2, ecranCeremonie;
 
+var IUT, IUTPhys;
+
+var appareil, appareilPhys;
+
 var mentionsBody;
 var mentionsLength = 20;
 var mentionsZ = 8;
@@ -115,7 +171,7 @@ if ("ontouchstart" in document.documentElement){
 
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF, /*gameTpGLTF,*/ pontGalleryGLTF, pupitreArtistsGLTF, theatreGLTF, hansonJSON, SolGLTF, /*CommandesPNG*/, visuelFestivalPNG] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, /*gameTpGLTF,*/ pontGalleryGLTF, pupitreArtistsGLTF, theatreGLTF, hansonJSON, SolGLTF, /*CommandesPNG,*/ visuelFestivalPNG, iutGLTF, appareilGLTF] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
         // utils.loadResource('model/teleport_game.gltf'),
@@ -126,10 +182,52 @@ if ("ontouchstart" in document.documentElement){
         utils.loadResource('model/petits_cailloux.gltf'),
         // utils.loadResource('image/Commandes_site.png'),
         utils.loadResource('image/banniere.png'),
+        utils.loadResource('model/test_iut.gltf'),
+        utils.loadResource('model/appareil_photo.gltf'),
     ]);
 
     const wheel = wheelGLTF.scene;
     const chassis = chassisGLTF.scene;
+
+    /**
+     * Appareil Photo Anciens
+     */
+    // Modèle 3D
+    appareil = appareilGLTF.scene
+    appareil.scale.set(5, 5, 5)
+    appareil.position.set(-185, 12, 0)
+    appareil.rotation.y = -Math.PI*0.05
+    gScene.add(appareil)
+
+    // Physique
+    // const objPhys = new CANNON.Box(new CANNON.Vec3(12, 5, 5))
+    // appareilPhys = new CANNON.Body({mass: 0})
+    // appareilPhys.addShape(objPhys, new CANNON.Vec3(0, 12, 0))
+    // appareilPhys.rotation = new CANNON.Vec3(0, 0, Math.PI*0.5)
+    // appareilPhys.position.x = -25
+    // // appareilPhys.position.x = appareil.position.x
+    // gWorld.addBody(appareilPhys)
+
+
+    /**
+     * Cube IUT
+     */
+    // Modèle 3D
+    IUT = iutGLTF.scene
+    IUT.rotation.y = Math.PI
+    IUT.position.set(185,1,0)
+    IUT.scale.set(3, 3, 3)
+    gScene.add(IUT)
+
+    // Physique
+    const iutPhys = new CANNON.Box(new CANNON.Vec3(12, 12, 12))
+    IUTPhys = new CANNON.Body({
+        mass: 0, 
+        shape: iutPhys,
+        position: new CANNON.Vec3(185, 12, 0)
+    })
+    gWorld.addBody(IUTPhys)
+
     
     /**
      * Game Island
@@ -164,7 +262,6 @@ if ("ontouchstart" in document.documentElement){
         cailloux.clone()
     ]
     deco[1].scale.set(0.3, 0.3, 0.3)
-    console.log(deco[0])
     deco.forEach(function(item, index){
         deco[index].traverse( function ( node ) {
 
@@ -182,7 +279,11 @@ if ("ontouchstart" in document.documentElement){
         deco[1].children[3],
         deco[1].children[4],
         deco[1].children[5],
+        deco[0].children[0]
     ]
+
+    display[6].position.set(100, 0.001, 10)
+    display[6].scale.set(5, 5, 0.5)
 
     display[5].position.set(-55, 0.001, 90)
     display[5].scale.set(10, 10, 0.5)
@@ -405,7 +506,7 @@ if ("ontouchstart" in document.documentElement){
 
     vehicle = createVehicle();
     vehicle.addToWorld(gWorld, meshes);
-    var interactable = [collideGallery, collideArtists, ceremonieBody, mentionsBody]
+    var interactable = [collideGallery, collideArtists, ceremonieBody, mentionsBody, IUTPhys]
     vehicle.detectBody(interactable)
 
     resetVehicle = () => {

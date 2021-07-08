@@ -1,10 +1,11 @@
-import '../style/main.css'
+import '../style/main.scss'
 import * as CANNON from 'cannon-es'
 import * as THREE from 'three'
 import * as utils from '../utils.js';
 import createVehicle from '../raycastVehicle.js';
 import {cameraHelper} from '../cameraHelper.js';
 // import cannonDebugger from 'cannon-es-debugger'
+import '../menu.js'
 
 const worldStep = 1/60;
 
@@ -82,83 +83,71 @@ gWorld.addBody(floorBody)
 
 
 var vehicle, chassis
-const vehicleInitialPosition = new THREE.Vector3(-10, 25, -10);
+const vehicleInitialPosition = new THREE.Vector3(50, 25, -10);
 const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI *0.50);
 let resetVehicle = () => {};
 
 
 const mouse = new THREE.Vector2();
 
-const mentions = [40, 30, 150];
-var plane1, plane2, plane3, plane4, plane5;
-const hauteurOeuvre = 70;
+const mentions = [40, 30, 50];
+var planes = []
+var textures = []
+var objJSON;
+const hauteurOeuvre = 50;
 const ecartOeuvre = 155;
 
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF] = await Promise.all([
+    const [wheelGLTF, chassisGLTF,fileJSON] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
+        utils.loadResource('infos/mentions.txt'),
     ]);
 
-    /**
-     * Colliders Mentions légales
-     */
-    const collideShape = new CANNON.Box(new CANNON.Vec3(50, 10, 22))
-    const collideBehind = new CANNON.Body({
-        mass:0,
-        shape: collideShape,
-        position: new CANNON.Vec3(50, 0,0)
-    })
-    gWorld.addBody(collideBehind)
-    const collideFront = new CANNON.Body({
-        mass:0,
-        shape: collideShape,
-        position: new CANNON.Vec3(-950, 0,0)
-    })
-    collideFront.collisionResponse = 0
-    gWorld.addBody(collideFront)
+    
 
 
     /**
      * Affichage Mentions légales
      */
+    objJSON = JSON.parse(fileJSON)
     const oeuvreGeometry = new THREE.PlaneGeometry(152, 88)
-    plane1 = new THREE.Mesh(
-        oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#ABEDC6'})
-    )
-    plane1.rotation.y = Math.PI
-    plane1.position.set(mentions[0]-ecartOeuvre, hauteurOeuvre, mentions[2])
-    
-    plane2 = new THREE.Mesh(
-        oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#E8AABE'})
-    )
-    plane2.rotation.y = Math.PI
-    plane2.position.set(mentions[0]-(ecartOeuvre*2), hauteurOeuvre, mentions[2])
-   
-    plane3 = new THREE.Mesh(
-        oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
-    )
-    plane3.rotation.y = Math.PI
-    plane3.position.set(mentions[0]-(ecartOeuvre*3), hauteurOeuvre, mentions[2])
-    
-    plane4 = new THREE.Mesh(
-        oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
-    )
-    plane4.rotation.y = Math.PI
-    plane4.position.set(mentions[0]-(ecartOeuvre*4), hauteurOeuvre, mentions[2])
-    
-    plane5 = new THREE.Mesh(
-        oeuvreGeometry,
-        new THREE.MeshStandardMaterial({color: '#FFBF66'})
-    )
-    plane5.rotation.y = Math.PI
-    plane5.position.set(mentions[0]-(ecartOeuvre*5), hauteurOeuvre, mentions[2])
-    gScene.add(plane1, plane2, plane3, plane4, plane5)
+    for(var mention in objJSON.mentions){
+        for(var texture in objJSON.mentions[mention]){
+            textures[mention] = await Promise.all([
+                utils.loadResource(objJSON.mentions[mention][texture])
+            ]);
+            planes[mention] = new THREE.Mesh(
+                oeuvreGeometry,
+                new THREE.MeshBasicMaterial({transparent: true, map: textures[mention][0]})
+            )
+            planes[mention].rotation.y = Math.PI
+            planes[mention].position.set(mentions[0]-(ecartOeuvre*mention), hauteurOeuvre, mentions[2])
+            gScene.add(planes[mention])
+        }
+    }
+
+    console.log(planes.length)
+
+    /**
+     * Colliders Mentions légales
+     */
+     const collideShape = new CANNON.Box(new CANNON.Vec3(50, 10, 22))
+     const collideBehind = new CANNON.Body({
+         mass:0,
+         shape: collideShape,
+         position: new CANNON.Vec3(150, 0,0)
+     })
+     gWorld.addBody(collideBehind)
+     const collideFront = new CANNON.Body({
+         mass:0,
+         shape: collideShape,
+         position: new CANNON.Vec3(-(planes.length*ecartOeuvre), 0,0)
+     })
+     collideFront.collisionResponse = 0
+     gWorld.addBody(collideFront)
+
 
     /**
      * Van

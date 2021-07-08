@@ -1,9 +1,10 @@
-import '../style/main.css'
+import '../style/main.scss'
 import * as CANNON from 'cannon-es'
 import * as THREE from 'three'
 import * as utils from '../utils.js';
 import createVehicle from '../raycastVehicle.js';
 import {cameraHelper} from '../cameraHelper.js';
+import '../menu.js'
 // import cannonDebugger from 'cannon-es-debugger'
 
 const worldStep = 1/60;

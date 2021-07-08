@@ -1,8 +1,9 @@
-import '../style/main.css'
+import '../style/main.scss'
 import * as THREE from 'three'
 import * as utils from '../utils.js';
 import {cameraHelper} from '../cameraHelper.js';
 import gsap from 'gsap'
+import '../menu.js'
 
 const gScene = new THREE.Scene();
 const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
@@ -372,8 +373,8 @@ window.addEventListener('click', () => {
                             gsap.to(currentArtistsClicked[op].position, {duration: speedAnim, x: -((currentArtistsClicked.length/2)*ecartArtist)+(currentArtistsClicked.length*5), y: heightArtist, z: 0})
                         }
                     }
+                }
             }
-    }
             currentArtist = currentIntersect
         }
     }
@@ -400,10 +401,10 @@ function render() {
      */
     raycaster.setFromCamera(mouse, camera)
 
-    if(gScene.getObjectById(14)){
-        intersects = raycaster.intersectObjects(categoriesToTest);
-    }else if(currentArtistsClicked != []){
+    if(currentArtistsClicked.length != 0){
         intersects = raycaster.intersectObjects(currentArtistsClicked)
+    }else {
+        intersects = raycaster.intersectObjects(categoriesToTest);
     }
 
     if(intersects.length){

@@ -39,7 +39,7 @@ function initCameraHelper(camera, target, controllerScope, cameraId) {
             case 4:
                 console.log('Camera Mentions Légales')
                 target.add(camera);
-                camera.position.set(-30, 6.5, 15);
+                camera.position.set(-25, 10.5, 15);
                 camera.rotation.set(0, 4.65, 0);
                 camera.fov = 90;
                 cameraHelper.update = () => {};

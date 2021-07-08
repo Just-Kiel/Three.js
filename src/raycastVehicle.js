@@ -95,13 +95,16 @@ export default function createVehicle() {
                     // window.location.pathname = "./immersions/artists.html";
                 }
                 if(i.body.id == interactBodies[2].id){
-                    window.open("https://youtu.be/AuOXgnmPF0Q")
+                    window.open("https://youtu.be/VrPx1opuGQM")
                 }
                 if(i.body.id == interactBodies[3].id){
                     console.log("enter")
                 }
+                if(i.body.id == interactBodies[4].id){
+                    window.location.pathname = "./iut.html"
+                }
                 
-                // if(i.body.id == interactBodies[4].id){
+                // if(i.body.id == interactBodies[5].id){
                 //     // window.location.pathname = "./game.html";
                 //     window.location.pathname = "./immersions/game.html";
                 // }
