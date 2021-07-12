@@ -368,3 +368,30 @@ html
 		}
 	}
 }
+
+.burger_menu {
+    z-index: 998;
+    position: absolute;
+    top: 30%;
+    left: 18%;
+}
+
+.burger_menu_img {
+    background-image: url(../../static/image/liste.png);
+    background-size: 30%;
+    background-repeat: no-repeat;
+}
+
+.cross_menu {
+    background-image: url(../../static/image/croix.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+}
+
+#middle{
+    transform: translate(120%, 120%);
+    width: 30%;
+    height: 30%;
+    margin: 0;
+}

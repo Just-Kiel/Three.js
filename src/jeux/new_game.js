@@ -5,7 +5,9 @@ import * as utils from '../utils.js';
 import createVehicle from '../raycastVehicle.js';
 import {cameraHelper} from '../cameraHelper.js';
 import '../menu.js'
-// import cannonDebugger from 'cannon-es-debugger'
+import cannonDebugger from 'cannon-es-debugger'
+import gsap from 'gsap'
+
 
 const worldStep = 1/60;
 
@@ -21,7 +23,7 @@ gRenderer.setPixelRatio(window.devicePixelRatio);
 gRenderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(gRenderer.domElement);
 
-// cannonDebugger(gScene, gWorld.bodies, {color: "red"})
+cannonDebugger(gScene, gWorld.bodies, {color: "red"})
 
 /**
  * Sizes
@@ -55,6 +57,7 @@ gScene.add(camera)
 /**
  * Lights
  */
+// const ambientLight = new THREE.AmbientLight('#FFFFFF', 1);
 const ambientLight = new THREE.AmbientLight('#686868', 1);
 gScene.add(ambientLight);
 const pointLight = new THREE.PointLight(0xffffff, 2, 1000)
@@ -112,7 +115,7 @@ const floorBodyBridge1 = new CANNON.Body({
 })
 gWorld.addBody(floorBodyBridge1)
 
-const bridgeShape2 = new CANNON.Box(new CANNON.Vec3(20, 3, 106))
+const bridgeShape2 = new CANNON.Box(new CANNON.Vec3(25, 3, 106))
 const floorBodyBridge2 = new CANNON.Body({
     mass: 0,
     shape: bridgeShape2,
@@ -129,11 +132,15 @@ let resetVehicle = () => {};
 var gameTp, gameTpBody
 var gameTpSize = 11
 
-var colormudarBody, colormudar
-var fearOfDaemon, fearOfDaemonBody
-var boomBoomEscape, boomBoomEscapeBody
+var colormudarBody, colormudar, planeEnterColor
+var fearOfDaemon, fearOfDaemonBody, planeEnterFear
+var boomBoomEscape, boomBoomEscapeBody, planeEnterBoom
 
 var island
+
+var vehicle;
+var longueur = 76;
+var largeur = 40;
 
 (async function init() {
 
@@ -177,6 +184,10 @@ var island
     })
     gWorld.addBody(gameTpBody)
 
+    const gameLight = new THREE.PointLight(0xffffff, 2, 1000)
+    gameLight.position.set(450, 0, 670)
+    gScene.add(gameLight)
+
     /**
      * Jeux
      */
@@ -191,13 +202,23 @@ var island
     gScene.add(colormudar)
 
     // ColorMudar phys
-    const gameShape = new CANNON.Box(new CANNON.Vec3(76, 40, 2))
+    const gameShape = new CANNON.Box(new CANNON.Vec3(longueur, largeur, 2))
     colormudarBody = new CANNON.Body({
         mass: 0,
         position: new CANNON.Vec3(330, -28, 680),
         shape: gameShape,
     })
+    colormudarBody.collisionResponse = 0
     gWorld.addBody(colormudarBody)
+
+    planeEnterColor = new THREE.Mesh(
+        new THREE.PlaneGeometry(longueur*2, largeur*2),
+        new THREE.MeshStandardMaterial({color: "#FF0000", side: THREE.DoubleSide})
+    )
+    planeEnterColor.name = "Colormudar"
+    planeEnterColor.rotateX(Math.PI * 0.5)
+    planeEnterColor.position.set(colormudarBody.position.x, colormudarBody.position.y-2, colormudarBody.position.z)
+
 
     // Plane Game (Fear of Daemon)
     fearOfDaemon = new THREE.Mesh(
@@ -213,7 +234,17 @@ var island
         mass: 0,
         shape: gameShape,
     })
+    fearOfDaemonBody.collisionResponse = 0
     gWorld.addBody(fearOfDaemonBody)
+
+    planeEnterFear = new THREE.Mesh(
+        new THREE.PlaneGeometry(longueur*2, largeur*2),
+        new THREE.MeshStandardMaterial({color: "#FF0000", side: THREE.DoubleSide})
+    )
+    planeEnterFear.name = "FearOfDaemon"
+    planeEnterFear.rotateX(Math.PI * 0.5)
+    planeEnterFear.position.set(fearOfDaemon.position.x, fearOfDaemon.position.y-2, fearOfDaemon.position.z)
+
 
     // Plane Game (Boom Boom Escape)
     boomBoomEscape = new THREE.Mesh(
@@ -229,7 +260,16 @@ var island
         mass: 0,
         shape: gameShape,
     })
+    boomBoomEscapeBody.collisionResponse = 0
     gWorld.addBody(boomBoomEscapeBody)
+
+    planeEnterBoom = new THREE.Mesh(
+        new THREE.PlaneGeometry(longueur*2, largeur*2),
+        new THREE.MeshStandardMaterial({color: "#FF0000", side: THREE.DoubleSide})
+    )
+    planeEnterBoom.name = "BoomBoomEscape"
+    planeEnterBoom.rotateX(Math.PI * 0.5)
+    planeEnterBoom.position.set(boomBoomEscape.position.x, boomBoomEscape.position.y-2, boomBoomEscape.position.z)
 
 
     /**
@@ -246,7 +286,7 @@ var island
         chassis,
     };
 
-    const vehicle = createVehicle();
+    vehicle = createVehicle();
     vehicle.addToWorld(gWorld, meshes);
     var interactable = [gameTpBody, colormudarBody, fearOfDaemonBody, boomBoomEscapeBody]
     vehicle.detectBody(interactable)
@@ -289,10 +329,53 @@ function render() {
      * Game Update
      */
     colormudarBody.quaternion.copy(colormudar.quaternion)
+    planeEnterColor.quaternion.copy(colormudar.quaternion)
     fearOfDaemonBody.quaternion.copy(fearOfDaemon.quaternion)
+    planeEnterFear.quaternion.copy(fearOfDaemon.quaternion)
     fearOfDaemonBody.position.copy(fearOfDaemon.position)
     boomBoomEscapeBody.quaternion.copy(boomBoomEscape.quaternion)
+    planeEnterBoom.quaternion.copy(boomBoomEscape.quaternion)
     boomBoomEscapeBody.position.copy(boomBoomEscape.position)
+
+
+        if(vehicle.chassisBody.position.x >= colormudarBody.position.x - (longueur) && vehicle.chassisBody.position.x <= colormudarBody.position.x + (longueur) && vehicle.chassisBody.position.z >= colormudarBody.position.z - (largeur) && vehicle.chassisBody.position.z <= colormudarBody.position.z + (largeur)){
+            gScene.add(planeEnterColor)
+            gsap.to(planeEnterColor.position, {duration: 0.2, y: colormudarBody.position.y+1})
+            
+        } else{
+            if(gScene.getObjectByName("Colormudar")){
+                gsap.to(planeEnterColor.position, {duration: 0.15, y: colormudarBody.position.y-2})
+                setTimeout(function(){
+                    gScene.remove(planeEnterColor)
+                }, 150)
+            }
+        }
+        
+        if(vehicle.chassisBody.position.x >= fearOfDaemonBody.position.x - (longueur) && vehicle.chassisBody.position.x <= fearOfDaemonBody.position.x + (longueur) && vehicle.chassisBody.position.z >= fearOfDaemonBody.position.z - (largeur) && vehicle.chassisBody.position.z <= fearOfDaemonBody.position.z + (largeur)){
+            gScene.add(planeEnterFear)
+            gsap.to(planeEnterFear.position, {duration: 0.2, y: fearOfDaemonBody.position.y+1})
+            
+        } else{
+            if(gScene.getObjectByName("FearOfDaemon")){
+                gsap.to(planeEnterFear.position, {duration: 0.15, y: fearOfDaemonBody.position.y-2})
+                setTimeout(function(){
+                    gScene.remove(planeEnterFear)
+                }, 150)
+            }
+        }
+        
+        if(vehicle.chassisBody.position.x >= boomBoomEscapeBody.position.x - (longueur) && vehicle.chassisBody.position.x <= boomBoomEscapeBody.position.x + (longueur) && vehicle.chassisBody.position.z >= boomBoomEscapeBody.position.z - (largeur) && vehicle.chassisBody.position.z <= boomBoomEscapeBody.position.z + (largeur)){
+            gScene.add(planeEnterBoom)
+            gsap.to(planeEnterBoom.position, {duration: 0.2, y: boomBoomEscapeBody.position.y+1})
+            
+        } else{
+            if(gScene.getObjectByName("BoomBoomEscape")){
+                gsap.to(planeEnterBoom.position, {duration: 0.15, y: boomBoomEscapeBody.position.y-2})
+                setTimeout(function(){
+                    gScene.remove(planeEnterBoom)
+                }, 150)
+            }
+        }
 
     /**
      * Test update physique
@@ -308,6 +391,20 @@ window.addEventListener('keyup', (e) => {
     switch (e.key.toUpperCase()) {
         case 'V':
             resetVehicle(); 
+            break;
+        case 'ENTER':
+            if(gScene.getObjectByName("Colormudar")){
+                // window.location.pathname = "./immersions/mentions_legales.html"
+                window.open("https://just-kiel.itch.io/colormudar")
+            }
+            if(gScene.getObjectByName("FearOfDaemon")){
+                // window.location.pathname = "./immersions/mentions_legales.html"
+                window.open("https://kangourou-gang.itch.io/fear-of-daemon")
+            }
+            if(gScene.getObjectByName("BoomBoomEscape")){
+                // window.location.pathname = "./immersions/mentions_legales.html"
+                window.open("https://valentin-prieto.itch.io/boom-boom-escape")
+            }
             break;
     }
 });

@@ -4,11 +4,32 @@ document.body.addEventListener('mousedown', onMouseDown);
 document.body.addEventListener('mouseup', onMouseUp);
 // document.body.addEventListener('touchend', e => onMouseUp(e.touches[0]));
 document.body.addEventListener('mousemove', onMouseMove);
-// document.body.addEventListener('touchmove', e => onMouseMove(e.touches[0]));
+document.body.addEventListener('touchmove', e => onMouseMove(e.touches[0]));
 
 let value, showing, anchorX, anchorY, min = 100;
 const wheel = document.querySelector('.wheel');
 const links = ["./index.html", "./gallery.html", './artists.html', "./iut.html", "./game.html", "./mentions_legales.html", "./anciens.html", "https://youtu.be/VrPx1opuGQM"]
+
+if ("ontouchstart" in document.documentElement)
+{
+	wheel.classList.add("burger_menu")
+	wheel.classList.add("burger_menu_img")
+
+	document.getElementById('menu').onclick = function(){
+		if(document.getElementById('middle').classList.contains("cross_menu")){
+			showing = false
+			wheel.classList.remove('on');
+			wheel.classList.add("burger_menu_img")
+			document.getElementById('middle').classList.remove("cross_menu")
+		} else {
+			showing = true
+			document.getElementById('middle').classList.add('cross_menu')
+			wheel.classList.remove("burger_menu_img")
+			// wheel.classList.add("cross_menu")
+			wheel.classList.add('on');
+		}
+	}
+}
 
 function onMouseDown({ clientX: x, clientY: y }) {
 	showing = true;
@@ -47,3 +68,7 @@ function onMouseMove({ clientX: x, clientY: y }) {
     value = index-1;
     console.log(index)
 }
+
+// document.body.addEventListener('touchstart', function(){
+// 	if
+// });

@@ -117,15 +117,15 @@ export default function createVehicle() {
                 }
                 if(i.body.id == interactBodies[1].id){
                     console.log("start colormudar")
-                    window.open("https://just-kiel.itch.io/colormudar")
+                    // window.open("https://just-kiel.itch.io/colormudar")
                 }
                 if(i.body.id == interactBodies[2].id){
                     console.log("start fear of daemon")
-                    window.open("https://kangourou-gang.itch.io/fear-of-daemon")
+                    // window.open("https://kangourou-gang.itch.io/fear-of-daemon")
                 }
                 if(i.body.id == interactBodies[3].id){
                     console.log("start Boom boom escape")
-                    window.open("https://valentin-prieto.itch.io/boom-boom-escape")
+                    // window.open("https://valentin-prieto.itch.io/boom-boom-escape")
                 }
 
             }
