@@ -80,7 +80,6 @@ export default function createVehicle() {
     
     vehicle.detectBody = function(interactBodies){
         chassisBody.addEventListener('collide', interact)
-        wheelBodies[1].addEventListener('collide', interact)
         function interact(i){
             var path = window.location.pathname;
             var page = path.split("/").pop();
