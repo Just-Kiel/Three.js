@@ -5,7 +5,7 @@ const path = require('path')
 
 module.exports = {
     entry: {
-        new: path.resolve(__dirname, '../src/new.js'),
+        new: path.resolve(__dirname, '../src/hub.js'),
         new_game: path.resolve(__dirname, '../src/jeux/new_game.js'),
         gallery: path.resolve(__dirname, '../src/galerie/gallery.js'),
         artists: path.resolve(__dirname, '../src/artistes/artists.js'),

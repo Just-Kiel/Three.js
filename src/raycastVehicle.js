@@ -2,7 +2,7 @@ import * as CANNON from 'cannon-es'
 import * as THREE from 'three'
 
 export default function createVehicle() {
-    const chassisBody = new CANNON.Body({mass: 100});
+    const chassisBody = new CANNON.Body({mass: 200});
     const chassisBaseShape = new CANNON.Box(new CANNON.Vec3(4, 1.6, 9.2));
     const chassisTopShape = new CANNON.Box(new CANNON.Vec3(4, 1.6, 9));
     chassisBody
@@ -86,7 +86,13 @@ export default function createVehicle() {
             
             if(page == "index.html" || page == ""){
                 if(i.body.id == interactBodies[0].id){
+                    document.getElementById("blackscreen").classList.remove("hidden")
+                    document.getElementById("blackscreen").classList.remove("blackscreen-non")
+                    document.getElementById("blackscreen").classList.add("blackscreen-active")
+
+                    setTimeout(function(){
                     window.location.pathname = "./gallery.html";
+                    }, 2000)
                     // window.location.pathname = "./immersions/gallery.html";
                 }
                 if(i.body.id == interactBodies[1].id){
@@ -97,16 +103,23 @@ export default function createVehicle() {
                     window.open("https://youtu.be/VrPx1opuGQM")
                 }
                 if(i.body.id == interactBodies[3].id){
-                    console.log("enter")
-                }
-                if(i.body.id == interactBodies[4].id){
                     window.location.pathname = "./iut.html"
                 }
                 
-                // if(i.body.id == interactBodies[5].id){
-                //     // window.location.pathname = "./game.html";
-                //     window.location.pathname = "./immersions/game.html";
-                // }
+                if(i.body.id == interactBodies[4].id){
+                    window.location.pathname = "./anciens.html"
+                }
+                
+                if(i.body.id == interactBodies[5].id){
+                    document.getElementById("blackscreen").classList.remove("hidden")
+                    document.getElementById("blackscreen").classList.remove("blackscreen-non")
+                    document.getElementById("blackscreen").classList.add("blackscreen-active")
+
+                    setTimeout(function(){
+                    window.location.pathname = "./game.html";
+                    }, 2000)
+                    // window.location.pathname = "./immersions/game.html";
+                }
             }
 
             if(page == "game.html"){

@@ -8,7 +8,7 @@ document.body.addEventListener('touchmove', e => onMouseMove(e.touches[0]));
 
 let value, showing, anchorX, anchorY, min = 100;
 const wheel = document.querySelector('.wheel');
-const links = ["./index.html", "./gallery.html", './artists.html', "./iut.html", "./game.html", "./mentions_legales.html", "./anciens.html", "https://youtu.be/VrPx1opuGQM"]
+const links = ["./index.html", "./iut.html", "./anciens.html", "./game.html", "./mentions_legales.html", "./gallery.html", "https://youtu.be/VrPx1opuGQM", "./artists.html"]
 
 if ("ontouchstart" in document.documentElement)
 {

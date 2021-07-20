@@ -314,15 +314,21 @@ html
 			opacity: 0.8;
 			transform: scale(1.5) rotate(var(--rotation)) !important;
 			transition-timing-function: cubic-bezier(0, 0.5, 0.5, 1.5);
+            p{
+                text-align: center;
+                transform: rotate(var(--test)) !important;
+            }
 		}
+
+        
 	}
 
 	.arc {
 		position: absolute;
 		top: 0;
 		right: 0;
-		width: 50%;
-		height: 50%;
+		width: 80%;
+		height: 80%;
 		transform-origin: 0% 100%;
 		background-image: radial-gradient(circle at 0% 100%, transparent, transparent 29.5%, var(--color-border) 30%, var(--color-border) 30.5%, var(--color) 31%, var(--color) 50%, var(--color-border) 50.25%, var(--color-border) 51.5%, transparent 51.75%, transparent);
 		transition-property: transform, opacity;
@@ -333,15 +339,15 @@ html
 		opacity: 0;
 		transform: scale(0) rotate(var(--rotation));
 
-		i {
-			position: absolute;
-			top: 40%;
-			left: 15%;
-			font-size: 2rem;
-			transform: rotate(calc(var(--rotation) * -1));
-			color: rgba(255, 255, 255, 0.8);
-			transition: color 0.3s;
-		}
+        p{
+            position: relative;
+            color: white;
+            top: 42%;
+            left: -27%;
+            font-size: 0.5em;
+            text-align: center;
+            transform: rotate(var(--test));
+        }
 	}
 
 	@for $i from 1 through 8 {
@@ -363,6 +369,7 @@ html
 				--rotation: #{-22.5 + ($i - 1) * 45}deg;
 				--color: rgba(179, 179, 179, 0.6);
 				--color-border: rgb(179, 179, 179);
+                --test : #{22.5 - ($i - 1) * 45}deg;
 				transition-delay: #{($i % 2) * 0.015}s;
 			}
 		}
