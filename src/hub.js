@@ -4,7 +4,7 @@ import * as THREE from 'three'
 import * as utils from './utils.js';
 import createVehicle from './raycastVehicle.js';
 import {cameraHelper} from './cameraHelper.js';
-import cannonDebugger from 'cannon-es-debugger'
+// import cannonDebugger from 'cannon-es-debugger'
 import './menu.js'
 import gsap from 'gsap'
 
@@ -20,7 +20,7 @@ const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
 });
 const clock = new THREE.Clock()
 
-cannonDebugger(gScene, gWorld.bodies, {color: "red"})
+// cannonDebugger(gScene, gWorld.bodies, {color: "red"})
 
 /**
  * Sizes
@@ -65,8 +65,8 @@ gScene.add(ambientLight);
 const pointLight = new THREE.PointLight(0xffffff, 2, 800)
 pointLight.position.set(50, 500, -150)
 gScene.add(pointLight)
-const secondLight = new THREE.PointLight(0xffffff, 1, 1200)
-secondLight.position.set(150, 0, 0)
+// const secondLight = new THREE.PointLight(0xffffff, 1, 1200)
+// secondLight.position.set(150, 0, 0)
 // gScene.add(secondLight)
 
 /**
@@ -77,6 +77,11 @@ const floorShape = new CANNON.Cylinder(245, 132, 150, 32)
 const initFloorShape = new CANNON.Cylinder(28, 28, 1, 32)
 const bridgeInitFloorShape = new CANNON.Box(new CANNON.Vec3(15, 1, 55))
 const sphereCenterFloorShape = new CANNON.Sphere(85)
+const caillou1Shape = new CANNON.Sphere(22)
+const caillou2Shape = new CANNON.Sphere(15)
+const caillou3Shape = new CANNON.Sphere(32)
+const murHorizontalShape = new CANNON.Box(new CANNON.Vec3(20, 8, 2))
+const murVerticalShape = new CANNON.Box(new CANNON.Vec3(4, 8, 30))
 const floorBody = new CANNON.Body({
     mass: 0,
     position: new CANNON.Vec3(0, -104, -48),
@@ -85,13 +90,27 @@ floorBody.addShape(floorShape)
 floorBody.addShape(initFloorShape, new CANNON.Vec3(0, 96, 365))
 floorBody.addShape(bridgeInitFloorShape, new CANNON.Vec3(0, 84, 290), new CANNON.Quaternion(-0.1, 0, 0))
 floorBody.addShape(sphereCenterFloorShape, new CANNON.Vec3(0, 30, 0))
+floorBody.addShape(caillou1Shape, new CANNON.Vec3(215, 75, 32))
+floorBody.addShape(caillou2Shape, new CANNON.Vec3(180, 75, 25))
+floorBody.addShape(caillou2Shape, new CANNON.Vec3(75, 75, 30))
+floorBody.addShape(caillou2Shape, new CANNON.Vec3(145, 75, 50))
+floorBody.addShape(murHorizontalShape, new CANNON.Vec3(0,96, 385))
+floorBody.addShape(murVerticalShape, new CANNON.Vec3(-22,96, 355))
+floorBody.addShape(murVerticalShape, new CANNON.Vec3(22,96, 355))
+floorBody.addShape(caillou3Shape, new CANNON.Vec3(165, 75, 110))
+floorBody.addShape(caillou1Shape, new CANNON.Vec3(138, 75, 75))
+
 gWorld.addBody(floorBody)
 
 
 var vehicle
 const vehicleInitialPosition = new THREE.Vector3(0, 50, 320);
+const test = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI);
 const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI);
 let resetVehicle = () => {};
+
+var vehicleNewPosition, vehicleNewRotation
+let jump = () => {};
 
 var gameTpBody;
 
@@ -115,11 +134,10 @@ if ("ontouchstart" in document.documentElement){
 
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF, hansonJSON, hubGLTF] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, hubGLTF] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
-        utils.loadResource('fonts/Hanson_Bold.json'),
-        utils.loadResource('model/new_hub.gltf'),
+        utils.loadResource('model/Hub.gltf'),
     ]);
 
     const wheel = wheelGLTF.scene;
@@ -132,11 +150,19 @@ if ("ontouchstart" in document.documentElement){
     /**
      * Appareil Photo Anciens
      */
-    // Physique
+    // Physique collider
     const objPhys = new CANNON.Sphere(15)
     appareilPhys = new CANNON.Body({mass: 0})
     appareilPhys.addShape(objPhys, new CANNON.Vec3(160, -20, -110))
     gWorld.addBody(appareilPhys)
+    // Physique
+    const appareilBody = new CANNON.Body({
+        mass: 0,
+        position: new CANNON.Vec3(200, -20, -110)
+    })
+    appareilBody.addShape(objPhys)
+    appareilBody.addShape(objPhys, new CANNON.Vec3(20, 0, 10))
+    gWorld.addBody(appareilBody)
 
 
     /**
@@ -214,28 +240,6 @@ if ("ontouchstart" in document.documentElement){
     })
     gWorld.addBody(collideArtists)
 
-    // Texte des nommés
-    // const textNominGeometry = new THREE.TextGeometry(
-    //     'Les nommés',
-    //     {
-    //         font: hansonJSON,
-    //         size: 3,
-    //         height: 0.5,
-    //         curveSegments: 12,
-    //         bevelEnabled: true,
-    //         bevelThickness: 0.03,
-    //         bevelSize: 0.02,
-    //         bevelOffset: 0,
-    //         bevelSegments: 5
-    //     }
-    // )
-    // const textMaterial = new THREE.MeshBasicMaterial()
-    // textNomin = new THREE.Mesh(textNominGeometry, textMaterial)
-    // textNominGeometry.center()
-    // textNomin.rotation.y = -Math.PI*0.2
-    // textNomin.position.set(pupitreArtistsBody.position.x-10, pupitreArtistsBody.position.y + 15, pupitreArtistsBody.position.z + 14)
-    // gScene.add(textNomin)
-
 /**
  * Galerie
  */
@@ -257,26 +261,6 @@ if ("ontouchstart" in document.documentElement){
         collisionResponse: 0
     })
     gWorld.addBody(collideGallery)
-    
-    // Texte de la galerie
-    // const textGalerieGeometry = new THREE.TextGeometry(
-    //     'Le palmarès',
-    //     {
-    //         font: hansonJSON,
-    //         size: 3,
-    //         height: 0.5,
-    //         curveSegments: 12,
-    //         bevelEnabled: true,
-    //         bevelThickness: 0.03,
-    //         bevelSize: 0.02,
-    //         bevelOffset: 0,
-    //         bevelSegments: 5
-    //     }
-    // )
-    // const textGalerie = new THREE.Mesh(textGalerieGeometry, textMaterial)
-    // textGalerieGeometry.center()
-    // textGalerie.position.set(pontGalleryBody.position.x + 195, pontGalleryBody.position.y + 15, pontGalleryBody.position.z -95)
-    // gScene.add(textGalerie)
 
     /**
      * Van
@@ -330,8 +314,27 @@ function render() {
 
     cameraHelper.update();
 
+    if(vehicle.chassisBody.quaternion.x < -0.6 || vehicle.chassisBody.quaternion.x > 0.6){
+        vehicleNewPosition = vehicle.chassisBody.position;
+        vehicleNewRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI);
 
-    hub.children[14].children[1].rotateOnAxis(new THREE.Vector3(0, 1, 0), -0.008)
+        setTimeout(function(){
+            jump = () => {
+                vehicleNewPosition.y = vehicle.chassisBody.position.y +0.2;
+                gsap.to(vehicle.chassisBody, {duration: 2000, position: vehicleNewPosition});
+                vehicle.chassisBody.quaternion.copy(vehicleNewRotation);
+                vehicle.chassisBody.velocity.set(0, 0, 0);
+                vehicle.chassisBody.angularVelocity.set(0, 0, 0);            
+            }
+            jump()
+        }, 2000
+
+        )
+        
+    }
+
+
+    hub.children[16].children[1].rotateOnAxis(new THREE.Vector3(0, 1, 0), -0.008)
 
     gRenderer.render(gScene, camera);
 
@@ -346,6 +349,14 @@ window.addEventListener('keyup', (e) => {
     switch (e.key.toUpperCase()) {
         case 'V':
             resetVehicle();
+            break;
+            
+        case 'B':
+            console.log(test)
+            console.log(vehicle.indexUpAxis)
+            console.log(vehicle.wheelInfos)
+            console.log(vehicle.chassisBody)
+            console.log(vehicle.chassisBody.quaternion.y)
             break;
     }
 });

@@ -144,7 +144,7 @@ var ecartCard = 30;
 
     [backCardPNG, modelGLTF] = await Promise.all([
         utils.loadResource('image/artists/backCard.png'),
-        utils.loadResource('model/scene.gltf')
+        utils.loadResource('model/Scène.gltf')
     ]);
 
     /**

@@ -4,10 +4,15 @@ import * as THREE from 'three'
 export default function createVehicle() {
     const chassisBody = new CANNON.Body({mass: 200});
     const chassisBaseShape = new CANNON.Box(new CANNON.Vec3(4, 1.6, 9.2));
+    const chassisAwayShape = new CANNON.Box(new CANNON.Vec3(4, 1.6, 9.2));
     const chassisTopShape = new CANNON.Box(new CANNON.Vec3(4, 1.6, 9));
     chassisBody
         .addShape(chassisBaseShape, new CANNON.Vec3(0, -2, 0.5))
         .addShape(chassisTopShape, new CANNON.Vec3(0, 1, 0.8));
+
+    // const roundBody = new CANNON.Body({
+    //     mass: 0
+    // })
 
     const wheelOptions = {
         radius: 1.4,
@@ -123,7 +128,7 @@ export default function createVehicle() {
             }
 
             if(page == "game.html"){
-                if(i.body.id == interactBodies[0].id){
+                if(i.body.id == interactBodies[0].id || i.body.id == interactBodies[4].id){
                     // window.location.pathname = "./immersions/index.html";
                     window.location.pathname = "./index.html";
                 }

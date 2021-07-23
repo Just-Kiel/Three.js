@@ -21,6 +21,7 @@ const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
 });
 gRenderer.setPixelRatio(window.devicePixelRatio);
 gRenderer.setSize(window.innerWidth, window.innerHeight);
+gRenderer.setClearColor('#FFFFFF')
 document.body.appendChild(gRenderer.domElement);
 
 cannonDebugger(gScene, gWorld.bodies, {color: "red"})
@@ -57,8 +58,8 @@ gScene.add(camera)
 /**
  * Lights
  */
-// const ambientLight = new THREE.AmbientLight('#FFFFFF', 1);
-const ambientLight = new THREE.AmbientLight('#686868', 1);
+const ambientLight = new THREE.AmbientLight('#FFFFFF', 1);
+// const ambientLight = new THREE.AmbientLight('#686868', 1);
 gScene.add(ambientLight);
 const pointLight = new THREE.PointLight(0xffffff, 2, 1000)
 pointLight.position.set(50, 100, 150)
@@ -130,7 +131,7 @@ const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNO
 let resetVehicle = () => {};
 
 var gameTp, gameTpBody
-var gameTpSize = 11
+var gameTpSize = 30
 
 var colormudarBody, colormudar, planeEnterColor
 var fearOfDaemon, fearOfDaemonBody, planeEnterFear
@@ -144,14 +145,15 @@ var largeur = 40;
 
 (async function init() {
 
-    const [wheelGLTF, chassisGLTF, gameTpGLTF, islandGLTF, colormudarPNG, fearOfDaemonPNG, boomBoomEscapePNG] = await Promise.all([
+    const [wheelGLTF, chassisGLTF, islandGLTF, colormudarPNG, fearOfDaemonPNG, boomBoomEscapePNG, enterPNG] = await Promise.all([
         utils.loadResource('model/roue.gltf'),
         utils.loadResource('model/van.gltf'),
-        utils.loadResource('model/teleport_game.gltf'),
-        utils.loadResource('model/Floating_island_all.gltf'),
+        // utils.loadResource('model/Trou_Noir.gltf'),
+        utils.loadResource('model/Floating_Island.gltf'),
         utils.loadResource('image/colormudar_startscreen.png'),
         utils.loadResource('image/fearOfDaemon_startscreen.png'),
         utils.loadResource('image/boomBoomEscape_startscreen.png'),
+        utils.loadResource('image/enter.png'),
     ]);
 
     const wheel = wheelGLTF.scene;
@@ -160,33 +162,40 @@ var largeur = 40;
     /**
      * Island
      */
-    island = islandGLTF.scene.children[0]
-    island.position.set(0, -62.5, 0)
+    island = islandGLTF.scene
+    island.position.set(0, -62.5, 390)
     gScene.add(island)
 
     /**
      * Teleport
      */
-    gameTp = gameTpGLTF.scene;
-    gameTp.position.set(7, 3.8, 12)
-    gameTp.scale.set(gameTpSize, gameTpSize, gameTpSize)
-    gameTp.rotation.set(Math.PI/2, 0, 0)
-    gScene.add(gameTp)
+    // gameTp = gameTpGLTF.scene;
+    // gameTp.position.set(7, 3.8, 12)
+    // gameTp.scale.set(gameTpSize, gameTpSize, gameTpSize)
+    // gameTp.rotation.set(Math.PI/2, 0, 0)
+    // gScene.add(gameTp)
 
     // Teleport Game phys
     //pas de cylinder bc les collisions sont pas bonnes
     const gameTpShape = new CANNON.Box(new CANNON.Vec3(gameTpSize, gameTpSize, gameTpSize))
     gameTpBody = new CANNON.Body({
-        mass: 1000,
-        position: new CANNON.Vec3(450, -10, 670),
+        mass: 0,
+        position: new CANNON.Vec3(350, -10, 800),
         shape: gameTpShape,
-        quaternion: new CANNON.Quaternion(0, -1, -1)
+        // quaternion: new CANNON.Quaternion(0, -1, -1)
+    })
+    const gameTpEnd = new CANNON.Body({
+        mass: 0,
+        position: new CANNON.Vec3(-10, 0, -150),
+        shape: gameTpShape,
+        // quaternion: new CANNON.Quaternion(0, -1, -1)
     })
     gWorld.addBody(gameTpBody)
+    gWorld.addBody(gameTpEnd)
 
-    const gameLight = new THREE.PointLight(0xffffff, 2, 1000)
-    gameLight.position.set(450, 0, 670)
-    gScene.add(gameLight)
+    // const gameLight = new THREE.PointLight(0xffffff, 2, 1000)
+    // gameLight.position.set(450, 0, 670)
+    // gScene.add(gameLight)
 
     /**
      * Jeux
@@ -213,7 +222,8 @@ var largeur = 40;
 
     planeEnterColor = new THREE.Mesh(
         new THREE.PlaneGeometry(longueur*2, largeur*2),
-        new THREE.MeshStandardMaterial({color: "#FF0000", side: THREE.DoubleSide})
+        new THREE.MeshBasicMaterial({map: enterPNG, transparent: true})
+        // new THREE.MeshStandardMaterial({color: "#FF0000", side: THREE.DoubleSide})
     )
     planeEnterColor.name = "Colormudar"
     planeEnterColor.rotateX(Math.PI * 0.5)
@@ -239,7 +249,7 @@ var largeur = 40;
 
     planeEnterFear = new THREE.Mesh(
         new THREE.PlaneGeometry(longueur*2, largeur*2),
-        new THREE.MeshStandardMaterial({color: "#FF0000", side: THREE.DoubleSide})
+        new THREE.MeshBasicMaterial({map: enterPNG, transparent: true})
     )
     planeEnterFear.name = "FearOfDaemon"
     planeEnterFear.rotateX(Math.PI * 0.5)
@@ -265,7 +275,7 @@ var largeur = 40;
 
     planeEnterBoom = new THREE.Mesh(
         new THREE.PlaneGeometry(longueur*2, largeur*2),
-        new THREE.MeshStandardMaterial({color: "#FF0000", side: THREE.DoubleSide})
+        new THREE.MeshBasicMaterial({map: enterPNG, transparent: true})
     )
     planeEnterBoom.name = "BoomBoomEscape"
     planeEnterBoom.rotateX(Math.PI * 0.5)
@@ -288,7 +298,7 @@ var largeur = 40;
 
     vehicle = createVehicle();
     vehicle.addToWorld(gWorld, meshes);
-    var interactable = [gameTpBody, colormudarBody, fearOfDaemonBody, boomBoomEscapeBody]
+    var interactable = [gameTpBody, colormudarBody, fearOfDaemonBody, boomBoomEscapeBody, gameTpEnd]
     vehicle.detectBody(interactable)
 
     resetVehicle = () => {
@@ -322,8 +332,8 @@ function render() {
     /**
      * Teleport Update
      */
-    gameTp.position.copy(gameTpBody.position)
-    gameTp.quaternion.copy(gameTpBody.quaternion)
+    // gameTp.position.copy(gameTpBody.position)
+    // gameTp.quaternion.copy(gameTpBody.quaternion)
 
     /**
      * Game Update
