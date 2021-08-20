@@ -5,7 +5,7 @@ import * as utils from '../utils.js';
 import createVehicle from '../raycastVehicle.js';
 import {cameraHelper} from '../cameraHelper.js';
 import '../menu.js'
-import cannonDebugger from 'cannon-es-debugger'
+// import cannonDebugger from 'cannon-es-debugger'
 import gsap from 'gsap'
 
 
@@ -21,10 +21,10 @@ const gRenderer = new THREE.WebGLRenderer(/*{antialias: true}*/{
 });
 gRenderer.setPixelRatio(window.devicePixelRatio);
 gRenderer.setSize(window.innerWidth, window.innerHeight);
-gRenderer.setClearColor('#FFFFFF')
+gRenderer.setClearColor('#18276b')
 document.body.appendChild(gRenderer.domElement);
 
-cannonDebugger(gScene, gWorld.bodies, {color: "red"})
+// cannonDebugger(gScene, gWorld.bodies, {color: "red"})
 
 /**
  * Sizes
@@ -126,7 +126,7 @@ const floorBodyBridge2 = new CANNON.Body({
 gWorld.addBody(floorBodyBridge2)
 
 
-const vehicleInitialPosition = new THREE.Vector3(440, 15, 650);
+const vehicleInitialPosition = new THREE.Vector3(340, 15, 750);
 const vehicleInitialRotation = new THREE.Quaternion().setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI / 2);
 let resetVehicle = () => {};
 
@@ -207,14 +207,14 @@ var largeur = 40;
         new THREE.MeshBasicMaterial({map: colormudarPNG})
     )
     colormudar.rotation.set(-Math.PI*0.5, 0, -Math.PI*1.2)
-    colormudar.position.set(330, -30, 680)
+    colormudar.position.set(400, -30, 580)
     gScene.add(colormudar)
 
     // ColorMudar phys
     const gameShape = new CANNON.Box(new CANNON.Vec3(longueur, largeur, 2))
     colormudarBody = new CANNON.Body({
         mass: 0,
-        position: new CANNON.Vec3(330, -28, 680),
+        position: new CANNON.Vec3(400, -28, 580),
         shape: gameShape,
     })
     colormudarBody.collisionResponse = 0
@@ -328,6 +328,10 @@ function render() {
     updatePhysics();
 
     cameraHelper.update();
+
+    if(vehicle.chassisBody.position.y <= -100){
+        resetVehicle()
+    }
 
     /**
      * Teleport Update

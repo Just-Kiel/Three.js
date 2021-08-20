@@ -45,7 +45,7 @@ const clock = new THREE.Clock()
 
 gRenderer.setPixelRatio(window.devicePixelRatio);
 gRenderer.setSize(window.innerWidth, window.innerHeight);
-gRenderer.setClearColor('#D9AE71')
+gRenderer.setClearColor('#18276b')
 document.body.appendChild(gRenderer.domElement);
 
 /**
@@ -327,10 +327,7 @@ function render() {
                 vehicle.chassisBody.angularVelocity.set(0, 0, 0);            
             }
             jump()
-        }, 2000
-
-        )
-        
+        }, 2000)
     }
 
 

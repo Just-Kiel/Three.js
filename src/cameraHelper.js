@@ -12,9 +12,17 @@ function initCameraHelper(camera, target, controllerScope, cameraId) {
         switch (cameraId++) {
             case 0:
                 console.info('Game camera');
-                target.remove(camera);
-                camera.fov = 70;
-                cameraHelper.update = initChaseCamera(camera, target);
+                camera.position.set(-50, 16.5, 15);
+                camera.fov = 90;
+                cameraHelper.update = () => 
+                {
+                    camera.lookAt(target.position)
+                    camera.position.set(target.position.x + 50, target.position.y + 50, target.position.z - 50)
+                };
+
+                // target.remove(camera);
+                // camera.fov = 70;
+                // cameraHelper.update = initChaseCamera(camera, target);
                 break;
             case 1:
                 console.info('No camera');
