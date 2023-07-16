@@ -330,8 +330,7 @@ function render() {
         }, 2000)
     }
 
-
-    hub.children[16].children[1].rotateOnAxis(new THREE.Vector3(0, 1, 0), -0.008)
+    hub.getObjectByName("trou_noir").rotateOnAxis(new THREE.Vector3(0, 1, 0), 0.008)
 
     gRenderer.render(gScene, camera);
 
